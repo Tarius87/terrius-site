@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Terrius</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%224%2016%20232%20286%22%3E%3Crect%20x%3D%22-40%22%20y%3D%22-20%22%20width%3D%22320%22%20height%3D%22330%22%20fill%3D%22%230a1230%22/%3E%0A%20%20%3Cpath%20fill%3D%22%23ffffff%22%20fill-rule%3D%22evenodd%22%20d%3D%22M6%2018%20L234%2018%20L234%2094%20L152%2094%20L152%20300%20L88%20300%20L88%2094%20L6%2094%20Z%20M120%2032%20L127%2058%20L127%20236%20L140%20256%20L140%20278%20L127%20264%20L127%20284%20L113%20284%20L113%20264%20L100%20278%20L100%20256%20L113%20236%20L113%2058%20Z%20M127%2050%20L150%2060%20L214%2080%20L200%2080%20L146%2070%20L136%2078%20L127%2072%20Z%20M113%2050%20L90%2060%20L26%2080%20L40%2080%20L94%2070%20L104%2078%20L113%2072%20Z%22%20fill%3D%22%23FFFFFF%22/%3E%0A%20%20%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M127%20246%20L140%20266%20L140%20268.2%20L127%20248.2%20Z%22%20fill%3D%22%23FFFFFF%22/%3E%0A%20%20%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M127%20254%20L140%20274%20L140%20276.2%20L127%20256.2%20Z%22%20fill%3D%22%23FFFFFF%22/%3E%0A%20%20%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M113%20246%20L100%20266%20L100%20268.2%20L113%20248.2%20Z%22%20fill%3D%22%23FFFFFF%22/%3E%0A%20%20%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M113%20254%20L100%20274%20L100%20276.2%20L113%20256.2%20Z%22%20fill%3D%22%23FFFFFF%22/%3E%0A%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -891,6 +892,33 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         .x-store.is-on .x-card { transform: none; }
       }
     </style>
+
+    <style>
+      /* Terrius wordmark in the hero, lit like neon */
+      .x-logo { line-height: 0; text-shadow: none; }
+      .x-logo svg { display: block; width: min(84vw, 620px); height: auto; color: #fff; overflow: visible;
+        filter: drop-shadow(0 0 3px rgba(255,255,255,.9)) drop-shadow(0 0 14px rgba(255,255,255,.45)) drop-shadow(0 0 34px rgba(120,160,255,.35));
+        animation: x-flick 2.4s steps(1) both; will-change: opacity; }
+      .x-endmark { position: relative; z-index: 2; width: 64px; height: auto; color: #fff; margin-bottom: 18px; filter: drop-shadow(0 0 10px rgba(75,136,247,.6)); }
+      .x-end { align-content: center; justify-items: center; }
+      /* smoother scrolling: animated bits get their own layers so the big street photos are not repainted every frame */
+      .x-track, .x-store, .x-card { backface-visibility: hidden; }
+      .x-card { will-change: transform, translate, opacity; }
+      .x-qglow, .x-pulse, .x-ember, .x-mini b, .x-sign, .x-mirror, .x-wet { will-change: opacity, transform; }
+      .x-paint { contain: paint; }
+      @media (max-width: 900px), (pointer: coarse) {
+        .x-rain { display: none; }
+        .x-wet, .x-qglow, .x-pulse, .x-mirror { mix-blend-mode: normal; }
+        .x-wet { opacity: .12; } .x-store.is-lit .x-wet { opacity: .22; }
+        .x-wet i { animation: none; }
+        .x-store.is-lit .x-sign { text-shadow: 0 0 3px var(--neon), 0 0 12px var(--glow), 0 0 26px var(--glow); }
+        .x-s4.is-lit .x-mini b:first-child, .x-s4.is-lit .x-mini b:last-child { text-shadow: 0 0 3px #800020, 0 0 12px #800020; }
+        .x-logo svg { filter: drop-shadow(0 0 3px rgba(255,255,255,.85)) drop-shadow(0 0 16px rgba(140,170,255,.4)); }
+      }
+      @media (prefers-reduced-motion: reduce) { .x-logo svg { animation: none !important; } }
+      .x-sign--wm img { height: auto; width: 88%; max-height: 100%; opacity: .32; }
+      .x-dsign--wm img { height: auto; width: min(100%, 460px); }
+    </style>
   </head>
   <body>
     <div class="page" id="top">
@@ -905,7 +933,16 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
             <div class="x-hero">
               <div class="x-hero__copy">
                 <p class="x-eyebrow">Independent ideas · One company</p>
-                <h1 class="x-neon" id="x-title" aria-label="Terrius"><span>T</span><span>E</span><span>R</span><span>R</span><span>I</span><span>U</span><span>S</span></h1>
+                <h1 class="x-neon x-logo" id="x-title" aria-label="Terrius"><svg viewBox="0 0 1198 320" role="img" aria-hidden="true" focusable="false">
+  <path fill-rule="evenodd" d="M6 18 L234 18 L234 94 L152 94 L152 300 L88 300 L88 94 L6 94 Z M120 32 L127 58 L127 236 L140 256 L140 278 L127 264 L127 284 L113 284 L113 264 L100 278 L100 256 L113 236 L113 58 Z M127 50 L150 60 L214 80 L200 80 L146 70 L136 78 L127 72 Z M113 50 L90 60 L26 80 L40 80 L94 70 L104 78 L113 72 Z" fill="currentColor"/>
+  <path d="M127 246 L140 266 L140 268.2 L127 248.2 Z" fill="currentColor"/>
+  <path d="M127 254 L140 274 L140 276.2 L127 256.2 Z" fill="currentColor"/>
+  <path d="M113 246 L100 266 L100 268.2 L113 248.2 Z" fill="currentColor"/>
+  <path d="M113 254 L100 274 L100 276.2 L113 256.2 Z" fill="currentColor"/>
+  <g transform="translate(178,300) skewX(-10)">
+    <path d="M36.68 -70.38V-17.38H127.84V0.00H16.96V-154.55H124.02V-137.16H36.68V-87.77H120.84V-70.38Z M285.07 -76.32Q291.86 -73.35 296.41 -69.32Q300.97 -65.30 302.99 -60.21Q305.00 -55.12 305.64 -50.67Q306.27 -46.22 306.27 -40.07Q306.27 -38.16 306.17 -34.56Q306.06 -30.95 306.06 -29.26Q306.06 -20.56 307.97 -14.63Q309.88 -8.69 315.39 -4.88V0.00H291.43Q287.19 -9.75 287.19 -25.23V-39.01Q287.19 -53.21 281.04 -59.89Q274.90 -66.57 261.75 -66.57H210.87V0.00H191.16V-154.55H262.39Q285.07 -154.55 297.26 -143.84Q309.45 -133.14 309.45 -113.21Q309.45 -100.06 303.73 -91.37Q298.00 -82.68 285.07 -76.32ZM288.89 -110.45Q288.89 -125.72 280.83 -131.44Q272.78 -137.16 258.57 -137.16H210.87V-83.95H258.57Q274.26 -83.95 281.57 -90.31Q288.89 -96.67 288.89 -110.45Z M475.38 -76.32Q482.16 -73.35 486.72 -69.32Q491.28 -65.30 493.29 -60.21Q495.31 -55.12 495.94 -50.67Q496.58 -46.22 496.58 -40.07Q496.58 -38.16 496.47 -34.56Q496.37 -30.95 496.37 -29.26Q496.37 -20.56 498.28 -14.63Q500.18 -8.69 505.70 -4.88V0.00H481.74Q477.50 -9.75 477.50 -25.23V-39.01Q477.50 -53.21 471.35 -59.89Q465.20 -66.57 452.06 -66.57H401.18V0.00H381.46V-154.55H452.70Q475.38 -154.55 487.57 -143.84Q499.76 -133.14 499.76 -113.21Q499.76 -100.06 494.04 -91.37Q488.31 -82.68 475.38 -76.32ZM479.20 -110.45Q479.20 -125.72 471.14 -131.44Q463.08 -137.16 448.88 -137.16H401.18V-83.95H448.88Q464.57 -83.95 471.88 -90.31Q479.20 -96.67 479.20 -110.45Z M595.94 -154.55V0.00H576.01V-154.55Z M769.71 -154.55H789.43V-46.00Q789.43 -22.68 773.21 -8.90Q756.99 4.88 729.86 4.88Q702.30 4.88 686.50 -8.80Q670.71 -22.47 670.71 -46.00V-154.55H690.42V-46.00Q690.42 -29.26 701.13 -20.88Q711.84 -12.51 729.86 -12.51Q748.51 -12.51 759.11 -21.41Q769.71 -30.32 769.71 -46.00Z M918.89 -12.51Q930.76 -12.51 939.03 -15.26Q947.30 -18.02 951.22 -22.47Q955.14 -26.92 956.73 -31.27Q958.32 -35.62 958.32 -40.49Q958.32 -58.09 929.92 -65.51L891.54 -75.68Q861.23 -83.53 861.23 -111.72Q861.23 -132.71 875.96 -144.90Q890.70 -157.09 916.14 -157.09Q942.85 -157.09 957.69 -144.48Q972.53 -131.86 972.74 -109.18H954.08Q953.87 -124.23 943.91 -132.39Q933.94 -140.56 915.50 -140.56Q899.81 -140.56 890.38 -133.35Q880.94 -126.14 880.94 -114.48Q880.94 -105.58 886.67 -100.49Q892.39 -95.40 906.38 -91.58L945.18 -81.20Q960.87 -76.96 969.45 -66.78Q978.04 -56.60 978.04 -42.40Q978.04 -36.25 976.45 -30.21Q974.86 -24.17 970.62 -17.70Q966.38 -11.24 959.81 -6.36Q953.24 -1.48 942.32 1.70Q931.40 4.88 917.62 4.88Q908.93 4.88 900.98 3.50Q893.03 2.12 884.76 -1.59Q876.49 -5.30 870.56 -11.13Q864.62 -16.96 860.70 -26.71Q856.78 -36.46 856.56 -49.18H875.22V-48.12Q875.22 -41.55 877.23 -35.83Q879.25 -30.10 883.81 -24.59Q888.36 -19.08 897.37 -15.79Q906.38 -12.51 918.89 -12.51Z" fill="currentColor"/>
+  </g>
+</svg></h1>
                 <h2>Build what should exist.</h2>
                 <p class="x-sub">Terrius is the home for five distinct ventures across games, social, apparel, education and fiction.</p>
                 <p class="x-hint">Take a drive ↓</p>
@@ -915,7 +952,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
               <article class="x-store x-s1" style="--ar: 1376 / 768">
                 <div class="x-paint" aria-hidden="true">
                   <img class="x-photo" src="nd_trivispar_blue.jpg" alt="" width="1376" height="768" decoding="async" />
-                  <div class="x-sign" style="left: 29.4%; top: 21%; width: 42.9%; height: 12.9%"><img src="trivispar.svg" alt="" /><span>TriviSpar</span></div>
+                  <div class="x-sign x-sign--wm" style="left: 29.4%; top: 21%; width: 42.9%; height: 12.9%"><img src="trivispar-wordmark.svg" alt="" /></div>
                   <span class="x-qglow" style="left: 67.4%; top: 41%; width: 6.4%; height: 11.4%"></span>
                   <div class="x-wet"><i></i></div>
                 </div>
@@ -1000,6 +1037,13 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         <section class="x-bleed x-night x-end" aria-label="Closing">
           <div class="x-sky"><div class="x-stars"></div></div>
           <div class="x-stripe" aria-hidden="true"></div>
+          <svg class="x-endmark" viewBox="4 16 232 286" aria-hidden="true" focusable="false">
+  <path fill-rule="evenodd" d="M6 18 L234 18 L234 94 L152 94 L152 300 L88 300 L88 94 L6 94 Z M120 32 L127 58 L127 236 L140 256 L140 278 L127 264 L127 284 L113 284 L113 264 L100 278 L100 256 L113 236 L113 58 Z M127 50 L150 60 L214 80 L200 80 L146 70 L136 78 L127 72 Z M113 50 L90 60 L26 80 L40 80 L94 70 L104 78 L113 72 Z" fill="currentColor"/>
+  <path d="M127 246 L140 266 L140 268.2 L127 248.2 Z" fill="currentColor"/>
+  <path d="M127 254 L140 274 L140 276.2 L127 256.2 Z" fill="currentColor"/>
+  <path d="M113 246 L100 266 L100 268.2 L113 248.2 Z" fill="currentColor"/>
+  <path d="M113 254 L100 274 L100 276.2 L113 256.2 Z" fill="currentColor"/>
+</svg>
           <h2>One company. Five worlds in motion.</h2>
         </section>
       </main>
@@ -1013,7 +1057,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         <div class="x-detail__shade" aria-hidden="true"></div>
         <div class="x-detail__inner">
           <a class="x-back" href="#">← Back to the drive</a>
-          <h1 class="x-dsign" id="x-d1"><img src="trivispar.svg" alt="" /><span>TriviSpar</span></h1>
+          <h1 class="x-dsign x-dsign--wm" id="x-d1" aria-label="TriviSpar"><img src="trivispar-wordmark.svg" alt="" /></h1>
           <p class="x-card__label">01 · Game</p>
           <div class="x-dpanel">
             <h2>Purpose</h2>
@@ -1329,7 +1373,8 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         function req() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
         function remeasure() { measure(); last = -1; req(); }
         addEventListener("scroll", req, { passive: true });
-        addEventListener("resize", remeasure);
+        var lastW = innerWidth;
+        addEventListener("resize", function () { if (innerWidth === lastW) return; lastW = innerWidth; remeasure(); });
         addEventListener("load", remeasure);
         [].forEach.call(far.querySelectorAll("img"), function (im) { im.addEventListener("load", remeasure); });
         if (mq.addEventListener) mq.addEventListener("change", remeasure);
