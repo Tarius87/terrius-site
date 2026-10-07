@@ -779,8 +779,8 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       @keyframes x-ripple { to { transform: translate3d(1.2cqw, 0, 0) scaleY(1.15); } }
 
       /* cards */
-      .x-card { position: absolute; z-index: 4; left: var(--cx, calc(var(--fx, .5) * 100%)); bottom: max(14px, env(safe-area-inset-bottom)); width: min(420px, calc(100vw - 32px)); padding: 18px 20px; border-radius: var(--r-m);
-        background: rgba(8,10,18,.74); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); border: 1px solid rgba(255,255,255,.1); border-top: 2px solid var(--accent);
+      .x-card { position: absolute; z-index: 4; left: 0; translate: var(--cxp, 0px) 0; bottom: max(14px, env(safe-area-inset-bottom)); width: min(420px, calc(100vw - 32px)); padding: 18px 20px; border-radius: var(--r-m);
+        background: rgba(8,10,18,.9); border: 1px solid rgba(255,255,255,.1); border-top: 2px solid var(--accent);
         transform: translate3d(-50%, 40px, 0); opacity: 0; transition: transform .6s var(--ease-out), opacity .5s; }
       .x-store.is-on .x-card { transform: translate3d(-50%, 0, 0); opacity: 1; }
       .x-card p, .x-card h3 { margin: 0; }
@@ -858,7 +858,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       .x-dsign img, .x-dsign .x-crop { height: clamp(52px, 12vw, 88px); width: auto; max-width: none; flex: none; filter: drop-shadow(0 0 8px var(--glow)); animation: x-on 1.4s steps(1) .25s both; }
       .x-dsign .x-crop img { height: 100%; filter: none; animation: none; }
       .x-detail .x-card__label { font: var(--type-label); }
-      .x-dpanel { padding: 22px 24px; border-radius: var(--r-m); background: rgba(8,10,18,.7); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); border: 1px solid rgba(255,255,255,.1); border-top: 2px solid var(--accent); display: grid; gap: 10px; }
+      .x-dpanel { padding: 22px 24px; border-radius: var(--r-m); background: rgba(8,10,18,.88); border: 1px solid rgba(255,255,255,.1); border-top: 2px solid var(--accent); display: grid; gap: 10px; }
       .x-dpanel h2, .x-dpanel p { margin: 0; }
       .x-dpanel h2 { font: var(--type-caption); letter-spacing: .14em; text-transform: uppercase; color: #9aa6c8; }
       .x-dpanel p { font: var(--type-body); font-size: 17px; line-height: 1.6; color: #e3e7f2; }
@@ -887,7 +887,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         .x-paint { position: relative; inset: auto; aspect-ratio: var(--ar); }
         .x-photo { -webkit-mask: none; mask: none; }
         .x-paint::after { background: linear-gradient(transparent 85%, #04060e); }
-        .x-card { position: relative; left: auto; bottom: auto; margin: -24px auto 0; transform: none; opacity: 1; transition: none; }
+        .x-card { position: relative; left: auto; bottom: auto; translate: none; margin: -24px auto 0; transform: none; opacity: 1; transition: none; }
         .x-store.is-on .x-card { transform: none; }
       }
     </style>
@@ -1291,12 +1291,13 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           factor = Math.max(0, Math.min(0.25, (far.offsetWidth - vw - s0) / Math.max(1, cams[cams.length - 1] - camS)));
           drive.style.height = Math.round(vh + total) + "px";
         }
+        var cards = stores.map(function (s) { return s.querySelector(".x-card"); });
         function frame() {
           ticking = false;
           if (mq.matches) {
             track.style.transform = far.style.transform = far.style.opacity = "";
             hero.style.transform = hero.style.opacity = hero.style.visibility = shade.style.opacity = "";
-            stores.forEach(function (s) { s.classList.add("is-lit", "is-on"); s.style.removeProperty("--cx"); });
+            stores.forEach(function (s) { s.classList.add("is-lit", "is-on"); var c = s.querySelector(".x-card"); if (c) c.style.translate = ""; });
             return;
           }
           var top = drive.getBoundingClientRect().top,
@@ -1315,7 +1316,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           hero.style.visibility = op < 0.01 ? "hidden" : "";
           shade.style.opacity = String(1 - ease(it));
           // cards stay at the frame's center while their store pans, so text never leaves the screen
-          stores.forEach(function (s, k) { s.style.setProperty("--cx", (cam - lefts[k]).toFixed(1) + "px"); });
+          cards.forEach(function (c, k) { if (c) c.style.translate = (cam - lefts[k]).toFixed(1) + "px 0"; });
           var i = seg.intro ? (t > 0.42 ? 0 : -1) : seg.next != null && t >= 0.5 ? seg.next : seg.k;
           if (i !== last) {
             last = i;
