@@ -926,7 +926,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       .x-icons button:hover, .x-icons button:focus-visible { transform: translateY(-2px); border-color: rgba(255,255,255,.5); box-shadow: 0 0 16px rgba(120,150,255,.35); outline: none; }
       .x-icons button:active { transform: scale(.94); }
       .x-icons img { width: 100%; height: 100%; object-fit: contain; display: block; }
-      .x-home { position: fixed; z-index: 60; left: max(14px, env(safe-area-inset-left)); top: max(14px, env(safe-area-inset-top)); display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px 0 10px; border-radius: 22px; border: 1px solid rgba(255,255,255,.22); background: rgba(6,9,22,.72); color: #fff; font: 600 13px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity .3s ease, transform .3s ease; -webkit-tap-highlight-color: transparent; }
+      .x-home { position: fixed; z-index: 60; right: max(14px, env(safe-area-inset-right)); top: max(14px, env(safe-area-inset-top)); display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px 0 10px; border-radius: 22px; border: 1px solid rgba(255,255,255,.22); background: rgba(6,9,22,.72); color: #fff; font: 600 13px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity .3s ease, transform .3s ease; -webkit-tap-highlight-color: transparent; }
       .x-home.is-on { opacity: 1; transform: none; pointer-events: auto; }
       .x-home img { width: 22px; height: 22px; object-fit: contain; }
       .x-locked .x-home { display: none; }
@@ -1320,7 +1320,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           hero = stage.querySelector(".x-hero"),
           shade = stage.querySelector(".x-hero__shade"),
           mq = matchMedia("(prefers-reduced-motion: reduce)"),
-          ticking = false, last = -1, factor = 0.25, vw = 0, vh = 0,
+          ticking = false, last = -1, ys = -1, factor = 0.25, vw = 0, vh = 0,
           segs = [], spots = [], lefts = [], total = 1, camS = 0, s0 = 0;
         // one camera: intro pan (copy lifts away), then dwell on each store and ease to the next
         function ease(t) { return 0.45 * t + 0.55 * t * t * (3 - 2 * t); }
@@ -1366,8 +1366,11 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
             return;
           }
           var top = drive.getBoundingClientRect().top,
-            y = Math.min(total, Math.max(0, -top)),
-            seg = segs[segs.length - 1];
+            yT = Math.min(total, Math.max(0, -top));
+          if (ys < 0 || Math.abs(yT - ys) > vh * 3) ys = yT;
+          else ys += (yT - ys) * 0.2;
+          if (Math.abs(yT - ys) < 0.4) ys = yT; else req();
+          var y = ys, seg = segs[segs.length - 1];
           for (var n = 0; n < segs.length; n++) { if (y < segs[n].y0 + segs[n].len) { seg = segs[n]; break; } }
           var t = clamp((y - seg.y0) / seg.len),
             cam = seg.a + (seg.b - seg.a) * ease(t),
@@ -1392,7 +1395,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           }
         }
         function req() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
-        function remeasure() { measure(); last = -1; req(); }
+        function remeasure() { measure(); last = -1; ys = -1; req(); }
         addEventListener("scroll", req, { passive: true });
         var lastW = innerWidth;
         addEventListener("resize", function () { if (innerWidth === lastW) return; lastW = innerWidth; remeasure(); });
