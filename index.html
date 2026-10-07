@@ -918,6 +918,14 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       @media (prefers-reduced-motion: reduce) { .x-logo svg { animation: none !important; } }
       .x-sign--wm img { height: auto; width: 88%; max-height: 100%; opacity: .32; }
       .x-dsign--wm img { height: auto; width: min(100%, 460px); }
+      .x-hero h2 { font-size: clamp(22px, 6.2vw, 46px); line-height: 1.1; white-space: nowrap; letter-spacing: -.01em; }
+      .x-hero__copy { gap: 10px; }
+      .x-hint { margin-top: 10px; }
+      .x-icons { display: flex; justify-content: center; gap: clamp(10px, 3vw, 20px); margin-top: 4px; pointer-events: auto; }
+      .x-icons button { width: clamp(50px, 13vw, 64px); height: clamp(50px, 13vw, 64px); padding: 8px; border-radius: 16px; border: 1px solid rgba(255,255,255,.18); background: rgba(8,12,28,.62); cursor: pointer; display: grid; place-items: center; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; -webkit-tap-highlight-color: transparent; }
+      .x-icons button:hover, .x-icons button:focus-visible { transform: translateY(-2px); border-color: rgba(255,255,255,.5); box-shadow: 0 0 16px rgba(120,150,255,.35); outline: none; }
+      .x-icons button:active { transform: scale(.94); }
+      .x-icons img { width: 100%; height: 100%; object-fit: contain; display: block; }
     </style>
   </head>
   <body>
@@ -946,6 +954,13 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
                 <h2>Build what should exist.</h2>
                 <p class="x-sub">Terrius is the home for five distinct ventures across games, social, apparel, education and fiction.</p>
                 <p class="x-hint">Take a drive ↓</p>
+                <nav class="x-icons" aria-label="Drive to a venture">
+                  <button type="button" data-k="0" aria-label="TriviSpar"><img src="ts-icon.svg" alt="" /></button>
+                  <button type="button" data-k="1" aria-label="BondFyres"><img src="bondfyres-mark.svg" alt="" /></button>
+                  <button type="button" data-k="2" aria-label="Vibe Shop Class"><img src="vsc-icon.png" alt="" /></button>
+                  <button type="button" data-k="3" aria-label="Quality Stoner"><img src="qs-icon.png" alt="" /></button>
+                  <button type="button" data-k="4" aria-label="The Unmirrored"><img src="unmirrored-icon.svg" alt="" /></button>
+                </nav>
               </div>
             </div>
             <div class="x-track">
@@ -1386,6 +1401,30 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           measure();
           return Math.round(dTop + spots[k]);
         };
+      })();
+
+      (function () {
+        var raf = null;
+        function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+        ["wheel", "touchstart", "keydown"].forEach(function (e) { addEventListener(e, stop, { passive: true }); });
+        function driveTo(k) {
+          if (!window.xSpot) return;
+          stop();
+          var to = window.xSpot(k), from = scrollY, d = to - from;
+          if (matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(d) < 2) { scrollTo({ top: to, left: 0, behavior: "instant" }); return; }
+          var dur = Math.min(4200, 900 + Math.abs(d) / innerHeight * 420), t0 = null;
+          function e(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+          function step(ts) {
+            if (t0 === null) t0 = ts;
+            var t = Math.min(1, (ts - t0) / dur);
+            scrollTo({ top: from + d * e(t), left: 0, behavior: "instant" });
+            raf = t < 1 ? requestAnimationFrame(step) : null;
+          }
+          raf = requestAnimationFrame(step);
+        }
+        [].forEach.call(document.querySelectorAll(".x-icons button"), function (b) {
+          b.addEventListener("click", function () { driveTo(+b.getAttribute("data-k")); });
+        });
       })();
 
       (function () {
