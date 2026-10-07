@@ -916,7 +916,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         .x-logo svg { filter: drop-shadow(0 0 3px rgba(255,255,255,.85)) drop-shadow(0 0 16px rgba(140,170,255,.4)); }
       }
       @media (prefers-reduced-motion: reduce) { .x-logo svg { animation: none !important; } }
-      .x-sign--wm img { height: auto; width: 88%; max-height: 100%; opacity: .32; }
+      .x-sign--wm img { width: 88%; height: 92%; max-height: none; object-fit: contain; opacity: .32; }
       .x-dsign--wm img { height: auto; width: min(100%, 460px); }
       .x-hero h2 { font-size: clamp(22px, 6.2vw, 46px); line-height: 1.1; white-space: nowrap; letter-spacing: -.01em; }
       .x-hero__copy { gap: 10px; }
@@ -982,7 +982,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
               <article class="x-store x-s2" style="--ar: 1376 / 768">
                 <div class="x-paint" aria-hidden="true">
                   <img class="x-photo" src="nd_bondfyres.jpg" alt="" width="1376" height="768" loading="lazy" decoding="async" />
-                  <div class="x-sign" style="left: 13%; top: 16.6%; width: 74%; height: 15.4%"><span class="x-crop" style="aspect-ratio: 100 / 120"><img src="bondfyres.svg" alt="" /></span><span>BondFyres</span></div>
+                  <div class="x-sign x-sign--wm" style="left: 13%; top: 16.6%; width: 74%; height: 15.4%"><img src="bondfyres-wordmark.svg" alt="" /></div>
                   <i class="x-ember" style="left: 46%; top: 64%"></i>
                   <i class="x-ember" style="left: 49.5%; top: 63%"></i>
                   <i class="x-ember" style="left: 52%; top: 65%"></i>
@@ -1001,7 +1001,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
               <article class="x-store x-s3" style="--ar: 1376 / 768">
                 <div class="x-paint" aria-hidden="true">
                   <img class="x-photo" src="nd_vsc.jpg" alt="" width="1376" height="768" loading="lazy" decoding="async" />
-                  <div class="x-sign" style="left: 29.4%; top: 21%; width: 42.9%; height: 12.9%"><span class="x-crop" style="aspect-ratio: 1250 / 1159"><img src="vsc.png" alt="" /></span><span>Vibe Shop Class</span></div>
+                  <div class="x-sign x-sign--wm" style="left: 29.4%; top: 21%; width: 42.9%; height: 12.9%"><img src="vsc-wordmark.svg" alt="" /></div>
                   <span class="x-pulse" style="left: 43.8%; top: 38.6%; width: 30.6%; height: 35.8%"></span>
                   <div class="x-wet"><i></i></div>
                 </div>
@@ -1032,7 +1032,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
               <article class="x-store x-s5" style="--ar: 1376 / 768">
                 <div class="x-paint" aria-hidden="true">
                   <img class="x-photo" src="nd_unmirrored.jpg" alt="" width="1376" height="768" loading="lazy" decoding="async" />
-                  <div class="x-sign" style="left: 27.6%; top: 18.2%; width: 46%; height: 13.8%"><span>The Unmirrored</span></div>
+                  <div class="x-sign x-sign--wm" style="left: 27.6%; top: 18.2%; width: 46%; height: 13.8%"><img src="unmirrored-wordmark.svg" alt="" /></div>
                   <span class="x-mirror" style="left: 21.2%; top: 38.8%; width: 19.2%; height: 34%"><i></i></span>
                   <span class="x-mirror" style="left: 61.2%; top: 38.8%; width: 19.2%; height: 34%"><i></i></span>
                   <div class="x-wet"><i></i></div>
@@ -1087,7 +1087,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         <div class="x-detail__shade" aria-hidden="true"></div>
         <div class="x-detail__inner">
           <a class="x-back" href="#">← Back to the drive</a>
-          <h1 class="x-dsign" id="x-d2"><span class="x-crop" style="aspect-ratio: 100 / 120"><img src="bondfyres.svg" alt="" /></span><span>BondFyres</span></h1>
+          <h1 class="x-dsign x-dsign--wm" id="x-d2" aria-label="BondFyres"><img src="bondfyres-wordmark.svg" alt="" /></h1>
           <p class="x-card__label">02 · Social</p>
           <div class="x-dpanel">
             <h2>Purpose</h2>
@@ -1102,7 +1102,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         <div class="x-detail__shade" aria-hidden="true"></div>
         <div class="x-detail__inner">
           <a class="x-back" href="#">← Back to the drive</a>
-          <h1 class="x-dsign" id="x-d3"><span class="x-crop" style="aspect-ratio: 1250 / 1159"><img src="vsc.png" alt="" /></span><span>Vibe Shop Class</span></h1>
+          <h1 class="x-dsign x-dsign--wm" id="x-d3" aria-label="Vibe Shop Class"><img src="vsc-wordmark.svg" alt="" style="width: min(70%, 300px)" /></h1>
           <p class="x-card__label">03 · YouTube</p>
           <div class="x-dpanel">
             <h2>Purpose</h2>
@@ -1132,7 +1132,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         <div class="x-detail__shade x-detail__shade--sharp" aria-hidden="true"></div>
         <div class="x-detail__inner">
           <a class="x-back" href="#">← Back to the drive</a>
-          <h1 class="x-dsign" id="x-d5"><span>The Unmirrored</span></h1>
+          <h1 class="x-dsign x-dsign--wm" id="x-d5" aria-label="The Unmirrored"><img src="unmirrored-wordmark.svg" alt="" /></h1>
           <p class="x-card__label">05 · Fiction</p>
           <div class="x-dpanel">
             <h2>The story</h2>
