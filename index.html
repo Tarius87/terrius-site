@@ -926,11 +926,16 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       .x-icons button:hover, .x-icons button:focus-visible { transform: translateY(-2px); border-color: rgba(255,255,255,.5); box-shadow: 0 0 16px rgba(120,150,255,.35); outline: none; }
       .x-icons button:active { transform: scale(.94); }
       .x-icons img { width: 100%; height: 100%; object-fit: contain; display: block; }
+      .x-home { position: fixed; z-index: 60; left: max(14px, env(safe-area-inset-left)); top: max(14px, env(safe-area-inset-top)); display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px 0 10px; border-radius: 22px; border: 1px solid rgba(255,255,255,.22); background: rgba(6,9,22,.72); color: #fff; font: 600 13px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity .3s ease, transform .3s ease; -webkit-tap-highlight-color: transparent; }
+      .x-home.is-on { opacity: 1; transform: none; pointer-events: auto; }
+      .x-home img { width: 22px; height: 22px; object-fit: contain; }
+      .x-locked .x-home { display: none; }
     </style>
   </head>
   <body>
     <div class="page" id="top">
       <main class="main">
+        <button type="button" class="x-home" aria-label="Back to the start"><img src="terrius-mark-white.svg" alt="" /><span>Home</span></button>
         <section class="x-bleed x-night x-drive" aria-labelledby="x-title">
           <div class="x-stage">
             <div class="x-far" aria-hidden="true">
@@ -1410,7 +1415,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         function driveTo(k) {
           if (!window.xSpot) return;
           stop();
-          var to = window.xSpot(k), from = scrollY, d = to - from;
+          var to = k < 0 ? 0 : window.xSpot(k), from = scrollY, d = to - from;
           if (matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(d) < 2) { scrollTo({ top: to, left: 0, behavior: "instant" }); return; }
           var dur = Math.min(4200, 900 + Math.abs(d) / innerHeight * 420), t0 = null;
           function e(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
@@ -1421,6 +1426,12 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
             raf = t < 1 ? requestAnimationFrame(step) : null;
           }
           raf = requestAnimationFrame(step);
+        }
+        var home = document.querySelector(".x-home"), homeOn = false;
+        if (home) {
+          home.addEventListener("click", function () { driveTo(-1); });
+          var chk = function () { var on = scrollY > innerHeight * 0.5; if (on !== homeOn) { homeOn = on; home.classList.toggle("is-on", on); } };
+          addEventListener("scroll", chk, { passive: true }); chk();
         }
         [].forEach.call(document.querySelectorAll(".x-icons button"), function (b) {
           b.addEventListener("click", function () { driveTo(+b.getAttribute("data-k")); });
