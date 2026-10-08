@@ -1355,7 +1355,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           var y = 0, L = vh * 0.75;
           segs.push({ y0: y, len: L, a: camS, b: cams[0], k: 0, intro: true }); y += L;
           cams.forEach(function (c, k) {
-            L = vh * (k === cams.length - 1 ? 0.4 : 0.22);
+            L = vh * (k === cams.length - 1 ? 0.4 : 0.3);
             spots[k] = y + L / 2;
             segs.push({ y0: y, len: L, a: c, b: c, k: k }); y += L;
             if (k < cams.length - 1) {
@@ -1417,6 +1417,11 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         if (mq.addEventListener) mq.addEventListener("change", remeasure);
         measure();
         frame();
+        window.xSpots = function () {
+          if (mq.matches) return null;
+          var dTop = drive.getBoundingClientRect().top + scrollY;
+          return { list: spots.map(function (p) { return dTop + p; }), start: dTop, end: dTop + total };
+        };
         window.xSpot = function (k) {
           var s = stores[k], dTop = drive.getBoundingClientRect().top + scrollY;
           if (mq.matches || !s) return s ? s.getBoundingClientRect().top + scrollY : dTop;
@@ -1427,22 +1432,43 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
 
       (function () {
         var raf = null;
-        function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+        function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } auto = false; }
         ["wheel", "touchstart", "keydown"].forEach(function (e) { addEventListener(e, stop, { passive: true }); });
         function driveTo(k) {
           if (!window.xSpot) return;
           stop();
-          var to = k < 0 ? 0 : window.xSpot(k), from = scrollY, d = to - from;
+          var to = k < 0 ? 0 : window.xSpot(k);
+          glide(to, Math.min(4200, 900 + Math.abs(to - scrollY) / innerHeight * 420));
+        }
+        function glide(to, dur) {
+          stop();
+          var from = scrollY, d = to - from;
           if (matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(d) < 2) { scrollTo({ top: to, left: 0, behavior: "instant" }); return; }
-          var dur = Math.min(4200, 900 + Math.abs(d) / innerHeight * 420), t0 = null;
+          var t0 = null; auto = true;
           function e(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
           function step(ts) {
             if (t0 === null) t0 = ts;
             var t = Math.min(1, (ts - t0) / dur);
             scrollTo({ top: from + d * e(t), left: 0, behavior: "instant" });
             raf = t < 1 ? requestAnimationFrame(step) : null;
+            if (!raf) auto = false;
           }
           raf = requestAnimationFrame(step);
+        }
+        var touching = false, settleT = null, auto = false;
+        addEventListener("touchstart", function () { touching = true; clearTimeout(settleT); }, { passive: true });
+        addEventListener("touchend", function () { touching = false; arm(); }, { passive: true });
+        function arm() { clearTimeout(settleT); settleT = setTimeout(settle, 180); }
+        addEventListener("scroll", function () { if (!auto) arm(); }, { passive: true });
+        function settle() {
+          if (touching || raf || !window.xSpots) return;
+          var S = window.xSpots(); if (!S) return;
+          var y = scrollY, intro = S.list[0];
+          if (y < intro - innerHeight * 0.35 || y > S.end) return;
+          var best = null, bd = 1e9;
+          S.list.forEach(function (p) { var dd = Math.abs(p - y); if (dd < bd) { bd = dd; best = p; } });
+          if (best === null || bd < 4 || bd > innerHeight * 1.2) return;
+          glide(best, Math.min(700, 260 + bd / innerHeight * 500));
         }
         var home = document.querySelector(".x-home"), homeOn = false;
         if (home) {
