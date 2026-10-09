@@ -794,7 +794,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
 
       /* cards */
       .x-card { position: absolute; z-index: 4; left: 0; translate: var(--cxp, 0px) 0; bottom: max(14px, env(safe-area-inset-bottom)); width: min(420px, calc(100vw - 32px)); padding: 18px 20px; border-radius: var(--r-m);
-        background: rgba(8,10,18,.9); border: 1px solid rgba(255,255,255,.1); border-top: 2px solid var(--accent);
+        background: rgba(8,10,18,.9); border: 0; border-top: 2px solid var(--accent); box-shadow: 0 18px 40px rgba(0,0,0,.45);
         transform: translate3d(-50%, 40px, 0); opacity: 0; transition: transform .6s var(--ease-out), opacity .5s; }
       .x-store.is-on .x-card { transform: translate3d(-50%, 0, 0); opacity: 1; }
       .x-card p, .x-card h3 { margin: 0; }
@@ -848,8 +848,11 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       .x-store.is-on .x-card { pointer-events: auto; }
       .x-card__foot { margin-top: 6px !important; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
       .x-card__foot .x-card__status { margin-top: 0 !important; }
-      .x-more { display: inline-flex; align-items: center; min-height: var(--tap); font: var(--type-label); color: #fff; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; text-decoration-thickness: 2px; }
-      .x-more:hover { text-shadow: 0 0 10px var(--glow); }
+      .x-more { display: inline-flex; align-items: center; gap: 8px; min-height: var(--tap); padding: 0 18px; border-radius: 999px; font: var(--type-label); font-weight: 600; letter-spacing: .02em; color: #fff; text-decoration: none; background: color-mix(in srgb, var(--accent) 80%, #000); box-shadow: 0 0 18px color-mix(in srgb, var(--glow) 45%, transparent); transition: transform .2s, box-shadow .2s; -webkit-tap-highlight-color: transparent; }
+      .x-more:hover { box-shadow: 0 0 26px var(--glow); }
+      .x-more:active { transform: scale(.96); }
+      .x-more:focus { outline: none; }
+      .x-more:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(255,255,255,.35), 0 0 26px var(--glow); }
 
       /* detail views */
       .x-detail { position: fixed; inset: 0; z-index: 100; overflow-y: auto; overscroll-behavior: contain; background: #04060e; color: #eef0f6; display: grid; place-items: center; padding: max(24px, env(safe-area-inset-top)) var(--gutter) max(40px, env(safe-area-inset-bottom)); }
@@ -879,7 +882,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       .x-dsign img, .x-dsign .x-crop { height: clamp(52px, 12vw, 88px); width: auto; max-width: none; flex: none; filter: drop-shadow(0 0 8px var(--glow)); animation: x-on 1.4s steps(1) .25s both; }
       .x-dsign .x-crop img { height: 100%; filter: none; animation: none; }
       .x-detail .x-card__label { font: var(--type-label); }
-      .x-dpanel { padding: 22px 24px; border-radius: var(--r-m); background: rgba(8,10,18,.88); border: 1px solid rgba(255,255,255,.1); border-top: 2px solid var(--accent); display: grid; gap: 10px; }
+      .x-dpanel { padding: 22px 24px; border-radius: var(--r-m); background: rgba(8,10,18,.88); border: 0; border-top: 2px solid var(--accent); display: grid; gap: 10px; }
       .x-dpanel h2, .x-dpanel p { margin: 0; }
       .x-dpanel h2 { font: var(--type-caption); letter-spacing: .14em; text-transform: uppercase; color: #9aa6c8; }
       .x-dpanel p { font: var(--type-body); font-size: 17px; line-height: 1.6; color: #e3e7f2; }
@@ -1010,7 +1013,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
                   <p class="x-card__label">01 · Game</p>
                   <h3>TriviSpar</h3>
                   <p class="x-card__line">A trivia game for 1 to 16 players — you write the questions.</p>
-                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#trivispar">Purpose &amp; stage →</a></div>
+                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#trivispar">Explore <span aria-hidden="true">→</span></a></div>
                 </div>
               </article>
 
@@ -1029,7 +1032,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
                   <p class="x-card__label">02 · Social</p>
                   <h3>BondFyres</h3>
                   <p class="x-card__line">A 21+ social app with four-person live video.</p>
-                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#bondfyres">Purpose &amp; stage →</a></div>
+                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#bondfyres">Explore <span aria-hidden="true">→</span></a></div>
                 </div>
               </article>
 
@@ -1044,7 +1047,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
                   <p class="x-card__label">03 · YouTube</p>
                   <h3>Vibe Shop Class</h3>
                   <p class="x-card__line">A YouTube channel teaching anyone to build real things with AI.</p>
-                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#vibe-shop-class">Purpose &amp; stage →</a></div>
+                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#vibe-shop-class">Explore <span aria-hidden="true">→</span></a></div>
                 </div>
               </article>
 
@@ -1060,7 +1063,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
                   <p class="x-card__label">04 · Clothing</p>
                   <h3>Quality Stoner</h3>
                   <p class="x-card__line">One store, two vibes — Loud &amp; Proud or Discreet &amp; Neat.</p>
-                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#quality-stoner">Purpose &amp; stage →</a></div>
+                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#quality-stoner">Explore <span aria-hidden="true">→</span></a></div>
                 </div>
               </article>
 
@@ -1076,7 +1079,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
                   <p class="x-card__label">05 · Fiction</p>
                   <h3>The Unmirrored</h3>
                   <p class="x-card__line">A literary thriller novel by J. Simmons.</p>
-                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#the-unmirrored">Purpose &amp; stage →</a></div>
+                  <div class="x-card__foot"><p class="x-card__status">In development.</p><a class="x-more" href="#the-unmirrored">Explore <span aria-hidden="true">→</span></a></div>
                 </div>
               </article>
             </div>
