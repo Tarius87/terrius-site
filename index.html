@@ -916,7 +916,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
     <style>
       /* Terrius wordmark in the hero, lit like neon */
       /* the wordmark sits on the empty rooftop billboard frame in the skyline photo and pans with it */
-      .x-board { position: absolute; left: 0; top: 0; height: 100%; z-index: 4; pointer-events: none; will-change: transform; }
+      .x-board { position: absolute; left: 0; top: 0; height: 100%; z-index: 4; pointer-events: none; will-change: transform, opacity; }
       .x-board .x-logo { position: absolute; left: 89.39svh; top: 26.4svh; margin: 0; transform: translate(-50%, -50%); }
       .x-board .x-logo svg { width: 41svh; }
       .x-hero { align-content: start; padding-top: 37svh; }
@@ -1395,7 +1395,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         function frame() {
           ticking = false;
           if (mq.matches) {
-            track.style.transform = far.style.transform = far.style.opacity = board.style.transform = "";
+            track.style.transform = far.style.transform = far.style.opacity = board.style.transform = board.style.opacity = board.style.visibility = "";
             hero.style.transform = hero.style.opacity = hero.style.visibility = shade.style.opacity = "";
             stores.forEach(function (s) { s.classList.add("is-lit", "is-on"); var c = s.querySelector(".x-card"); if (c) c.style.translate = ""; });
             return;
@@ -1413,6 +1413,9 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           track.style.transform = "translate3d(" + (vw / 2 - cam) + "px,0,0)";
           far.style.transform = "translate3d(" + -(s0 + (cam - camS) * factor) + "px,0,0)";
           board.style.transform = far.style.transform;
+          var bo = 1 - clamp(it / 0.3);
+          board.style.opacity = String(bo);
+          board.style.visibility = bo < 0.01 ? "hidden" : "";
           far.style.opacity = String(1 - 0.3 * ease(it));
           var op = 1 - ease(clamp((it - 0.08) / 0.62));
           hero.style.opacity = String(op);
