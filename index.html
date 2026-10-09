@@ -915,6 +915,15 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
 
     <style>
       /* Terrius wordmark in the hero, lit like neon */
+      /* the wordmark sits on the empty rooftop billboard frame in the skyline photo and pans with it */
+      .x-board { position: absolute; left: 0; top: 0; height: 100%; z-index: 4; pointer-events: none; will-change: transform; }
+      .x-board .x-logo { position: absolute; left: 89.39svh; top: 26.4svh; margin: 0; transform: translate(-50%, -50%); }
+      .x-board .x-logo svg { width: 41svh; }
+      .x-hero { align-content: start; padding-top: 37svh; }
+      @media (prefers-reduced-motion: reduce) {
+        .x-board { width: 100%; height: 100svh; transform: none !important; }
+        .x-board .x-logo { left: 50%; }
+      }
       .x-logo { line-height: 0; text-shadow: none; }
       .x-logo svg { display: block; width: min(84vw, 620px); height: auto; color: #fff; overflow: visible;
         filter: drop-shadow(0 0 3px rgba(255,255,255,.9)) drop-shadow(0 0 14px rgba(255,255,255,.45)) drop-shadow(0 0 34px rgba(120,160,255,.35));
@@ -960,14 +969,11 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         <section class="x-bleed x-night x-drive" aria-labelledby="x-title">
           <div class="x-stage">
             <div class="x-far" aria-hidden="true">
-              <img src="nd_skyline_sign.jpg" alt="" width="1376" height="768" fetchpriority="high" />
+              <img src="nd_skyline.jpg" alt="" width="1376" height="768" fetchpriority="high" />
               <img src="nd_skyline.jpg" alt="" width="1376" height="768" decoding="async" />
             </div>
             <div class="x-hero__shade" aria-hidden="true"></div>
-            <div class="x-hero">
-              <div class="x-hero__copy">
-                <p class="x-eyebrow">Independent ideas · One company</p>
-                <h1 class="x-neon x-logo" id="x-title" aria-label="Terrius"><svg viewBox="0 0 1198 320" role="img" aria-hidden="true" focusable="false">
+            <div class="x-board"><h1 class="x-neon x-logo" id="x-title" aria-label="Terrius"><svg viewBox="0 0 1198 320" role="img" aria-hidden="true" focusable="false">
   <path fill-rule="evenodd" d="M6 18 L234 18 L234 94 L152 94 L152 300 L88 300 L88 94 L6 94 Z M120 32 L127 58 L127 236 L140 256 L140 278 L127 264 L127 284 L113 284 L113 264 L100 278 L100 256 L113 236 L113 58 Z M127 50 L150 60 L214 80 L200 80 L146 70 L136 78 L127 72 Z M113 50 L90 60 L26 80 L40 80 L94 70 L104 78 L113 72 Z" fill="currentColor"/>
   <path d="M127 246 L140 266 L140 268.2 L127 248.2 Z" fill="currentColor"/>
   <path d="M127 254 L140 274 L140 276.2 L127 256.2 Z" fill="currentColor"/>
@@ -976,7 +982,10 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
   <g transform="translate(178,300) skewX(-10)">
     <path d="M36.68 -70.38V-17.38H127.84V0.00H16.96V-154.55H124.02V-137.16H36.68V-87.77H120.84V-70.38Z M285.07 -76.32Q291.86 -73.35 296.41 -69.32Q300.97 -65.30 302.99 -60.21Q305.00 -55.12 305.64 -50.67Q306.27 -46.22 306.27 -40.07Q306.27 -38.16 306.17 -34.56Q306.06 -30.95 306.06 -29.26Q306.06 -20.56 307.97 -14.63Q309.88 -8.69 315.39 -4.88V0.00H291.43Q287.19 -9.75 287.19 -25.23V-39.01Q287.19 -53.21 281.04 -59.89Q274.90 -66.57 261.75 -66.57H210.87V0.00H191.16V-154.55H262.39Q285.07 -154.55 297.26 -143.84Q309.45 -133.14 309.45 -113.21Q309.45 -100.06 303.73 -91.37Q298.00 -82.68 285.07 -76.32ZM288.89 -110.45Q288.89 -125.72 280.83 -131.44Q272.78 -137.16 258.57 -137.16H210.87V-83.95H258.57Q274.26 -83.95 281.57 -90.31Q288.89 -96.67 288.89 -110.45Z M475.38 -76.32Q482.16 -73.35 486.72 -69.32Q491.28 -65.30 493.29 -60.21Q495.31 -55.12 495.94 -50.67Q496.58 -46.22 496.58 -40.07Q496.58 -38.16 496.47 -34.56Q496.37 -30.95 496.37 -29.26Q496.37 -20.56 498.28 -14.63Q500.18 -8.69 505.70 -4.88V0.00H481.74Q477.50 -9.75 477.50 -25.23V-39.01Q477.50 -53.21 471.35 -59.89Q465.20 -66.57 452.06 -66.57H401.18V0.00H381.46V-154.55H452.70Q475.38 -154.55 487.57 -143.84Q499.76 -133.14 499.76 -113.21Q499.76 -100.06 494.04 -91.37Q488.31 -82.68 475.38 -76.32ZM479.20 -110.45Q479.20 -125.72 471.14 -131.44Q463.08 -137.16 448.88 -137.16H401.18V-83.95H448.88Q464.57 -83.95 471.88 -90.31Q479.20 -96.67 479.20 -110.45Z M595.94 -154.55V0.00H576.01V-154.55Z M769.71 -154.55H789.43V-46.00Q789.43 -22.68 773.21 -8.90Q756.99 4.88 729.86 4.88Q702.30 4.88 686.50 -8.80Q670.71 -22.47 670.71 -46.00V-154.55H690.42V-46.00Q690.42 -29.26 701.13 -20.88Q711.84 -12.51 729.86 -12.51Q748.51 -12.51 759.11 -21.41Q769.71 -30.32 769.71 -46.00Z M918.89 -12.51Q930.76 -12.51 939.03 -15.26Q947.30 -18.02 951.22 -22.47Q955.14 -26.92 956.73 -31.27Q958.32 -35.62 958.32 -40.49Q958.32 -58.09 929.92 -65.51L891.54 -75.68Q861.23 -83.53 861.23 -111.72Q861.23 -132.71 875.96 -144.90Q890.70 -157.09 916.14 -157.09Q942.85 -157.09 957.69 -144.48Q972.53 -131.86 972.74 -109.18H954.08Q953.87 -124.23 943.91 -132.39Q933.94 -140.56 915.50 -140.56Q899.81 -140.56 890.38 -133.35Q880.94 -126.14 880.94 -114.48Q880.94 -105.58 886.67 -100.49Q892.39 -95.40 906.38 -91.58L945.18 -81.20Q960.87 -76.96 969.45 -66.78Q978.04 -56.60 978.04 -42.40Q978.04 -36.25 976.45 -30.21Q974.86 -24.17 970.62 -17.70Q966.38 -11.24 959.81 -6.36Q953.24 -1.48 942.32 1.70Q931.40 4.88 917.62 4.88Q908.93 4.88 900.98 3.50Q893.03 2.12 884.76 -1.59Q876.49 -5.30 870.56 -11.13Q864.62 -16.96 860.70 -26.71Q856.78 -36.46 856.56 -49.18H875.22V-48.12Q875.22 -41.55 877.23 -35.83Q879.25 -30.10 883.81 -24.59Q888.36 -19.08 897.37 -15.79Q906.38 -12.51 918.89 -12.51Z" fill="currentColor"/>
   </g>
-</svg></h1>
+</svg></h1></div>
+            <div class="x-hero">
+              <div class="x-hero__copy">
+                <p class="x-eyebrow">Independent ideas · One company</p>
                 <h2>Build what should exist.</h2>
                 <p class="x-sub">Terrius is the home for five distinct ventures across games, social, apparel, education and fiction.</p>
                 <p class="x-hint">Take a drive ↓</p>
@@ -1341,6 +1350,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           stage = drive.querySelector(".x-stage"),
           track = drive.querySelector(".x-track"),
           far = drive.querySelector(".x-far"),
+          board = drive.querySelector(".x-board"),
           stores = [].slice.call(drive.querySelectorAll(".x-store")),
           hero = stage.querySelector(".x-hero"),
           shade = stage.querySelector(".x-hero__shade"),
@@ -1385,7 +1395,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         function frame() {
           ticking = false;
           if (mq.matches) {
-            track.style.transform = far.style.transform = far.style.opacity = "";
+            track.style.transform = far.style.transform = far.style.opacity = board.style.transform = "";
             hero.style.transform = hero.style.opacity = hero.style.visibility = shade.style.opacity = "";
             stores.forEach(function (s) { s.classList.add("is-lit", "is-on"); var c = s.querySelector(".x-card"); if (c) c.style.translate = ""; });
             return;
@@ -1402,6 +1412,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
             it = seg.intro ? t : 1;
           track.style.transform = "translate3d(" + (vw / 2 - cam) + "px,0,0)";
           far.style.transform = "translate3d(" + -(s0 + (cam - camS) * factor) + "px,0,0)";
+          board.style.transform = far.style.transform;
           far.style.opacity = String(1 - 0.3 * ease(it));
           var op = 1 - ease(clamp((it - 0.08) / 0.62));
           hero.style.opacity = String(op);
