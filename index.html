@@ -118,7 +118,7 @@
 :root[data-theme="dark"] { color-scheme: dark; }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -798,6 +798,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         transform: translate3d(-50%, 40px, 0); opacity: 0; transition: transform .6s var(--ease-out), opacity .5s; }
       .x-store.is-on .x-card { transform: translate3d(-50%, 0, 0); opacity: 1; }
       .x-card p, .x-card h3 { margin: 0; }
+      @media (pointer: coarse) { .x-wet i { animation: none; } .x-wet, .x-mirror { mix-blend-mode: normal; } }
       .x-card__label { font: var(--type-caption); letter-spacing: .12em; text-transform: uppercase; color: #9aa6c8; }
       .x-card h3 { margin-top: 4px; font: var(--type-title); color: #fff; }
       .x-card__line { margin-top: 8px !important; font: var(--type-body); color: #c7cde0; }
@@ -1454,13 +1455,13 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         function glide(to, dur) {
           stop();
           var from = scrollY, d = to - from;
-          if (matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(d) < 2) { scrollTo({ top: to, left: 0, behavior: "instant" }); return; }
+          if (matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(d) < 2) { window.scrollTo(0, to); return; }
           var t0 = null; auto = true;
           function e(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
           function step(ts) {
             if (t0 === null) t0 = ts;
             var t = Math.min(1, (ts - t0) / dur);
-            scrollTo({ top: from + d * e(t), left: 0, behavior: "instant" });
+            window.scrollTo(0, Math.round(from + d * e(t)));
             raf = t < 1 ? requestAnimationFrame(step) : null;
             if (!raf) auto = false;
           }
@@ -1469,7 +1470,16 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         var touching = false, settleT = null, auto = false;
         addEventListener("touchstart", function () { touching = true; clearTimeout(settleT); }, { passive: true });
         addEventListener("touchend", function () { touching = false; arm(); }, { passive: true });
-        function arm() { clearTimeout(settleT); settleT = setTimeout(settle, 180); }
+        addEventListener("touchcancel", function () { touching = false; arm(); }, { passive: true });
+        // wait until iOS momentum has fully stopped before snapping, so the snap never fights the finger's fling
+        var lastY = -1, still = 0;
+        function arm() { clearTimeout(settleT); lastY = scrollY; still = 0; settleT = setTimeout(check, 140); }
+        function check() {
+          if (touching || raf) return;
+          if (Math.abs(scrollY - lastY) > 0.5) { lastY = scrollY; still = 0; settleT = setTimeout(check, 140); return; }
+          if (++still < 2) { settleT = setTimeout(check, 140); return; }
+          settle();
+        }
         addEventListener("scroll", function () { if (!auto) arm(); }, { passive: true });
         function settle() {
           if (touching || raf || !window.xSpots) return;
