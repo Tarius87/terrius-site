@@ -763,6 +763,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       .x-far { position: absolute; left: 0; top: 0; z-index: 0; height: 100%; display: flex; will-change: transform, opacity; }
       .x-far img { height: 100%; width: auto; max-width: none; flex: none; }
       .x-far img + img { transform: scaleX(-1); }
+      .x-far::before { content: ""; position: absolute; right: 100%; top: 0; height: 100%; aspect-ratio: 1376 / 768; background: url(nd_skyline.jpg) center / cover no-repeat; transform: scaleX(-1); }
       .x-track { position: absolute; inset: 0; z-index: 1; display: flex; will-change: transform; }
       /* neighbours overlap by their soft edges so the photos cross-fade instead of meeting at a line */
       .x-store { position: relative; flex: none; height: 100%; aspect-ratio: var(--ar); container-type: inline-size; margin-left: calc(var(--ar) * 100svh * -.17); --neon: #fff; --glow: #fff; --accent: #fff; --dot: var(--accent); --dim: #8a8794; --lit: #fff; }
@@ -904,6 +905,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         .x-stage > .x-vig { display: none; }
         .x-far { height: 100svh; width: 100%; overflow: hidden; justify-content: center; opacity: 1 !important; transform: none !important; }
         .x-far img + img { display: none; }
+        .x-far::before { display: none; }
         .x-hero__shade { bottom: auto; height: 100svh; opacity: 1 !important; }
         .x-hero { position: relative; inset: auto; min-height: 100svh; opacity: 1 !important; transform: none !important; visibility: visible !important; }
         .x-track { position: relative; flex-direction: column; padding: 0; transform: none !important; }
@@ -1391,7 +1393,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           });
           total = y;
           var img0 = far.firstElementChild.offsetWidth;
-          s0 = Math.max(0, img0 / 2 - vw / 2);
+          s0 = far.offsetHeight * 0.8939 - vw / 2;
           factor = Math.max(0, Math.min(0.25, (far.offsetWidth - vw - s0) / Math.max(1, cams[cams.length - 1] - camS)));
           drive.style.height = Math.round(vh + total) + "px";
         }
