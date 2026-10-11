@@ -1380,14 +1380,14 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           // start with TriviSpar's soft edge already inside the frame on the right
           camS = stores[0].offsetLeft + vw * 0.5 - vw * 0.72;
           segs = []; spots = [];
-          var y = 0, L = vh * 0.75;
+          var y = 0, L = vh * 0.55;
           segs.push({ y0: y, len: L, a: camS, b: cams[0], k: 0, intro: true }); y += L;
           cams.forEach(function (c, k) {
-            L = vh * (k === cams.length - 1 ? 0.4 : 0.3);
+            L = vh * (k === cams.length - 1 ? 0.3 : 0.22);
             spots[k] = y + L / 2;
             segs.push({ y0: y, len: L, a: c, b: c, k: k }); y += L;
             if (k < cams.length - 1) {
-              L = Math.max(vh * 0.5, (cams[k + 1] - c) * 0.38);
+              L = Math.min(vh * 0.6, Math.max(vh * 0.35, (cams[k + 1] - c) * 0.25));
               segs.push({ y0: y, len: L, a: c, b: cams[k + 1], k: k, next: k + 1 }); y += L;
             }
           });
@@ -1409,7 +1409,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           var top = drive.getBoundingClientRect().top,
             yT = Math.min(total, Math.max(0, -top));
           if (ys < 0 || Math.abs(yT - ys) > vh * 3) ys = yT;
-          else ys += (yT - ys) * 0.2;
+          else ys += (yT - ys) * 0.38;
           if (Math.abs(yT - ys) < 0.4) ys = yT; else req();
           var y = ys, seg = segs[segs.length - 1];
           for (var n = 0; n < segs.length; n++) { if (y < segs[n].y0 + segs[n].len) { seg = segs[n]; break; } }
@@ -1493,23 +1493,39 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         addEventListener("touchcancel", function () { touching = false; arm(); }, { passive: true });
         // wait until iOS momentum has fully stopped before snapping, so the snap never fights the finger's fling
         var lastY = -1, still = 0;
-        function arm() { clearTimeout(settleT); lastY = scrollY; still = 0; settleT = setTimeout(check, 140); }
+        function arm() { clearTimeout(settleT); lastY = scrollY; still = 0; settleT = setTimeout(check, 90); }
         function check() {
           if (touching || raf) return;
-          if (Math.abs(scrollY - lastY) > 0.5) { lastY = scrollY; still = 0; settleT = setTimeout(check, 140); return; }
-          if (++still < 2) { settleT = setTimeout(check, 140); return; }
+          if (Math.abs(scrollY - lastY) > 0.5) { lastY = scrollY; still = 0; settleT = setTimeout(check, 90); return; }
+          if (++still < 2) { settleT = setTimeout(check, 90); return; }
           settle();
         }
-        addEventListener("scroll", function () { if (!auto) arm(); }, { passive: true });
+        var prevY = scrollY, dir = 1;
+        addEventListener("scroll", function () { var yy = scrollY; if (Math.abs(yy - prevY) > 1) dir = yy > prevY ? 1 : -1; prevY = yy; if (!auto) arm(); }, { passive: true });
         function settle() {
           if (touching || raf || !window.xSpots) return;
           var S = window.xSpots(); if (!S) return;
-          var y = scrollY, intro = S.list[0];
-          if (y < intro - innerHeight * 0.35 || y > S.end) return;
-          var best = null, bd = 1e9;
-          S.list.forEach(function (p) { var dd = Math.abs(p - y); if (dd < bd) { bd = dd; best = p; } });
-          if (best === null || bd < 4 || bd > innerHeight * 1.2) return;
-          glide(best, Math.min(700, 260 + bd / innerHeight * 500));
+          var y = scrollY, L = S.list, intro = L[0], to = null;
+          if (y > S.end + 2) return;
+          if (y < intro) {
+            if (y <= S.start + 2) return;
+            to = dir > 0 ? intro : S.start;
+          } else if (y >= L[L.length - 1]) {
+            to = L[L.length - 1];
+            if (y > to + innerHeight * 0.25) return;
+          } else {
+            for (var i = 0; i < L.length - 1; i++) {
+              if (y >= L[i] && y < L[i + 1]) {
+                var f = (y - L[i]) / (L[i + 1] - L[i]);
+                to = dir > 0 ? (f > 0.2 ? L[i + 1] : L[i]) : (f < 0.8 ? L[i] : L[i + 1]);
+                break;
+              }
+            }
+          }
+          if (to === null) return;
+          var bd = Math.abs(to - y);
+          if (bd < 3) return;
+          glide(to, Math.min(520, 220 + bd / innerHeight * 320));
         }
         var home = document.querySelector(".x-home"), homeOn = false;
         if (home) {
