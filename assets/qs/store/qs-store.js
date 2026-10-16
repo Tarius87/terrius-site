@@ -19,7 +19,7 @@
         { id: 'seal-crew-burgundy', x: 37.6, y: 60.5, w: 7, hook: 1 }, { id: 'wordmark-cuff-beanie-white', x: 28.3, y: 46.6, w: 3.6, b: 1, ry: 26 },
         { id: 'embroidered-qs-hoodie-burgundy', x: 62.3, y: 60.5, w: 7, hook: 1 }, { id: 'qs-snapback-burgundy', x: 71.6, y: 46.7, w: 4.6, b: 1, ry: -24 },
         { id: 'scattered-monogram-hoodie-white', x: 80, y: 62.5, w: 8.5, hook: 1, ry: -16 }, { id: 'maison-monogram-tee-black', x: 77.5, y: 44.6, w: 6, hook: 1, ry: -26, tag: 0 }],
-      deco: function (p) { p.appendChild(el('qss-lk2 qss-locked', { left: '46.7%', top: '42.8%', width: '6.6%', height: '12%' }, '<span class="qss-lk">&#128274;</span><b>Next drop</b><span>Soon</span>')); },
+      deco: function (p) { p.appendChild(el('qss-lk2 qss-locked', { left: '46.7%', top: '42.8%', width: '6.6%', height: '12%' }, '<span class="qss-lk">&#128274;</span><b>Next drop</b><span>Nov 15</span>')); },
       arrows: [{ to: 'lp', x: 30, y: 82, g: '&#8598;', l: 'Loud &amp; Proud aisle' }, { to: 'dn', x: 70, y: 82, g: '&#8599;', l: 'Discreet &amp; Neat aisle', lt: 1 }] },
     lp: { img: 'int-aisle', n: 'Loud & Proud aisle', k: 'Full QUALITY \u2022 STONER wordmark', z: 1, fx: .5, fy: .5, map: [25, 50],
       items: [
