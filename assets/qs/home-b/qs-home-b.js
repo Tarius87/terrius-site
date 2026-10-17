@@ -70,6 +70,24 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qsa-rule{width:28px;height:1px;background:#6E0B22;margin:18px auto 0}',
 '.qsa-btn{display:inline-block;margin-top:26px;border:1px solid #141414;font-size:13px;letter-spacing:.04em;line-height:1;padding:12px 20px;border-radius:4px;color:#141414!important}',
 '.qsa-btn:hover{background:#141414;color:#F4F3F0!important}',
+/* Winter Atelier promo band (Oct 17 2026, Justin 17:08: right under the hero pair, above the grid). Ice band, navy spaced caps,
+   blue-S QS mark (img/w/qs-bluemark-k.webp = the 360 winter wall's mark, built from collections/winter-atelier/assets/bqs.png + bqs-dot.png),
+   the five preview pieces of the 360 winter wall (not links; products hidden until Nov 15), one link -> /pages/walk-the-store#w=all.
+   AFTER NOV 15 LAUNCH: change copy/link to shop the collection. */
+'.qsa-wa{margin-top:48px;background:linear-gradient(180deg,#e1e8f2 0,#D6DFEC 55%,#ccd6e5 100%);box-shadow:inset 0 1px 0 #1B2236;color:#1B2236;text-align:center;padding:34px 18px 32px}',
+'.qsa-wa-in{max-width:1180px;margin:0 auto}',
+'.qsa-wa-t{display:flex;flex-direction:column;align-items:center}',
+'.qsa-wa-m{width:auto;height:52px}',
+'.qsa-wa-k{margin-top:16px;font-size:12px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;padding-left:.34em;color:#1B2236!important}',
+'.qsa-wa-h{margin-top:10px;font-size:23px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;padding-left:.26em;line-height:1.25;color:#1B2236!important}',
+'.qsa-wa-r{width:28px;height:1px;background:#1B2236;margin:14px auto 0}',
+'.qsa-wa-d{margin-top:14px;font-size:13px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;padding-left:.3em;color:#1B2236!important}',
+'.qsa-wa-p{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:26px auto 0;max-width:560px;border-bottom:1px solid rgba(27,34,54,.28);padding-bottom:10px}',
+'.qsa-wa-p>span{position:relative;display:block;height:82px}',
+'.qsa-wa-p img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 0 1px rgba(27,34,54,.25)) drop-shadow(0 8px 9px rgba(27,34,54,.22))}',
+'.qsa-wa-p .bn img{height:74%;top:26%}',
+'.qsa-wa-l{display:inline-block;margin-top:26px;font-size:12px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;padding:0 0 6px .26em;border-bottom:1px solid #1B2236;color:#1B2236!important}',
+'.qsa-wa-l:hover{opacity:.75}',
 /* grid */
 '.qsa-sec{padding:76px 18px 0;max-width:1240px;margin:0 auto}',
 '.qsa-sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px}',
@@ -99,6 +117,9 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 ' .qsa-half{padding:48px 20px 0}.qsa-sign{height:96px}.qsa-sign img.w{height:17px}.qsa-sign img.m{height:66px}.qsa-sign small{font-size:12px}',
 ' .qsa-rail{width:52%;margin-top:34px}.qsa-g{width:min(80%,470px)}.qsa-half .qsa-tag{margin:16px 0 44px;font-size:13px;padding:7px 13px}',
 ' .qsa-flo{height:40px}',
+' .qsa-wa{margin-top:64px;padding:56px 48px}.qsa-wa-in{display:grid;grid-template-columns:minmax(300px,380px) 1fr;grid-template-rows:auto auto;column-gap:40px;row-gap:0}.qsa-wa-t{grid-column:1;grid-row:1;align-self:end}.qsa-wa-c{grid-column:1;grid-row:2;align-self:start}.qsa-wa-p{grid-column:2;grid-row:1/3;align-self:center}',
+' .qsa-wa-m{height:72px}.qsa-wa-k{font-size:12.5px}.qsa-wa-h{font-size:30px}.qsa-wa-d{font-size:14px}.qsa-wa-l{font-size:12.5px}',
+' .qsa-wa-p{margin:0;max-width:none;gap:14px;padding-bottom:14px}.qsa-wa-p>span{height:190px}',
 ' .qsa-sec{padding:120px 48px 0}.qsa-grid{grid-template-columns:repeat(4,1fr);gap:52px 26px}',
 ' .qsa-store{margin-top:130px;padding-bottom:96px}.qsa-copy{padding:64px 22px 8px}',
 '}'
@@ -109,13 +130,20 @@ function half(g,cls,sign,img,tone,side){
   '<a class="qsa-g" href="/products/'+g[0]+'"><img src="'+I+img+'" alt="'+esc(g[3])+'" width="1028" height="937"></a>'+
   '<a href="/products/'+g[0]+'">'+tag(g,tone)+'</a></div>'}
 function card(g){return '<a class="qsa-pc" href="/products/'+g[0]+'"><div class="ph qsa-st-'+g[6]+'"><img src="'+P+g[5]+'.webp" alt="'+esc(g[3])+'" loading="lazy"></div><span class="lb">'+tag(g,g[6]==='w'?'lp':'dn')+'</span></a>'}
+/* Winter Atelier (Collection 002) preview: same five pieces as the 360 winter wall */
+var WINTER=[['winter-crest-back-tee-black','Winter Crest Back Tee — Black'],['winter-crest-crew-off-white','Winter Crest Crew — Off-White'],['frost-lined-hood-black','Frost-Lined Hood — Black'],['maison-winter-joggers-black','Maison Winter Joggers'],['wordmark-cuff-beanie-navy','Wordmark Cuff Beanie — Navy','bn']];
+var W=I.replace(/a\/$/,'w/');
+function winter(){return '<section class="qsa-wa" id="winter-atelier" aria-label="Winter Atelier, Collection 002, drops November 15"><div class="qsa-wa-in">'+
+ '<div class="qsa-wa-t"><img class="qsa-wa-m" src="'+W+'qs-bluemark-k.webp" alt="QS" width="342" height="320"><p class="qsa-wa-k">Collection 002</p><p class="qsa-wa-h">Winter Atelier</p><div class="qsa-wa-r"></div><p class="qsa-wa-d">Drops Nov 15</p></div>'+
+ '<div class="qsa-wa-p">'+WINTER.map(function(w){return '<span'+(w[2]?' class="'+w[2]+'"':'')+'><img src="'+W+w[0]+'.webp" alt="'+esc(w[1])+'" loading="lazy"></span>'}).join('')+'</div>'+
+ '<div class="qsa-wa-c"><a class="qsa-wa-l" href="/pages/walk-the-store#w=all">Preview in the store &rarr;</a></div></div></section>'}
 var HTML='<div class="qsa" id="qs-home">'+
  '<div class="qsa-wrap"><div class="qsa-wall">'+
   half(CREW,'qsa-dn','<img class="w" src="'+I+'word-black.png" alt="Quality Stoner">','crew-seal-hang-dn.webp','lp','Loud &amp; Proud')+
   half(TEE,'qsa-lp','<img class="m" src="'+I+'qs-mono-white.png" alt="QS">','tee-dn-hang.webp','dn','Discreet &amp; Neat')+
  '</div><div class="qsa-floor"><div class="qsa-flo r"></div><div class="qsa-flo l"></div></div></div>'+
  '<div class="qsa-copy"><p class="qsa-new">New</p><div class="qsa-rule"></div>'+
-  '<a class="qsa-btn" href="/collections/all">Shop Now</a></div>'+
+  '<a class="qsa-btn" href="/collections/all">Shop Now</a></div>'+winter()+
  '<section class="qsa-sec"><div class="qsa-sh"><span class="qsa-k">The pieces</span><a href="/collections/all">View all</a></div><div class="qsa-grid">'+GRID.map(card).join('')+'</div></section>'+
  '<a class="qsa-store" href="/pages/walk-the-store" aria-label="The store: walk the 360 shop"><span class="qsa-sw"><span class="qsa-st-w"><img src="'+P+'wordmark-lattice-backpack-white.webp" alt="" loading="lazy"></span><span class="qsa-st-d"><img src="'+P+'damask-crossbody-burgundy.webp" alt="" loading="lazy"></span></span><span class="qsa-sl"><b>The store &nbsp;&rarr;</b></span></a>'+
  '</div>';
