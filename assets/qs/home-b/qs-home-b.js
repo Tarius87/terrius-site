@@ -1,7 +1,8 @@
 /* Quality Stoner home — concept B "dark editorial" (Fourthwall Custom HTML section 246a3a20), Oct 17 2026.
    Section HTML is one line: <script src="https://cdn.jsdelivr.net/gh/Tarius87/terrius-site@<commit>/assets/qs/home-b/qs-home-b.js"></script>
-   Renders in place of the script tag: hero (spaced wordmark, Signet set on hangers, NEW / THE SIGNET SET, burgundy rule,
+   Renders in place of the script tag: hero (spaced wordmark, the black set on hangers, NEW / THE BLACK SET, burgundy rule,
    outline Shop Now) + two charcoal studio photos -> calm grid (name + price) -> one 360 text link.
+   Oct 17 2026: hero set = Locket Hoodie — Black + Bookmark Joggers — Black (burgundy Signet pair retired: blank dyes didn't match).
    Restyles on the home page only (html.qsb-on): theme header (black bar, spaced caps, white monogram), newsletter section
    acebb3b4 (minimal underline form; still the theme's own form -> Kit), theme footer (dark). Hides the floating #qs-sw pill
    and the retired 863702ee section. Prices/names refresh from each product page's JSON-LD at runtime.
@@ -13,12 +14,12 @@ var S863='.custom-html--fw-section-custom-html-863702ee-37d1-48a0-8c17-b9a8c0e04
 var NL='[data-section-id="fw-section-newsletter-acebb3b4-0bfc-43c5-81bc-5509c22e59a5"]';
 /* grid: [slug, short name, fallback price, full name] — order alternates colour on 2-col phone and 4-col desktop */
 var GRID=[
- ['embroidered-qs-hoodie-burgundy','Signet Hoodie','58','Signet Hoodie — Burgundy'],
+ ['seal-crew-burgundy','Wax Seal Crew','49','Wax Seal Crew — Burgundy'],
  ['heavyweight-tee-black','Calling Card Tee','29','Calling Card Tee — Black'],
  ['wordmark-leg-joggers-black','Bookmark Joggers','45','Bookmark Joggers — Black'],
  ['wordmark-hoodie-white','Masthead Hoodie','58','Masthead Hoodie — White'],
  ['embroidered-qs-crew-black','Signet Crew','49','Signet Crew — Black'],
- ['embroidered-qs-joggers-burgundy','Signet Joggers','45','Signet Joggers — Burgundy'],
+ ['scattered-monogram-hoodie-white','Pressed Flower Hoodie','58','Pressed Flower Hoodie — White'],
  ['damask-lined-hoodie-black','Locket Hoodie','58','Locket Hoodie — Black'],
  ['wordmark-crew-white','Masthead Crew','49','Masthead Crew — White']];
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
@@ -59,7 +60,7 @@ H+'aside[data-drawer="mobile-menu"] .mobile-menu__section{border-color:#262626!i
 '.qsb img{display:block;max-width:100%;border:0}',
 '.qsb p,.qsb span{color:inherit}',
 '.qsb-hero{display:grid;gap:8px;padding:0 8px}',
-'.qsb-pan{background:#151515;display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 22px 44px}',
+'.qsb-pan{background:#151515 radial-gradient(85% 48% at 50% 46%,#262627 0%,#1b1b1c 55%,#151515 100%);display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 22px 44px}',
 '.qsb-wm{width:min(250px,70%);height:auto}',
 '.qsb-hl{display:block;width:100%;max-width:440px}',
 '.qsb-hang{width:100%;max-width:440px;height:auto;margin:34px 0 26px}',
@@ -136,12 +137,12 @@ function card(g){return '<a class="qsb-pc" data-s="'+g[0]+'" href="/products/'+g
 var HTML='<div class="qsb" id="qs-home">'+
  '<section class="qsb-hero">'+
   '<div class="qsb-pan"><img class="qsb-wm" src="'+I+'word-white.png" alt="Quality Stoner" width="1400" height="72">'+
-  '<a href="/products/embroidered-qs-hoodie-burgundy" class="qsb-hl"><img class="qsb-hang" src="'+I+'hang.webp" alt="Signet Hoodie and Signet Joggers in burgundy, on wooden hangers" width="1100" height="892"></a>'+
-  '<p class="qsb-new">New</p><p class="qsb-col">The Signet Set<br>Hoodie &amp; Joggers</p><div class="qsb-rule"></div>'+
-  '<a class="qsb-btn" href="/products/embroidered-qs-hoodie-burgundy">Shop Now</a></div>'+
+  '<a href="/products/damask-lined-hoodie-black" class="qsb-hl"><img class="qsb-hang" src="'+I+'hang.webp" alt="Locket Hoodie and Bookmark Joggers in black, on wooden hangers" width="1186" height="1062"></a>'+
+  '<p class="qsb-new">New</p><p class="qsb-col">The Black Set<br>Locket Hoodie &amp; Bookmark Joggers</p><div class="qsb-rule"></div>'+
+  '<a class="qsb-btn" href="/products/damask-lined-hoodie-black">Shop Now</a></div>'+
   '<div class="qsb-ph2">'+
-   '<a href="/collections/hoodies-crews" aria-label="Hoodies &amp; Crews"><picture><source media="(min-width:900px)" srcset="'+I+'stack-w.webp"><img src="'+I+'stack.webp" alt="Folded hoodies, Signet Hoodie in burgundy on top" width="1100" height="1000"></picture></a>'+
-   '<a href="/products/embroidered-qs-joggers-burgundy" aria-label="Signet Joggers — Burgundy"><picture><source media="(min-width:900px)" srcset="'+I+'lay-w.webp"><img src="'+I+'lay.webp" alt="Signet Joggers in burgundy" width="1100" height="1000"></picture></a>'+
+   '<a href="/collections/hoodies-crews" aria-label="Hoodies &amp; Crews"><picture><source media="(min-width:900px)" srcset="'+I+'stack-w.webp"><img src="'+I+'stack.webp" alt="Folded black hoodies and crews, Locket Hoodie on top" width="1100" height="1000"></picture></a>'+
+   '<a href="/products/wordmark-leg-joggers-black" aria-label="Bookmark Joggers — Black"><picture><source media="(min-width:900px)" srcset="'+I+'lay-w.webp"><img src="'+I+'lay.webp" alt="Bookmark Joggers in black" width="1100" height="1000"></picture></a>'+
   '</div></section>'+
  '<section class="qsb-sec"><div class="qsb-sh"><span class="qsb-k">The pieces</span><a href="/collections/all">View all</a></div><div class="qsb-grid">'+GRID.map(card).join('')+'</div></section>'+
  '<a class="qsb-walk" href="/pages/walk-the-store"><span>Look around the 360&deg; store &nbsp;&rarr;</span></a>'+
