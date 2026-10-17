@@ -1,5 +1,5 @@
 /* Quality Stoner collection pages (qs-col.js)
-   - dark brand cards for the product grid (#0b0a0a page, charcoal stage, off-white #F4F3F0 text, burgundy #6E0B22 accents); no cream
+   - Oct 17 2026: LIGHT page (home A look): off-white #F4F3F0, charcoal / burgundy / light-grey wall panels by garment tone
    - product photos shown as transparent cutouts on the dark stage: pre-made smooth cutouts (./cut/, mapped by product
      slug + photo fingerprint) for every current white-studio photo; otherwise a live cutout with a smoothed contour.
      White/light garments never sit on a white card; only a dark garment whose live cut fails the edge check gets a card
@@ -8,34 +8,46 @@
 (function () {
   if (window.__qsCol) return; window.__qsCol = 1;
   if (!/\/collections\//.test(location.pathname)) return;
+  /* Oct 17 2026 cohesive flow: light page like the home (concept A). Off-white #F4F3F0 page, product cutouts on flat wall panels:
+     white/light/grey garments on charcoal (some on burgundy #6E0B22), dark garments on a light grey panel (white never on white).
+     Spaced-caps Jost, name + price only; no glows, pills, badges, rounded cards or hover images. */
+  var SRC0 = (document.currentScript && document.currentScript.src) || ((document.querySelector('script[src*="qs-col.js"]') || {}).src) || '';
+  var FNT = SRC0 ? SRC0.replace(/collections\/qs-col\.js.*$/, 'home-b/img/a/f/') : '';
+  var F = 'QSJ,Jost,"Helvetica Neue",Helvetica,Arial,sans-serif';
   var css = [
-    'html.qsc-on .page__main{background:#0b0a0a}',
-    '.qsc-b360{display:inline-block;margin:0 0 14px;font-size:11px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;line-height:1.4;color:rgba(244,243,240,.66)!important;text-decoration:none!important}',
-    '.qsc-b360:hover{color:#F4F3F0!important}',
-    'html.qsc-on .collection-template__header h1{color:#F4F3F0}',
-    'html.qsc-on .collection-template__header h1:after{content:"";display:block;width:38px;height:3px;border-radius:3px;background:#6E0B22;margin-top:12px}',
-    'html.qsc-on .collection-template .empty,html.qsc-on .collection-template p{color:rgba(244,243,240,.75)}',
-    'html.qsc-on .product-tile .tile{display:block;background:#151313!important;border:1px solid rgba(244,243,240,.08);border-radius:18px;padding:8px;overflow:hidden;transition:border-color .2s ease}',
-    'html.qsc-on .product-tile .tile:hover{border-color:rgba(160,24,56,.85)}',
-    'html.qsc-on .product-tile .tile__image{border-radius:12px;overflow:hidden;position:relative;background:radial-gradient(120% 90% at 50% 40%,#2b2627 0%,#1a1818 55%,#0e0d0d 100%)!important}',
-    'html.qsc-on .product-tile .tile__image:before{content:"";position:absolute;left:50%;top:46%;width:80%;height:64%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(110,11,34,.34),rgba(110,11,34,0));pointer-events:none;z-index:0}',
+    FNT ? '@font-face{font-family:QSJ;src:url(' + FNT + 'jost_n4.woff2) format("woff2");font-weight:400;font-display:swap}' : '',
+    FNT ? '@font-face{font-family:QSJ;src:url(' + FNT + 'jost_n7.woff2) format("woff2");font-weight:700;font-display:swap}' : '',
+    'html.qsc-on .page__main{background:#F4F3F0}',
+    'html.qsc-on .collection-template{font-family:' + F + ';color:#141414}',
+    '.qsc-b360{display:inline-block;margin:0 0 18px;font-family:' + F + ';font-size:11px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;line-height:1.4;color:#6a6a6a!important;text-decoration:none!important}',
+    '.qsc-b360:hover{color:#141414!important}',
+    'html.qsc-on .collection-template__header h1{font-family:' + F + ';font-size:15px;font-weight:400;letter-spacing:.34em;text-transform:uppercase;color:#141414;line-height:1.3}',
+    'html.qsc-on .collection-template__header h1:after{content:"";display:block;width:28px;height:1px;background:#6E0B22;margin-top:16px}',
+    'html.qsc-on .collection-template .empty,html.qsc-on .collection-template p{color:#4a4a4a}',
+    'html.qsc-on .product-tile .tile{display:block;background:transparent!important;border:0;border-radius:0;padding:0;overflow:visible}',
+    'html.qsc-on .product-tile .tile__image{border-radius:0;overflow:hidden;position:relative;background:#E7E5E1!important}',
+    'html.qsc-on .product-tile .tile__image.qsc-pk{background:linear-gradient(180deg,#3d3936 0,#35312f 60%,#2f2c2a 100%)!important}',
+    'html.qsc-on .product-tile .tile__image.qsc-pb{background:linear-gradient(180deg,#7a1129 0,#6E0B22 60%,#600a1e 100%)!important}',
+    'html.qsc-on .product-tile .tile__image.qsc-pl{background:radial-gradient(ellipse 80% 70% at 50% 42%,#EEECE8 0,#E4E2DD 60%,#D9D6CF 100%)!important}',
     'html.qsc-on .product-tile .tile__image .image,html.qsc-on .product-tile .image__object{background:transparent!important;border-radius:0}',
     'html.qsc-on .product-tile .image__object{z-index:1}',
-    'html.qsc-on .product-tile .image__badges{z-index:2}',
-    'html.qsc-on .product-tile .image__badges>*{background:#6E0B22!important;color:#F4F3F0!important;border-radius:99px!important}',
-    'html.qsc-on .product-tile img.tile__item{mix-blend-mode:normal!important;width:90%;height:90%}',
+    'html.qsc-on .product-tile .image__badges{display:none!important}',
+    'html.qsc-on .product-tile .tile__options{display:none!important}',
+    'html.qsc-on .product-tile img.tile__item{mix-blend-mode:normal!important;width:80%;height:80%;opacity:1!important}',
+    'html.qsc-on .product-tile img.tile__item--2{display:none!important}',
     'html.qsc-on .product-tile img[data-qsc="wait"]{visibility:hidden}',
-    'html.qsc-on .product-tile img[data-qsc="card"]{width:86%;height:86%;object-fit:cover;background:#fff;border-radius:10px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 10px 26px rgba(0,0,0,.5)}',
-    'html.qsc-on .product-tile img.qsp-dark{filter:drop-shadow(0 0 1.2px rgba(255,255,255,.3)) drop-shadow(0 0 18px rgba(150,20,48,.5))}',
-    'html.qsc-on .product-tile img.qsp-light,html.qsc-on .product-tile img.qsp-mid{filter:drop-shadow(0 10px 18px rgba(0,0,0,.55))}',
-    'html.qsc-on .product-tile .tile__description{padding:10px 6px 6px!important}',
-    'html.qsc-on .product-tile .tile__heading,html.qsc-on .product-tile .tile:hover .tile__heading{color:#F4F3F0!important}',
-    'html.qsc-on .product-tile .tile__prices{opacity:1!important}',
-    'html.qsc-on .product-tile .tile__price{color:rgba(244,243,240,.72)!important}',
-    'html.qsc-on .product-tile .tile__price--offer{color:rgba(244,243,240,.45)!important}',
-    'html.qsc-on .pagination a,html.qsc-on .pagination span{color:#F4F3F0}',
+    'html.qsc-on .product-tile img[data-qsc="card"]{width:80%;height:80%;object-fit:contain;mix-blend-mode:multiply!important}',
+    'html.qsc-on .product-tile img.qsp-dark,html.qsc-on .product-tile img.qsp-mid,html.qsc-on .product-tile img.qsp-light{filter:drop-shadow(0 0 1px rgba(0,0,0,.25)) drop-shadow(0 12px 14px rgba(0,0,0,.26))}',
+    'html.qsc-on .product-tile .qsc-pk img.qsp-light,html.qsc-on .product-tile .qsc-pk img.qsp-mid,html.qsc-on .product-tile .qsc-pb img.qsp-light,html.qsc-on .product-tile .qsc-pb img.qsp-mid{filter:drop-shadow(0 0 1px rgba(0,0,0,.35)) drop-shadow(0 16px 18px rgba(0,0,0,.4))}',
+    'html.qsc-on .product-tile .tile__description{padding:14px 2px 4px!important;text-align:left}',
+    'html.qsc-on .product-tile .tile__heading,html.qsc-on .product-tile .tile:hover .tile__heading{font-family:' + F + '!important;font-size:11px!important;font-weight:400!important;letter-spacing:.22em!important;text-transform:uppercase!important;line-height:1.6!important;color:#141414!important;text-decoration:none!important}',
+    'html.qsc-on .product-tile .tile__prices{opacity:1!important;margin-top:4px;justify-content:flex-start}',
+    'html.qsc-on .product-tile .tile__price{font-family:' + F + '!important;font-size:11px!important;font-weight:400!important;letter-spacing:.14em!important;color:#6a6a6a!important}',
+    'html.qsc-on .product-tile .tile__price--offer{color:#9a9a9a!important}',
+    'html.qsc-on .pagination a,html.qsc-on .pagination span{color:#141414;font-family:' + F + ';letter-spacing:.2em}',
     'html.qsc-on #qs-sw{display:none!important}',
-    '@media (max-width:749px){html.qsc-on .footer{padding-bottom:16px!important}html.qsc-on .product-tile .tile{border-radius:16px;padding:6px}html.qsc-on .product-tile .tile__description{padding:8px 4px 4px!important}}'
+    '@media (min-width:750px){html.qsc-on .collection-template__header h1{font-size:17px}html.qsc-on .product-tile .tile__heading{font-size:12px!important}}',
+    '@media (max-width:749px){html.qsc-on .footer{padding-bottom:16px!important}}'
   ].join('\n');
   var st = document.createElement('style'); st.id = 'qs-col-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
@@ -45,7 +57,7 @@
      slug -> [photo fingerprint (last path segment of the Fourthwall image url), file in ./cut/, tone].
      Used when the served photo is opaque (Fourthwall's own transparent file always wins when the browser gets one),
      and only while the tile still shows that exact photo; a new photo falls through to the live cut. */
-  var CUT = {"heavyweight-tee-black":["7kgkxampQrY.jpg","heavyweight-tee-black.webp","dark"],"qs-cuff-beanie-white":["ne9-nbnonys.jpg","qs-cuff-beanie-white.webp","light"],"wordmark-crew-white":["W3soqbI4REY.jpg","wordmark-crew-white.webp","light"],"qs-lp-ts01-classic-tee-white":["ZsHIKw.jpg","qs-lp-ts01-classic-tee-white.webp","light"],"wordmark-leg-joggers-black":["1_xao6hV3Qg.jpg","wordmark-leg-joggers-black.webp","dark"],"qs-cuff-beanie-burgundy":["G9rMxmqPVfE.jpg","qs-cuff-beanie-burgundy.webp","dark"],"lockup-back-tee-off-white":["AaLsqEvzfqk.jpg","lockup-back-tee-off-white.webp","light"],"seal-crew-burgundy":["ae7PpHKZOAY.jpg","seal-crew-burgundy.webp","dark"],"letterpress-crew-grey":["Jhoc1o64QFg.jpg","letterpress-crew-grey.webp","light"],"embroidered-qs-crew-black":["bBWFmOWwEd0.jpg","embroidered-qs-crew-black.webp","dark"],"embroidered-qs-joggers-burgundy":["UegfTH7mWhw.jpg","embroidered-qs-joggers-burgundy.webp","dark"],"wordmark-hoodie-white":["FUGmRtM2gaY.jpg","wordmark-hoodie-white.webp","light"],"embroidered-qs-hoodie-burgundy":["joruaWIlVRU.jpg","embroidered-qs-hoodie-burgundy.webp","mid"],"embroidered-qs-tee-burgundy":["YOZlrF4MgfU.jpg","embroidered-qs-tee-burgundy.webp","mid"],"qs-snapback-black":["8orogpQVDQs.jpg","qs-snapback-black.webp","dark"],"qs-snapback-burgundy":["jos61NomFms.jpg","qs-snapback-burgundy.webp","dark"],"wordmark-snapback-black":["uswplVDnUEU.jpg","wordmark-snapback-black.webp","dark"],"wordmark-cuff-beanie-white":["bhYtA9X-Gvs.jpg","wordmark-cuff-beanie-white.webp","light"],"wordmark-cuff-beanie-black":["Y9Pye7Yld2E.jpg","wordmark-cuff-beanie-black.webp","dark"],"lockup-hoodie-black":["5G8h6PUrby8.jpg","lockup-hoodie-black.webp","dark"]};
+  var CUT = {"heavyweight-tee-black":["7kgkxampQrY.jpg","heavyweight-tee-black.webp","dark"],"qs-cuff-beanie-white":["ne9-nbnonys.jpg","qs-cuff-beanie-white.webp","light"],"wordmark-crew-white":["W3soqbI4REY.jpg","wordmark-crew-white.webp","light"],"qs-lp-ts01-classic-tee-white":["ZsHIKw.jpg","qs-lp-ts01-classic-tee-white.webp","light"],"wordmark-leg-joggers-black":["1_xao6hV3Qg.jpg","wordmark-leg-joggers-black.webp","dark"],"qs-cuff-beanie-burgundy":["G9rMxmqPVfE.jpg","qs-cuff-beanie-burgundy.webp","dark"],"lockup-back-tee-off-white":["AaLsqEvzfqk.jpg","lockup-back-tee-off-white.webp","light"],"seal-crew-burgundy":["ae7PpHKZOAY.jpg","seal-crew-burgundy.webp","dark"],"letterpress-crew-grey":["Jhoc1o64QFg.jpg","letterpress-crew-grey.webp","light"],"embroidered-qs-crew-black":["bBWFmOWwEd0.jpg","embroidered-qs-crew-black.webp","dark"],"embroidered-qs-joggers-burgundy":["UegfTH7mWhw.jpg","embroidered-qs-joggers-burgundy.webp","dark"],"wordmark-hoodie-white":["FUGmRtM2gaY.jpg","wordmark-hoodie-white.webp","light"],"embroidered-qs-hoodie-burgundy":["joruaWIlVRU.jpg","embroidered-qs-hoodie-burgundy.webp","dark"],"embroidered-qs-tee-burgundy":["YOZlrF4MgfU.jpg","embroidered-qs-tee-burgundy.webp","dark"],"qs-snapback-black":["8orogpQVDQs.jpg","qs-snapback-black.webp","dark"],"qs-snapback-burgundy":["jos61NomFms.jpg","qs-snapback-burgundy.webp","dark"],"wordmark-snapback-black":["uswplVDnUEU.jpg","wordmark-snapback-black.webp","dark"],"wordmark-cuff-beanie-white":["bhYtA9X-Gvs.jpg","wordmark-cuff-beanie-white.webp","light"],"wordmark-cuff-beanie-black":["Y9Pye7Yld2E.jpg","wordmark-cuff-beanie-black.webp","dark"],"lockup-hoodie-black":["5G8h6PUrby8.jpg","lockup-hoodie-black.webp","dark"]};
   var BASE = (function () {
     var s = document.currentScript && document.currentScript.src;
     if (!s) { var ss = document.querySelectorAll('script[src*="qs-col.js"]'); s = ss.length ? ss[ss.length - 1].src : ''; }
@@ -222,13 +234,14 @@
     return blobOf(c).then(function (u) { return u ? { src: u, cls: cls } : { src: null, cls: 'card' }; });
   }
   function tone(p, n) { // mean luminance of the garment pixels
-    var sum = 0, cnt = 0;
+    var sum = 0, cnt = 0, sr = 0, sg = 0;
     for (var i = 0; i < p.length; i += 4 * 53) {
       if (p[i + 3] < 200) continue;
-      sum += 0.2126 * p[i] + 0.7152 * p[i + 1] + 0.0722 * p[i + 2]; cnt++;
+      sum += 0.2126 * p[i] + 0.7152 * p[i + 1] + 0.0722 * p[i + 2]; sr += p[i]; sg += p[i + 1]; cnt++;
     }
     if (!cnt) return 'light';
-    var v = sum / cnt; return v < 62 ? 'dark' : v < 165 ? 'mid' : 'light';
+    var v = sum / cnt; if (v < 165 && sr > 1.5 * sg) return 'dark'; /* burgundy reads as dark: light panel, never the burgundy one */
+    return v < 62 ? 'dark' : v < 165 ? 'mid' : 'light';
   }
 
   /* ---------- tiles ---------- */
@@ -239,9 +252,17 @@
       run(img).then(function () { active--; pump(); }, function () { active--; pump(); });
     }
   }
+  /* wall panel by garment tone (Oct 17 2026): light / grey garments -> charcoal (one per category, listed in BURG, -> burgundy), dark garments and fallback photos -> light grey. White never sits on white. */
+  function slugOf(img) { var a = img.closest && img.closest('a[href*="/products/"]'); var m = a && /\/products\/([^/?#]+)/.exec(a.getAttribute('href') || ''); return m ? m[1] : ''; }
+  var BURG = ['scattered-monogram-hoodie-white', 'wordmark-lattice-backpack-white']; // one light piece per category on burgundy (same list in qs-pdp.js)
+  function panel(img, cls) {
+    var t = img.closest && img.closest('.tile__image'); if (!t) return;
+    var p = cls === 'light' || cls === 'mid' ? (BURG.indexOf(slugOf(img)) > -1 ? 'qsc-pb' : 'qsc-pk') : 'qsc-pl';
+    t.classList.remove('qsc-pk', 'qsc-pb', 'qsc-pl'); t.classList.add(p);
+  }
   function run(img) {
     var url = img.dataset.qscUrl;
-    var t = setTimeout(function () { if (img.dataset.qsc === 'wait') img.dataset.qsc = 'card'; }, 7000);
+    var t = setTimeout(function () { if (img.dataset.qsc === 'wait') { img.dataset.qsc = 'card'; panel(img, 'card'); } }, 7000);
     var pm = premade(img, url);
     var job = !pm ? analyse(url) : analyse(url, 1).then(function (r0) {
       if (r0 && !r0.opaque) return r0; // already transparent (or unreadable -> card)
@@ -254,11 +275,11 @@
       if (img.dataset.qscUrl !== url) return;
       if (!r || r.cls === 'card') {
         if (r && r.src) { img.removeAttribute('srcset'); img.dataset.qscOrig = url; img.dataset.qscUrl = r.src; img.src = r.src; }
-        img.dataset.qsc = 'card'; return;
+        img.dataset.qsc = 'card'; panel(img, 'card'); return;
       }
       img.classList.remove('qsp-dark', 'qsp-light', 'qsp-mid'); img.classList.add('qsp-' + r.cls);
       if (r.src) { img.removeAttribute('srcset'); img.dataset.qscOrig = url; img.dataset.qscUrl = r.src; img.src = r.src; }
-      img.dataset.qsc = 'cut';
+      img.dataset.qsc = 'cut'; panel(img, r.cls);
     });
   }
   var HOVER = window.matchMedia && window.matchMedia('(hover:hover)').matches;
@@ -270,7 +291,7 @@
       if (im.dataset.qscUrl && url === im.dataset.qscUrl) continue; // done or in progress
       im.dataset.qscUrl = url; im.dataset.qsc = 'wait';
       if (im.classList.contains('tile__item--2')) {
-        if (HOVER) second.push(im); else im.dataset.qsc = 'card'; // phones never show the hover image
+        im.dataset.qsc = 'card'; // hover image hidden everywhere since Oct 17 2026 (calm grid)
       } else watch(im);
     }
     for (i = 0; i < second.length; i++) watch(second[i]);
@@ -295,7 +316,7 @@
     var ls = document.querySelectorAll('.collection-template a[href^="/products/"]:not([data-q360])');
     for (var i = 0; i < ls.length; i++) { var l = ls[i], hr = l.getAttribute('href'); l.setAttribute('data-q360', '1'); if (!/[?&]from=360/.test(hr)) l.setAttribute('href', hr + (hr.indexOf('?') > -1 ? '&' : '?') + keep); }
     if (document.getElementById('qsc-b360')) return;
-    var hd = document.querySelector('.collection-template__header'); if (!hd) return;
+    var hd = document.querySelector('.collection-template__header') || document.querySelector('.collection-template .container > *, .collection-template > *'); if (!hd) return;
     var h = '';
     var m = {}; (location.search.replace(/^\?/, '') || '').split('&').forEach(function (kv) { var q = kv.split('='); if (q[0]) m[q[0]] = decodeURIComponent(q[1] || ''); });
     var st = /^[a-z]+$/.test(m.w || '') ? m : null; if (!st) try { st = JSON.parse(sessionStorage.getItem('q3-ret') || 'null'); } catch (e) {}
@@ -306,6 +327,8 @@
   var pend = 0;
   function soon() { if (pend) return; pend = 1; (window.requestAnimationFrame || setTimeout)(function () { pend = 0; scan(); back360(); }); }
   back360(); if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', back360);
+  window.addEventListener('load', back360); window.addEventListener('pageshow', back360);
+  [300, 1200, 3000, 6000].forEach(function (t) { setTimeout(back360, t); });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
   window.addEventListener('load', scan);
   new MutationObserver(soon).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });

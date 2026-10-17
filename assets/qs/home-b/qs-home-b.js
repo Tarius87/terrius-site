@@ -20,10 +20,10 @@ var GRID=[
  ['wordmark-hoodie-white','Masthead Hoodie','58','Masthead Hoodie — White',0,'wordmark-hoodie-white','w'],
  ['embroidered-qs-crew-black','Signet Crew','49','Signet Crew — Black',0,'embroidered-qs-crew-black','d'],
  ['maison-monogram-tee-black','Cipher Tee','34.99','Cipher Tee — Black',0,'maison-monogram-tee-black','d'],
- ['wordmark-crew-white','Masthead Crew','49','Masthead Crew — White',0,'wordmark-crew-white','w'],
+ ['qs-lp-ts01-classic-tee-white','Calling Card Tee','29','Calling Card Tee — White',0,'qs-lp-ts01-classic-tee-white','w'],
  ['lockup-hoodie-black','Postscript Hoodie','58','Postscript Hoodie — Black',0,'lockup-hoodie-black','d'],
  ['wordmark-snapback-black','Masthead Snapback','34.95','Masthead Snapback — Black',0,'wordmark-snapback-black','d'],
- ['letterpress-crew-grey','First Edition Crew','49','First Edition Crew',0,'letterpress-crew-white','w'],
+ ['scattered-monogram-hoodie-white','Pressed Flower Hoodie','58','Pressed Flower Hoodie — White',0,'scattered-monogram-hoodie-white','w'],
  ['wordmark-leg-joggers-black','Bookmark Joggers','45','Bookmark Joggers — Black',0,'wordmark-leg-joggers-black','d']];
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
 function money(v){v=+v;return '$'+(v%1?v.toFixed(2):''+v)}
@@ -85,34 +85,39 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qsa-st-d{background:radial-gradient(ellipse 80% 70% at 50% 42%,#EEECE8 0,#E4E2DD 60%,#D9D6CF 100%)}',
 '.qsa-st-d img{filter:drop-shadow(0 0 1px rgba(0,0,0,.28)) drop-shadow(0 12px 14px rgba(0,0,0,.26))}',
 /* 360 band */
-'.qsa-walk{display:block;margin:90px 0 0;padding-bottom:72px}',
-'.qsa-walk img{width:100%;height:auto;aspect-ratio:1376/678;object-fit:cover}',
-'.qsa-walk span{display:block;text-align:center;padding:22px 18px 0;font-size:10.5px;letter-spacing:.32em;text-transform:uppercase}',
-'.qsa-walk span b{font-weight:400;border-bottom:1px solid #9a9a9a;padding-bottom:6px}',
+/* the one doorway into the 360 (Oct 17 2026: replaces the empty interior painting): a small split wall with two real pieces, no names */
+'.qsa-store{display:block;max-width:560px;margin:90px auto 0;padding:0 18px 72px}',
+'.qsa-sw{display:grid;grid-template-columns:1fr 1fr}',
+'.qsa-sw>span{position:relative;display:block;aspect-ratio:1/1;overflow:hidden}',
+'.qsa-sw img{position:absolute;left:20%;top:16%;width:60%;height:68%;object-fit:contain}',
+'.qsa-sw .qsa-st-w{box-shadow:inset 0 3px 0 #a3203f}',
+'.qsa-sl{display:block;text-align:center;padding:24px 0 0;font-size:10.5px;letter-spacing:.32em;text-transform:uppercase}',
+'.qsa-sl b{font-weight:400;border-bottom:1px solid #9a9a9a;padding-bottom:6px}',
+'.qsa-store:hover .qsa-sl b{border-bottom-color:#141414}',
 '@media (min-width:900px){',
 ' .qsa-wrap{max-width:1240px;margin:0 auto;padding:48px 48px 0}',
 ' .qsa-half{padding:48px 20px 0}.qsa-sign{height:96px}.qsa-sign img.w{height:17px}.qsa-sign img.m{height:66px}.qsa-sign small{font-size:12px}',
 ' .qsa-rail{width:52%;margin-top:34px}.qsa-g{width:min(80%,470px)}.qsa-half .qsa-tag{margin:16px 0 44px;font-size:13px;padding:7px 13px}',
 ' .qsa-flo{height:40px}',
 ' .qsa-sec{padding:120px 48px 0}.qsa-grid{grid-template-columns:repeat(4,1fr);gap:52px 26px}',
-' .qsa-walk{margin-top:130px;padding-bottom:96px}.qsa-copy{padding:64px 22px 8px}',
+' .qsa-store{margin-top:130px;padding-bottom:96px}.qsa-copy{padding:64px 22px 8px}',
 '}'
 ].join('\n');
 function tag(g,tone){return '<span class="qsa-tag '+tone+'" data-s="'+g[0]+'">'+esc(g[1])+'<i>'+pm(g[2],g[4])+'</i></span>'}
-function half(g,cls,sign,img,tone){
- return '<div class="qsa-half '+cls+'"><div class="qsa-sign">'+sign+'<small>'+esc(g[1])+'</small></div><div class="qsa-rail"></div>'+
+function half(g,cls,sign,img,tone,side){
+ return '<div class="qsa-half '+cls+'"><div class="qsa-sign">'+sign+'<small>'+side+'</small></div><div class="qsa-rail"></div>'+
   '<a class="qsa-g" href="/products/'+g[0]+'"><img src="'+I+img+'" alt="'+esc(g[3])+'" width="1028" height="937"></a>'+
   '<a href="/products/'+g[0]+'">'+tag(g,tone)+'</a></div>'}
 function card(g){return '<a class="qsa-pc" href="/products/'+g[0]+'"><div class="ph qsa-st-'+g[6]+'"><img src="'+P+g[5]+'.webp" alt="'+esc(g[3])+'" loading="lazy"></div><span class="lb">'+tag(g,g[6]==='w'?'lp':'dn')+'</span></a>'}
 var HTML='<div class="qsa" id="qs-home">'+
  '<div class="qsa-wrap"><div class="qsa-wall">'+
-  half(TEE,'qsa-lp','<img class="w" src="'+I+'word-white.png" alt="Quality Stoner">','tee-dn-hang.webp','lp')+
-  half(CREW,'qsa-dn','<img class="m" src="'+I+'qs-mono-black.png" alt="QS">','crew-seal-hang-dn.webp','dn')+
+  half(TEE,'qsa-lp','<img class="w" src="'+I+'word-white.png" alt="Quality Stoner">','tee-dn-hang.webp','lp','Loud &amp; Proud')+
+  half(CREW,'qsa-dn','<img class="m" src="'+I+'qs-mono-black.png" alt="QS">','crew-seal-hang-dn.webp','dn','Discreet &amp; Neat')+
  '</div><div class="qsa-floor"><div class="qsa-flo l"></div><div class="qsa-flo r"></div></div></div>'+
- '<div class="qsa-copy"><p class="qsa-new">New</p><p class="qsa-col">'+esc(TEE[1])+' &middot; '+esc(CREW[1])+'</p><div class="qsa-rule"></div>'+
+ '<div class="qsa-copy"><p class="qsa-new">New</p><div class="qsa-rule"></div>'+
   '<a class="qsa-btn" href="/collections/all">Shop Now</a></div>'+
  '<section class="qsa-sec"><div class="qsa-sh"><span class="qsa-k">The pieces</span><a href="/collections/all">View all</a></div><div class="qsa-grid">'+GRID.map(card).join('')+'</div></section>'+
- '<a class="qsa-walk" href="/pages/walk-the-store"><img src="'+I+'int-band.webp" alt="Inside the Quality Stoner 360 store" loading="lazy" width="1376" height="678"><span><b>Look around the 360&deg; store &nbsp;&rarr;</b></span></a>'+
+ '<a class="qsa-store" href="/pages/walk-the-store" aria-label="The store: walk the 360 shop"><span class="qsa-sw"><span class="qsa-st-w"><img src="'+P+'wordmark-lattice-backpack-white.webp" alt="" loading="lazy"></span><span class="qsa-st-d"><img src="'+P+'damask-crossbody-burgundy.webp" alt="" loading="lazy"></span></span><span class="qsa-sl"><b>The store &nbsp;&rarr;</b></span></a>'+
  '</div>';
 document.documentElement.classList.add('qsa-on');
 var st=document.createElement('style');st.id='qs-home-css';st.textContent=CSS;(document.head||document.documentElement).appendChild(st);
