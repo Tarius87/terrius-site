@@ -1,7 +1,7 @@
 /* Quality Stoner home — concept A "the front wall" (Fourthwall Custom HTML section 246a3a20), Oct 17 2026 (Justin picked A).
    Section HTML is one line: <script src="https://cdn.jsdelivr.net/gh/Tarius87/terrius-site@<commit>/assets/qs/home-b/qs-home-b.js"></script>
    Light page (#F4F3F0) that mirrors the 360 store's Front wall: hero = LP | DN wall halves rebuilt in CSS (dark half with the
-   white Cipher Tee — White (Discreet & Neat), light half with the burgundy Wax Seal Crew), rails, 360 name-tag pills, floor strip
+   burgundy Wax Seal Crew (Loud & Proud), light half with the white Cipher Tee — White (Discreet & Neat); swapped Oct 17 2026 12:44), rails, 360 name-tag pills, floor strip
    -> NEW / CIPHER TEE · WAX SEAL CREW, burgundy rule, outline Shop Now -> "The pieces" grid on the 360 stages (white pieces on the
    dark wall material, dark pieces on the DN neutral stage) with name-tag pills -> 360 two-walls painting -> "Look around" link.
    The theme's own (light) header, newsletter section acebb3b4 and footer are left exactly as the theme draws them.
@@ -111,8 +111,8 @@ function half(g,cls,sign,img,tone,side){
 function card(g){return '<a class="qsa-pc" href="/products/'+g[0]+'"><div class="ph qsa-st-'+g[6]+'"><img src="'+P+g[5]+'.webp" alt="'+esc(g[3])+'" loading="lazy"></div><span class="lb">'+tag(g,g[6]==='w'?'lp':'dn')+'</span></a>'}
 var HTML='<div class="qsa" id="qs-home">'+
  '<div class="qsa-wrap"><div class="qsa-wall">'+
-  half(TEE,'qsa-lp','<img class="w" src="'+I+'word-white.png" alt="Quality Stoner">','tee-dn-hang.webp','lp','Loud &amp; Proud')+
-  half(CREW,'qsa-dn','<img class="m" src="'+I+'qs-mono-black.png" alt="QS">','crew-seal-hang-dn.webp','dn','Discreet &amp; Neat')+
+  half(CREW,'qsa-lp','<img class="w" src="'+I+'word-white.png" alt="Quality Stoner">','crew-seal-hang-dn.webp','lp','Loud &amp; Proud')+
+  half(TEE,'qsa-dn','<img class="m" src="'+I+'qs-mono-black.png" alt="QS">','tee-dn-hang.webp','dn','Discreet &amp; Neat')+
  '</div><div class="qsa-floor"><div class="qsa-flo l"></div><div class="qsa-flo r"></div></div></div>'+
  '<div class="qsa-copy"><p class="qsa-new">New</p><div class="qsa-rule"></div>'+
   '<a class="qsa-btn" href="/collections/all">Shop Now</a></div>'+
