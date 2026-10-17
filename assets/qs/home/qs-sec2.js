@@ -20,10 +20,10 @@ var SIDES=[
  {k:'discreet-neat',cls:'dn',ey:'Side two',h:'Discreet &amp;<br>Neat',p:'Just the QS. Quiet.',c:19,pics:['embroidered-qs-hoodie-burgundy','maison-monogram-tee-white','qs-snapback-burgundy']}];
 /* New in: [slug, side, image kind ('p' cutout | 'k' original product photo card), fallback name, fallback price] */
 var NEW=[
- ['heavyweight-tee-black','lp','p','Heavyweight Tee — Black','29'],
+ ['heavyweight-tee-black','lp','p','Calling Card Tee — Black','29'],
  ['damask-lined-hoodie-black','dn','p','Locket Hoodie — Black','58'],
- ['wordmark-crew-white','lp','k','Wordmark Crew — White','49'],
- ['qs-cuff-beanie-white','dn','k','QS Cuff Beanie — White','27.95']];
+ ['wordmark-crew-white','lp','k','Masthead Crew — White','49'],
+ ['qs-cuff-beanie-white','dn','k','Signet Beanie — White','27.95']];
 var ALL=36;
 /* phone circles: categories + both sides; every circle opens a collection, never a single product */
 var RING=[['tees','Tees','embroidered-qs-tee-burgundy'],['hoodies-crews','Hoodies &amp; Crews','wordmark-hoodie-white'],['joggers','Joggers','embroidered-qs-joggers-burgundy'],['hats','Hats','qs-snapback-burgundy'],['bags-more','Bags &amp; More','qs-lp-bp04-backpack-black'],['loud-proud','Loud &amp; Proud','lockup-hoodie-black','lp'],['discreet-neat','Discreet &amp; Neat','embroidered-qs-crew-black','dn']];
@@ -112,7 +112,7 @@ var HTML='<div class="qc" id="qs-home">'+
  '<section class="qc-sec"><div class="qc-sh"><h2>Pick your side</h2></div><div class="qc-sides">'+SIDES.map(sideTile).join('')+'</div></section>'+
  '<section class="qc-sec"><div class="qc-sh"><h2>New in</h2><a href="/collections/all">See all &rarr;</a></div><div class="qc-new">'+NEW.map(card).join('')+'</div></section>'+
  '<div class="qc-end"></div></div>';
-var BODY="<div class=\"qsd\"><span class=\"qsd-k\">Collection 001 &middot; The Standard</span><b>This is just the beginning.</b><p>More drops are on the way. New pieces, new colors, same standard. You got here early.</p></div><section class=\"qsa\" id=\"about\">\n <div class=\"qsa-in\">\n  <div>\n   <div class=\"qsa-k\">About Quality Stoner</div>\n   <h2>Casual wear for the quality stoner.</h2>\n   <p>Made in Milwaukee since June 2020. Most stoner gear is loud and clich\u00e9. We went the other way: clean fits, heavyweight blanks, and one mark you can wear anywhere.</p>\n   <p>Go Loud &amp; Proud with the full wordmark, or keep it Discreet &amp; Neat with just the QS. Same quality, your call.</p>\n   <div class=\"qsa-row\"><a class=\"l\" href=\"/collections/loud-proud\">Loud &amp; Proud</a><a href=\"/collections/discreet-neat\">Discreet &amp; Neat</a></div>\n  </div>\n  <div class=\"qsa-card\"><div><span>Est.</span><b>June 2020</b></div><div><span>Home</span><b>Milwaukee, WI</b></div><div><span>Two sides</span><b>Loud or Discreet</b></div><div><span>Built for</span><b>The quality stoner</b></div></div>\n </div>\n</section>";
+var BODY="<div class=\"qsd\"><span class=\"qsd-k\">Collection 001 &middot; The Standard</span><b>This is just the beginning.</b><p>More drops are on the way. New pieces, new colors, same standard. You got here early.</p></div><section class=\"qsa\" id=\"about\">\n <div class=\"qsa-in\">\n  <div>\n   <div class=\"qsa-k\">About Quality Stoner</div>\n   <h2>Casual wear for the quality stoner.</h2>\n   <p>Made in Milwaukee since June 2020. Most stoner gear is loud and clich\u00e9. We went the other way: clean fits, heavyweight blanks, and one mark you can wear anywhere.</p>\n   <p>Go Loud &amp; Proud with the full name, or keep it Discreet &amp; Neat with just the QS. Same quality, your call.</p>\n   <div class=\"qsa-row\"><a class=\"l\" href=\"/collections/loud-proud\">Loud &amp; Proud</a><a href=\"/collections/discreet-neat\">Discreet &amp; Neat</a></div>\n  </div>\n  <div class=\"qsa-card\"><div><span>Est.</span><b>June 2020</b></div><div><span>Home</span><b>Milwaukee, WI</b></div><div><span>Two sides</span><b>Loud or Discreet</b></div><div><span>Built for</span><b>The quality stoner</b></div></div>\n </div>\n</section>";
 var st=document.createElement('style');st.id='qs-home-css';st.textContent=CSS;(document.head||document.documentElement).appendChild(st);
 if(me&&me.parentNode){var w=document.createElement('div');w.innerHTML=HTML+BODY;while(w.firstChild)me.parentNode.insertBefore(w.firstChild,me)}
 /* retired side-choice gate (lived in 863702ee): make sure it never locks the page if that section is still rendered */
