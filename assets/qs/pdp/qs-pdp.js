@@ -137,13 +137,29 @@
     if (!cnt) return 'light';
     var v = sum / cnt; return v < 62 ? 'dark' : v < 165 ? 'mid' : 'light';
   }
+  /* pre-made smooth cutouts for photos that are served opaque and can't be cut cleanly at runtime (e.g. the cream-backdrop
+     Calling Card Tee - White hero), keyed by the photo fingerprint (last path segment of the Fourthwall url). Files live
+     next to the collection-page cutouts in the same repo commit: assets/qs/collections/cut/. White garments never sit on a white card. */
+  var PRE = { 'ZsHIKw.jpg': 'qs-lp-ts01-classic-tee-white.webp' };
+  var PBASE = (function () {
+    var s = document.currentScript && document.currentScript.src;
+    if (!s) { var ss = document.querySelectorAll('script[src*="qs-pdp.js"]'); s = ss.length ? ss[ss.length - 1].src : ''; }
+    return s && /\/pdp\/qs-pdp\.js/.test(s) ? s.replace(/pdp\/qs-pdp\.js.*$/, 'collections/cut/') : '';
+  })();
+  function premade(url, r) {
+    var f = PBASE && PRE[url.split('?')[0].split('/').pop()];
+    if (!f || (r && !r.src && r.cls !== 'card')) return r; // no cutout on file, or Fourthwall already sent a transparent file
+    // fetched into a blob url, exactly like a runtime cut-out (the gallery keeps blob srcs as they are)
+    return fetch(PBASE + f, { mode: 'cors' }).then(function (x) { if (!x.ok) throw 0; return x.blob(); })
+      .then(function (b) { return { src: URL.createObjectURL(b), cls: 'light' }; }, function () { return r; });
+  }
   function apply(img) {
     if (img.dataset.qsp && img.dataset.qsp !== 'wait') return;
     var url = img.currentSrc || img.getAttribute('src'); if (!url) return;
     if (img.dataset.qspUrl === url) return;
     img.dataset.qspUrl = url; img.dataset.qsp = 'wait';
     var t = setTimeout(function () { if (img.dataset.qsp === 'wait') img.dataset.qsp = 'card'; }, 6000);
-    Promise.resolve(analyse(url)).then(function (r) {
+    Promise.resolve(analyse(url)).then(function (r) { return premade(url, r); }).then(function (r) {
       clearTimeout(t);
       if (img.dataset.qspUrl !== url) return;
       if (!r || r.cls === 'card') { img.dataset.qsp = 'card'; return; }
