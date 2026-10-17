@@ -22,8 +22,8 @@ var SIDES=[
 var NEW=[
  ['heavyweight-tee-black','lp','p','Calling Card Tee — Black','29'],
  ['damask-lined-hoodie-black','dn','p','Locket Hoodie — Black','58'],
- ['wordmark-crew-white','lp','k','Masthead Crew — White','49'],
- ['qs-cuff-beanie-white','dn','k','Signet Beanie — White','27.95']];
+ ['wordmark-crew-white','lp','p','Masthead Crew — White','49'],
+ ['qs-cuff-beanie-white','dn','p','Signet Beanie — White','27.95']];
 var ALL=36;
 /* phone circles: categories + both sides; every circle opens a collection, never a single product */
 var RING=[['tees','Tees','embroidered-qs-tee-burgundy'],['hoodies-crews','Hoodies &amp; Crews','wordmark-hoodie-white'],['joggers','Joggers','embroidered-qs-joggers-burgundy'],['hats','Hats','qs-snapback-burgundy'],['bags-more','Bags &amp; More','qs-lp-bp04-backpack-black'],['loud-proud','Loud &amp; Proud','lockup-hoodie-black','lp'],['discreet-neat','Discreet &amp; Neat','embroidered-qs-crew-black','dn']];
@@ -35,7 +35,7 @@ var CSS=[
 S863+'{display:none!important}',
 S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none!important}',
 '#qs-sw{display:none!important}',/* the site-wide floating side pill: home has its own Pick-your-side tiles */
-'.qc{background:#0b0b0b;color:#fff;font-family:inherit;-webkit-font-smoothing:antialiased}',
+'.qc{isolation:isolate;background:#0b0b0b;color:#fff;font-family:inherit;-webkit-font-smoothing:antialiased}',
 '.qc *{box-sizing:border-box;margin:0;padding:0}.qc a{color:inherit!important;text-decoration:none!important}',
 '.qc b,.qc h1,.qc h2,.qc h3,.qc span,.qc p{color:inherit}.qc h1,.qc h2,.qc h3{font-family:inherit!important;text-transform:none}',
 '.qc-k{display:block;font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;opacity:.75}',
@@ -43,10 +43,12 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qc-rg{display:none}',
 /* store card */
 '.qc-hero{padding:34px 28px 8px}',
-'.qc-card{display:grid!important;grid-template-columns:1fr 1.32fr;max-width:1240px;margin:0 auto;background:#000;border:1px solid #242022;border-radius:26px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45)}',
-'.qc-ct{padding:46px 44px;display:flex;flex-direction:column;justify-content:center;gap:16px;background:radial-gradient(130% 90% at 0% 100%,rgba(110,11,34,.38) 0,rgba(110,11,34,0) 60%)}',
-'.qc-ct h1{font-size:46px;line-height:1.02;font-weight:600;letter-spacing:-.01em;color:#fff!important}',
-'.qc-ct p{font-size:16px;line-height:1.55;color:rgba(255,255,255,.78)!important;max-width:400px}',
+'.qc-card{display:grid!important;grid-template-columns:1fr 1.32fr;max-width:1240px;margin:0 auto;background:#fff;border:1px solid #d9d4d5;border-radius:26px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 24px 60px rgba(0,0,0,.55)}',
+'.qc a.qc-card{color:#0b0a0a!important}.qc-ct .qc-k{color:#0b0a0a;opacity:1}.qc .qc-ci .qc-360{color:#fff}',
+'.qc-ct{padding:46px 44px;display:flex;flex-direction:column;justify-content:center;gap:16px;background:#fff}',
+'.qc-ct h1{font-size:46px;line-height:1.02;font-weight:600;letter-spacing:-.01em;color:#0b0a0a!important}',
+'.qc-ct p{font-size:16px;line-height:1.55;color:#3d3839!important;max-width:400px}',
+'.qc-ct .qc-btn.b{background:#6E0B22;color:#fff!important;box-shadow:0 6px 16px rgba(110,11,34,.22)}',
 '.qc-bt{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}',
 '.qc-btn{display:inline-block;font-size:12px;line-height:1;font-weight:600;letter-spacing:.18em;text-transform:uppercase;border-radius:99px;padding:16px 24px;white-space:nowrap}',
 '.qc-btn.b{background:#6E0B22;color:#fff!important;box-shadow:0 0 24px rgba(163,32,63,.45)}.qc-btn.o{border:1.5px solid rgba(255,255,255,.65);color:#fff!important}',
