@@ -27,7 +27,11 @@
     '.product__gallery .gallery-thumbs__item img.qsp-light,.product__gallery .gallery-thumbs__item img.qsp-mid{filter:none}',
     '.product__gallery .gallery__nav-item,.product__gallery .gallery-thumbs__nav-item{background:rgba(255,255,255,.92)!important;color:#0b0a0a!important;border-radius:99px}',
     '#qs-sw.qsp-inline{position:static!important;left:auto!important;bottom:auto!important;transform:none!important;margin:18px 0 4px;width:max-content;max-width:100%;box-shadow:0 0 0 1px rgba(0,0,0,.12)!important;z-index:auto!important}',
-    '@media (max-width:639px){.product__gallery .gallery--product{border-radius:0;box-shadow:none;margin-left:-16px;margin-right:-16px;padding:10px 12px 12px}#qs-sw.qsp-inline{margin:16px auto 4px}}'
+    '@media (max-width:639px){.product__gallery .gallery--product{border-radius:0;box-shadow:none;margin-left:-16px;margin-right:-16px;padding:10px 12px 12px}#qs-sw.qsp-inline{margin:16px auto 4px}}',
+    /* Oct 17 2026: quiet back link when the visitor came from the 360 room */
+    '.qsp-b360{display:inline-block;padding:14px 0 12px;font-size:11px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;color:#5a5a5a!important;text-decoration:none!important;line-height:1.4}',
+    '.qsp-b360:hover{color:#111!important}',
+    '@media (min-width:640px){.qsp-b360{padding:0 0 18px;margin-top:-8px}}',
   ].join('\n');
   var st = document.createElement('style'); st.id = 'qs-pdp-css'; st.textContent = css;
   (document.head || document.documentElement).appendChild(st);
@@ -173,7 +177,26 @@
       img.dataset.qsp = 'cut';
     });
   }
+  /* ---------- "Back to the 360 room" (Oct 17 2026): shown when the page was opened from the 360 (?from=360, or the
+     referrer is /pages/walk-the-store). The link returns to the wall the visitor left (the 360 saves it in sessionStorage q3-ret). */
+  function back360() {
+    if (document.getElementById('qsp-b360')) return;
+    var fromQ = /[?&]from=360(&|$)/.test(location.search), fromR = /\/pages\/walk-the-store/.test(document.referrer || '');
+    if (!fromQ && !fromR) return;
+    var main = document.querySelector('.product .product__main'); if (!main) return;
+    var h = '';
+    var m = {}; (location.search.replace(/^\?/, '') || '').split('&').forEach(function (kv) { var q = kv.split('='); if (q[0]) m[q[0]] = decodeURIComponent(q[1] || ''); });
+    var st = /^[a-z]+$/.test(m.w || '') ? m : null; if (!st) try { st = JSON.parse(sessionStorage.getItem('q3-ret') || 'null'); } catch (e) {}
+    if (st && /^[a-z]+$/.test(st.w || '')) {
+      h = '#w=' + st.w; if (st.f === 'lp' || st.f === 'dn') h += '&f=' + st.f; if (+st.l) h += '&l=1';
+      if (st.w === 'fit' && st.t != null && st.t !== '') h += '&t=' + (+st.t || 0) + '&b=' + (+st.b || 0) + '&h=' + (+st.h || 0);
+    }
+    var a = document.createElement('a'); a.id = 'qsp-b360'; a.className = 'qsp-b360'; a.href = '/pages/walk-the-store' + h;
+    a.innerHTML = '&#8592;&nbsp; Back to the 360 room';
+    main.parentNode.insertBefore(a, main);
+  }
   function scan() {
+    back360();
     var imgs = document.querySelectorAll('.product__gallery .gallery__image-object, .product__gallery .gallery-thumbs__image-object');
     for (var i = 0; i < imgs.length; i++) {
       var im = imgs[i];

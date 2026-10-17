@@ -10,6 +10,8 @@
   if (!/\/collections\//.test(location.pathname)) return;
   var css = [
     'html.qsc-on .page__main{background:#0b0a0a}',
+    '.qsc-b360{display:inline-block;margin:0 0 14px;font-size:11px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;line-height:1.4;color:rgba(244,243,240,.66)!important;text-decoration:none!important}',
+    '.qsc-b360:hover{color:#F4F3F0!important}',
     'html.qsc-on .collection-template__header h1{color:#F4F3F0}',
     'html.qsc-on .collection-template__header h1:after{content:"";display:block;width:38px;height:3px;border-radius:3px;background:#6E0B22;margin-top:12px}',
     'html.qsc-on .collection-template .empty,html.qsc-on .collection-template p{color:rgba(244,243,240,.75)}',
@@ -282,8 +284,28 @@
     if (io) io.observe(im);
     else { queue.push(im); pump(); }
   }
+  /* "Back to the 360 room" (Oct 17 2026): on a collection opened from the 360 (?from=360 or referrer /pages/walk-the-store), a quiet
+     link above the title returns to the wall the visitor left (360 saves it in sessionStorage q3-ret); product links on the
+     page carry ?from=360 so the product page shows its own back link too. */
+  var F360 = /[?&]from=360(&|$)/.test(location.search) || /\/pages\/walk-the-store/.test(document.referrer || '');
+  function back360() {
+    if (!F360) return;
+    var keep = (location.search.match(/[?&](from|w|f|l|t|b|h)=[^&]*/g) || []).map(function (x) { return x.slice(1); }).join('&') || 'from=360';
+    if (!/(^|&)from=360/.test(keep)) keep = 'from=360&' + keep;
+    var ls = document.querySelectorAll('.collection-template a[href^="/products/"]:not([data-q360])');
+    for (var i = 0; i < ls.length; i++) { var l = ls[i], hr = l.getAttribute('href'); l.setAttribute('data-q360', '1'); if (!/[?&]from=360/.test(hr)) l.setAttribute('href', hr + (hr.indexOf('?') > -1 ? '&' : '?') + keep); }
+    if (document.getElementById('qsc-b360')) return;
+    var hd = document.querySelector('.collection-template__header'); if (!hd) return;
+    var h = '';
+    var m = {}; (location.search.replace(/^\?/, '') || '').split('&').forEach(function (kv) { var q = kv.split('='); if (q[0]) m[q[0]] = decodeURIComponent(q[1] || ''); });
+    var st = /^[a-z]+$/.test(m.w || '') ? m : null; if (!st) try { st = JSON.parse(sessionStorage.getItem('q3-ret') || 'null'); } catch (e) {}
+    if (st && /^[a-z]+$/.test(st.w || '')) { h = '#w=' + st.w; if (st.f === 'lp' || st.f === 'dn') h += '&f=' + st.f; if (+st.l) h += '&l=1'; }
+    var a = document.createElement('a'); a.id = 'qsc-b360'; a.className = 'qsc-b360'; a.href = '/pages/walk-the-store' + h;
+    a.innerHTML = '&#8592;&nbsp; Back to the 360 room'; hd.parentNode.insertBefore(a, hd);
+  }
   var pend = 0;
-  function soon() { if (pend) return; pend = 1; (window.requestAnimationFrame || setTimeout)(function () { pend = 0; scan(); }); }
+  function soon() { if (pend) return; pend = 1; (window.requestAnimationFrame || setTimeout)(function () { pend = 0; scan(); back360(); }); }
+  back360(); if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', back360);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
   window.addEventListener('load', scan);
   new MutationObserver(soon).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
