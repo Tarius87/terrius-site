@@ -370,6 +370,10 @@
     var s = Math.min((bw - 2 * G.sx) / W, (bh - G.t - G.g - G.n - G.b) / H); if (!M) s = Math.min(s, 1.15);
     var pmin = bw / 2 / Math.tan((CULL - STEP / 2 - 2) * Math.PI / 180);
     PERS = Math.round(Math.max(s * R, pmin)); s = PERS / R;
+    /* Oct 18 2026 short-viewport fix (MacBook Chrome 1440x635): the lens minimum (pmin) can make the resting wall taller than the block, which clipped
+       the wall's top/bottom and pushed the tab bar outside the block. The block now grows to the wall's real height (page scrolls), back to fit() height when it fits. */
+    var need = Math.ceil(G.t + H * s + G.g + G.n + G.b), bh0 = BH || bh;
+    bh = need > bh0 + 1 ? need : bh0;  /* 1 px slack: rounding never grows a block that already fits */ if (root.clientHeight !== bh) root.style.height = bh + 'px';
     cam.style.perspective = PERS + 'px';
     var ww = W * s, wh = H * s, x0 = (bw - ww) / 2, y0 = G.t, x1 = x0 + ww, y1 = y0 + wh;
     cam.style.top = (y0 + wh / 2) + 'px';
