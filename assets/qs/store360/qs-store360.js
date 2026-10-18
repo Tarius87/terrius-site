@@ -178,7 +178,7 @@
   /* Front wall: title band + the two sides as groups (label row with the side's Shop all link, then tee + hat + bag) */
   function frontWall(f) {
     f.classList.add('q3-look');
-    band(f, { kick: 'The store &middot; 01', title: 'Walk the store', sub: M ? 'The front' : '', href: 'https://qualitystoner.com/collections/all?from=360', aria: 'Shop all' });
+    band(f, { kick: 'The store &middot; 01', title: 'Take a look around', sub: M ? 'The front' : '', href: 'https://qualitystoner.com/collections/all?from=360', aria: 'Shop all' });
     ['lp', 'dn'].forEach(function (s, gi) {
       var ids = FRONT[s].filter(function (id) { return P(id); }), lab, cr;
       if (M) {
