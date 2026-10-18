@@ -39,8 +39,10 @@
   /* Oct 17 2026 ~17:10 (Justin: "Show these items", lookbook screenshots): 5 pieces. Tops/beanie = CONCEPT MOCKUPS (engine re-render of
      collections/winter-atelier/mock/<id>.jpg with its own alpha, no detail circle; work/winterwall/mockcut.py), NOT built Fourthwall products;
      joggers = the real hidden Fourthwall product (waistband-fixed cut). ar = tile w/h, k = height vs the tops (joggers longer, beanie smaller). */
-  var WINTER = [{ id: 'winter-crest-back-tee-black', n: 'Winter Crest Back Tee', ar: 1000 / 970, k: 1 }, { id: 'winter-crest-crew-off-white', n: 'Winter Crest Crew', ar: 973 / 1000, k: 1 },
-    { id: 'frost-lined-hood-black', n: 'Frost-Lined Hood', ar: 905 / 1000, k: 1 }, { id: 'maison-winter-joggers-black', n: 'Maison Winter Joggers', ar: 363 / 1000, k: 1.2 },
+  /* Oct 18 2026 ~11:30: tee (back view), crew and hood tiles are now the REAL Fourthwall product photos (built, still hidden; work/winterreal/cut.py,
+     same own-alpha method as hires/hicut.py). Beanie is still the concept mockup (W-BEA-4 not built yet). */
+  var WINTER = [{ id: 'winter-crest-back-tee-black', n: 'Winter Crest Back Tee', ar: 1000 / 868, k: 1 }, { id: 'winter-crest-crew-off-white', n: 'Winter Crest Crew', ar: 814 / 1000, k: 1 },
+    { id: 'frost-lined-hood-black', n: 'Frost-Lined Hood', ar: 774 / 1000, k: 1 }, { id: 'maison-winter-joggers-black', n: 'Maison Winter Joggers', ar: 363 / 1000, k: 1.2 },
     { id: 'wordmark-cuff-beanie-navy', n: 'Wordmark Cuff Beanie', ar: 880 / 1000, k: .5 }];
   /* 7 walls, clockwise (positive = turn right): Front, Tees, Hoodies & Crews, Joggers, Shop all (plain back wall), Bags & More, Hats */
   var ORDER = [{ k: 'front', n: 'Front', s: 'mx' }, { k: 'tees', n: 'Tees', s: 'mx' }, { k: 'tops', n: 'Hoodies & Crews', s: 'mx' }, { k: 'joggers', n: 'Joggers', s: 'mx' },
