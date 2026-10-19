@@ -296,7 +296,7 @@
       h = '#w=' + (st.w === 'fit' ? 'all' : st.w);
     }
     var a = document.createElement('a'); a.id = 'qsp-b360'; a.className = 'qsp-b360'; a.href = '/pages/walk-the-store' + h;
-    a.innerHTML = '&#8592;&nbsp; Back to the 360 room';
+    a.innerHTML = '&#8592;&nbsp; Back to the store';
     main.parentNode.insertBefore(a, main);
   }
   function scan() {

@@ -322,7 +322,7 @@
     var st = /^[a-z]+$/.test(m.w || '') ? m : null; if (!st) try { st = JSON.parse(sessionStorage.getItem('q3-ret') || 'null'); } catch (e) {}
     if (st && /^[a-z]+$/.test(st.w || '')) { h = '#w=' + st.w; if (st.f === 'lp' || st.f === 'dn') h += '&f=' + st.f; if (+st.l) h += '&l=1'; }
     var a = document.createElement('a'); a.id = 'qsc-b360'; a.className = 'qsc-b360'; a.href = '/pages/walk-the-store' + h;
-    a.innerHTML = '&#8592;&nbsp; Back to the 360 room'; hd.parentNode.insertBefore(a, hd);
+    a.innerHTML = '&#8592;&nbsp; Back to the store'; hd.parentNode.insertBefore(a, hd);
   }
   var pend = 0;
   function soon() { if (pend) return; pend = 1; (window.requestAnimationFrame || setTimeout)(function () { pend = 0; scan(); back360(); }); }
