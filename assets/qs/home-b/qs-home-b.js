@@ -178,7 +178,8 @@ function card(g){return '<a class="qsa-pc" href="/products/'+g[0]+'"><div class=
 /* Winter Atelier (Collection 002) preview: same five pieces as the 360 winter wall */
 /* Oct 19 2026 (Justin): row tightened (each piece's box = its own aspect, so no wide empty cells around the joggers/beanie) and the beanie made bigger.
    [slug, name, image w/h (img/w files are 520 px tall), height vs the tops] */
-var WINTER=[['winter-crest-back-tee-black','Winter Crest Back Tee — Black',599/520,1],['winter-crest-crew-off-white','Winter Crest Crew — Off-White',423/520,1],['frost-lined-hood-black','Frost-Lined Hood — Black',403/520,1],['maison-winter-joggers-black','Maison Winter Joggers',189/520,1.12],['wordmark-cuff-beanie-navy','Wordmark Cuff Beanie — Navy',458/520,.92]];
+/* Oct 19 2026 ~17:30 (Justin: side-by-side pieces must match in real-world scale): k = box height vs the crew at ONE scale (tee/crew/hood same torso width; joggers 1.2x crew height; beanie 0.5x torso width), from work/tee3back/layout.py. Was tee 1, hood 1, joggers 1.12, beanie .92 (qs-home-b.src.2f761.js). */
+var WINTER=[['winter-crest-back-tee-black','Winter Crest Back Tee — Black',599/520,.905],['winter-crest-crew-off-white','Winter Crest Crew — Off-White',423/520,1],['frost-lined-hood-black','Frost-Lined Hood — Black',403/520,1.095],['maison-winter-joggers-black','Maison Winter Joggers',189/520,1.2],['wordmark-cuff-beanie-navy','Wordmark Cuff Beanie — Navy',458/520,.332]];
 var W=I.replace(/a\/$/,'w/');
 function winter(){return '<section class="qsa-wa" id="winter-atelier" aria-label="Winter Atelier, Collection 002, drops November 15"><div class="qsa-wa-in">'+
  '<div class="qsa-wa-t"><img class="qsa-wa-m" src="'+W+'qs-bluemark-k.webp" alt="QS" width="342" height="320"><p class="qsa-wa-k">Collection 002</p><p class="qsa-wa-h">Winter Atelier</p><div class="qsa-wa-r"></div><p class="qsa-wa-d">Drops Nov 15</p></div>'+
