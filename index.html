@@ -1389,7 +1389,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
             spots[k] = y + L / 2;
             segs.push({ y0: y, len: L, a: c, b: c, k: k }); y += L;
             if (k < cams.length - 1) {
-              L = Math.min(vh * 0.6, Math.max(vh * 0.35, (cams[k + 1] - c) * 0.25));
+              L = Math.min(vh * 0.38, Math.max(vh * 0.3, (cams[k + 1] - c) * 0.2));
               segs.push({ y0: y, len: L, a: c, b: cams[k + 1], k: k, next: k + 1 }); y += L;
             }
           });
