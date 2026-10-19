@@ -339,13 +339,15 @@
        work/tee3back/layout.py). Tops share one floor line; joggers + beanie share the row-2 floor. Previous boxes in qs-store360.src.2f761.js. */
     /* Oct 19 2026 ~18:00 (Justin: "That hat looks really small and goofy"): beanie 1.7x (0.5 T -> 0.85 T wide, 62x70 -> 105x119), still bottom-aligned
        with the joggers (row-2 floor), tag nudged right / narrower so it clears. Tops + joggers unchanged. Previous: qs-store360.src.0cca5.js. */
+    /* Oct 19 2026 ~18:30 (Justin: "Move the beanie up, towards the middle of its card"): beanie vertically centred in its card (desktop card 415-710 ->
+       box top 565 -> 503; phone card 736-1056 -> top 886 -> 837), same 105x119 size; its tag follows to the beanie's middle. Previous: qs-store360.src.8b50b.js. */
     var PL = M ? {
       'winter-crest-back-tee-black': [26, 372, 221, 191, 136, 640, 212, 1], 'winter-crest-crew-off-white': [278, 352, 172, 211, 364, 640, 188, 1],
       'frost-lined-hood-black': [498, 332, 179, 231, 588, 640, 204, 1],
-      'maison-winter-joggers-black': [54, 752, 92, 253, 236, 880, 222, 0], 'wordmark-cuff-beanie-navy': [398, 886, 105, 119, 603, 880, 170, 0] } : {
+      'maison-winter-joggers-black': [54, 752, 92, 253, 236, 880, 222, 0], 'wordmark-cuff-beanie-navy': [398, 837, 105, 119, 603, 896, 170, 0] } : {
       'winter-crest-back-tee-black': [440, 126, 221, 191, 550, 330, 190, 1], 'winter-crest-crew-off-white': [714, 106, 172, 211, 800, 330, 190, 1],
       'frost-lined-hood-black': [941, 86, 179, 231, 1030, 330, 180, 1],
-      'maison-winter-joggers-black': [484, 431, 92, 253, 655, 600, 170, 0], 'wordmark-cuff-beanie-navy': [812, 565, 105, 119, 1025, 600, 160, 0] };
+      'maison-winter-joggers-black': [484, 431, 92, 253, 655, 600, 170, 0], 'wordmark-cuff-beanie-navy': [812, 503, 105, 119, 1025, 529, 160, 0] };
     var reg = div('q3-reg q3-wreg', { left: 0, top: 0, width: M ? 720 : W, height: H }); f.appendChild(reg);
     WINTER.forEach(function (p) {
       var b = PL[p.id]; if (!b) return;
