@@ -10,14 +10,14 @@ var IMG=CB+'c/',P=IMG+'p/',K=IMG+'k/';
 var S863='.custom-html--fw-section-custom-html-863702ee-37d1-48a0-8c17-b9a8c0e04dea',S246='.custom-html--fw-section-custom-html-246a3a20-ff62-43a2-bd4a-0c06afca2c46';
 /* ---- catalog fallbacks (live store refreshes these) ---- */
 var CATS=[
- {k:'tees',n:'Tees',c:6,f:'29',pics:['heavyweight-tee-black','embroidered-qs-tee-burgundy']},
+ {k:'tees',n:'Tees',c:6,f:'29',pics:['heavyweight-tee-black','signet-tee-burgundy']},
  {k:'hoodies-crews',n:'Hoodies & Crews',c:10,f:'49',pics:['wordmark-hoodie-white','damask-lined-hoodie-black']},
- {k:'joggers',n:'Joggers',c:4,f:'45',pics:['wordmark-leg-joggers-black','embroidered-qs-joggers-burgundy']},
+ {k:'joggers',n:'Joggers',c:4,f:'45',pics:['wordmark-leg-joggers-black','signet-joggers-burgundy']},
  {k:'hats',n:'Hats',c:7,f:'27.95',pics:['qs-snapback-burgundy','wordmark-cuff-beanie-white']},
  {k:'bags-more',n:'Bags & More',c:9,f:'45',pics:['qs-lp-bp04-backpack-black','scattered-monogram-backpack-white']}];
 var SIDES=[
  {k:'loud-proud',cls:'lp',ey:'Side one',h:'Loud &amp;<br>Proud',p:'The full name, out loud.',c:17,pics:['wordmark-hoodie-white','heavyweight-tee-black','wordmark-snapback-black']},
- {k:'discreet-neat',cls:'dn',ey:'Side two',h:'Discreet &amp;<br>Neat',p:'Just the QS. Quiet.',c:19,pics:['embroidered-qs-hoodie-burgundy','maison-monogram-tee-white','qs-snapback-burgundy']}];
+ {k:'discreet-neat',cls:'dn',ey:'Side two',h:'Discreet &amp;<br>Neat',p:'Just the QS. Quiet.',c:19,pics:['signet-hoodie-burgundy','maison-monogram-tee-white','qs-snapback-burgundy']}];
 /* New in: [slug, side, image kind ('p' cutout | 'k' original product photo card), fallback name, fallback price] */
 var NEW=[
  ['heavyweight-tee-black','lp','p','Calling Card Tee — Black','29'],
@@ -26,7 +26,7 @@ var NEW=[
  ['qs-cuff-beanie-white','dn','p','Signet Beanie — White','27.95']];
 var ALL=36;
 /* phone circles: categories + both sides; every circle opens a collection, never a single product */
-var RING=[['tees','Tees','embroidered-qs-tee-burgundy'],['hoodies-crews','Hoodies &amp; Crews','wordmark-hoodie-white'],['joggers','Joggers','embroidered-qs-joggers-burgundy'],['hats','Hats','qs-snapback-burgundy'],['bags-more','Bags &amp; More','qs-lp-bp04-backpack-black'],['loud-proud','Loud &amp; Proud','lockup-hoodie-black','lp'],['discreet-neat','Discreet &amp; Neat','embroidered-qs-crew-black','dn']];
+var RING=[['tees','Tees','signet-tee-burgundy'],['hoodies-crews','Hoodies &amp; Crews','wordmark-hoodie-white'],['joggers','Joggers','signet-joggers-burgundy'],['hats','Hats','qs-snapback-burgundy'],['bags-more','Bags &amp; More','qs-lp-bp04-backpack-black'],['loud-proud','Loud &amp; Proud','lockup-hoodie-black','lp'],['discreet-neat','Discreet &amp; Neat','embroidered-qs-crew-black','dn']];
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
 function money(v){v=+v;return '$'+(v%1?v.toFixed(2):''+v)}
 function split(n){var m=String(n).split(/\s+[\u2014\u2013-]\s+/);return m.length>1?[m.slice(0,-1).join(' — '),m[m.length-1]]:[n,'']}
