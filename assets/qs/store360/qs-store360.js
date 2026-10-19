@@ -316,8 +316,11 @@
     if (M) { var fo = div('q3-wofs', { position: 'absolute', left: (W - 720) / 2, top: 0, width: 720, height: 1080 }); f.appendChild(fo); f = fo; }
     function img(src, css, cls) { var i = document.createElement('img'); i.setAttribute('data-src', OWN + 'w/' + src); i.alt = ''; i.className = cls; i.decoding = 'async'; return px(i, css); }
     /* cards (backgrounds only; rgba fills, no opacity layers) */
-    var CD = M ? { f: [24, 316, 672, 388], s: [[24, 720, 328, 160], [368, 720, 328, 160], [24, 896, 328, 160], [368, 896, 328, 160]] }
-               : { f: [430, 70, 340, 640], s: [[790, 70, 165, 310], [975, 70, 155, 310], [790, 400, 165, 310], [975, 400, 155, 310]] };
+    /* Oct 19 2026 ~17:30 (Justin: side-by-side pieces must match in scale; the tee looked tiny next to the crew): tops row = tee | crew | hood at ONE
+       real-world scale (same torso width T = 120 face px), crew stays the focus = centre card with the deeper-ice fill; joggers + beanie row below,
+       proportional (joggers 1.2x the crew's height, beanie 0.5 T wide). Old 2x2 + big crew card in qs-store360.src.2f761.js. */
+    var CD = M ? { f: [264, 316, 200, 404], s: [[24, 316, 224, 404], [480, 316, 216, 404], [24, 736, 328, 320], [368, 736, 328, 320]] }
+               : { f: [685, 70, 230, 330], s: [[430, 70, 240, 330], [930, 70, 200, 330], [430, 415, 340, 295], [785, 415, 345, 295]] };
     function card(r, cls) { f.appendChild(div('q3-wcd ' + cls, { left: r[0], top: r[1], width: r[2], height: r[3] })); }
     card(CD.f, 'q3-wcd-f'); CD.s.forEach(function (r) { card(r, 'q3-wcd-s'); });
     /* navy text card: blue-S mark on an off-white plate, COLLECTION 002 / WINTER ATELIER / rule / DROPS NOV 15 (classes kept for nav/winter.py) */
@@ -332,14 +335,15 @@
     f.appendChild(M ? img('qs-watermark-07.webp', { left: 360 - 342, top: 340, height: 640, width: 683 }, 'q3-wwm') : img('qs-watermark-07.webp', { left: 600 - 320, top: 90, height: 600, width: 640 }, 'q3-wwm'));
     (M ? WFL_M : WFL_D).forEach(function (t) { f.appendChild(img('flake-navy-16.webp', { left: t[0], top: t[1], width: t[2], height: Math.round(t[2] * 140 / 128) }, 'q3-wfk')); });
     /* pieces: [left, top, w, h] box (object-fit contain, bottom-centred) + tag position in face px. g = tag group (crew alone; the four small even). */
-    /* Oct 19 2026 (Justin): every piece a bit bigger, the beanie noticeably bigger (old boxes in qs-store360.src.a1b10.js) */
+    /* Oct 19 2026 ~17:30: boxes = each cutout at the shared scale (torso px measured on the tiles: tee 544/1000w, crew 568/814w, hood 520/774w;
+       work/tee3back/layout.py). Tops share one floor line; joggers + beanie share the row-2 floor. Previous boxes in qs-store360.src.2f761.js. */
     var PL = M ? {
-      'winter-crest-crew-off-white': [40, 326, 350, 370, 540, 509, 296, 1],
-      'winter-crest-back-tee-black': [30, 758, 92, 110, 236, 800, 222, 0], 'frost-lined-hood-black': [374, 734, 92, 132, 580, 800, 222, 0],
-      'maison-winter-joggers-black': [50, 904, 54, 150, 236, 976, 222, 0], 'wordmark-cuff-beanie-navy': [372, 944, 94, 108, 580, 976, 222, 0] } : {
-      'winter-crest-crew-off-white': [440, 190, 320, 380, 600, 600, 300, 1],
-      'winter-crest-back-tee-black': [802, 160, 140, 128, 872, 300, 150, 0], 'frost-lined-hood-black': [995, 138, 115, 150, 1052, 300, 140, 0],
-      'maison-winter-joggers-black': [836, 425, 72, 198, 872, 636, 150, 0], 'wordmark-cuff-beanie-navy': [997, 497, 110, 126, 1052, 636, 140, 0] };
+      'winter-crest-back-tee-black': [26, 372, 221, 191, 136, 640, 212, 1], 'winter-crest-crew-off-white': [278, 352, 172, 211, 364, 640, 188, 1],
+      'frost-lined-hood-black': [498, 332, 179, 231, 588, 640, 204, 1],
+      'maison-winter-joggers-black': [54, 752, 92, 253, 236, 880, 222, 0], 'wordmark-cuff-beanie-navy': [409, 935, 62, 70, 580, 880, 222, 0] } : {
+      'winter-crest-back-tee-black': [440, 126, 221, 191, 550, 330, 190, 1], 'winter-crest-crew-off-white': [714, 106, 172, 211, 800, 330, 190, 1],
+      'frost-lined-hood-black': [941, 86, 179, 231, 1030, 330, 180, 1],
+      'maison-winter-joggers-black': [484, 431, 92, 253, 655, 600, 170, 0], 'wordmark-cuff-beanie-navy': [849, 614, 62, 70, 1010, 600, 170, 0] };
     var reg = div('q3-reg q3-wreg', { left: 0, top: 0, width: M ? 720 : W, height: H }); f.appendChild(reg);
     WINTER.forEach(function (p) {
       var b = PL[p.id]; if (!b) return;
