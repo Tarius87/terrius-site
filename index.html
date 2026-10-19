@@ -758,7 +758,9 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
       .x-stripe { position: absolute; left: 0; right: 0; top: 46%; height: 6px; background: repeating-linear-gradient(90deg, var(--blue) 0 60px, transparent 60px 84px, var(--orange) 84px 144px, transparent 144px 168px, var(--teal) 168px 228px, transparent 228px 252px, var(--burg) 252px 312px, transparent 312px 336px, var(--grey) 336px 396px, transparent 396px 420px); box-shadow: 0 0 14px rgba(75,136,247,.35); }
 
       /* drive */
-      .x-drive { height: 900vh; }
+      .x-drive { height: 900vh; position: relative; }
+      .x-snap { position: absolute; left: 0; width: 1px; height: 1px; scroll-snap-align: start; scroll-snap-stop: normal; pointer-events: none; visibility: hidden; }
+      html.x-snapon { scroll-snap-type: y proximity; }
       .x-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; background: #04060e; }
       .x-far { position: absolute; left: 0; top: 0; z-index: 0; height: 100%; display: flex; will-change: transform, opacity; }
       .x-far img { height: 100%; width: auto; max-width: none; flex: none; }
@@ -1367,7 +1369,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         function ease(t) { return 0.45 * t + 0.55 * t * t * (3 - 2 * t); }
         function clamp(t) { return Math.min(1, Math.max(0, t)); }
         function measure() {
-          if (mq.matches) { drive.style.height = ""; return; }
+          if (mq.matches) { drive.style.height = ""; document.documentElement.classList.remove("x-snapon"); return; }
           vw = stage.clientWidth;
           vh = stage.offsetHeight;
           var portrait = vw < vh * 0.9;
@@ -1396,6 +1398,12 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           s0 = far.offsetHeight * 0.8939 - vw / 2;
           factor = Math.max(0, Math.min(0.25, (far.offsetWidth - vw - s0) / Math.max(1, cams[cams.length - 1] - camS)));
           drive.style.height = Math.round(vh + total) + "px";
+          // native snap points at each storefront: the browser handles the settle, so nothing fights the finger
+          var marks = drive.querySelectorAll(".x-snap");
+          for (var q = marks.length; q < spots.length; q++) { var mk = document.createElement("i"); mk.className = "x-snap"; mk.setAttribute("aria-hidden", "true"); drive.appendChild(mk); }
+          marks = drive.querySelectorAll(".x-snap");
+          spots.forEach(function (p, k) { marks[k].style.top = Math.round(p) + "px"; });
+          document.documentElement.classList.add("x-snapon");
         }
         var cards = stores.map(function (s) { return s.querySelector(".x-card"); });
         function frame() {
@@ -1408,9 +1416,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           }
           var top = drive.getBoundingClientRect().top,
             yT = Math.min(total, Math.max(0, -top));
-          if (ys < 0 || Math.abs(yT - ys) > vh * 3) ys = yT;
-          else ys += (yT - ys) * 0.38;
-          if (Math.abs(yT - ys) < 0.4) ys = yT; else req();
+          ys = yT; // 1:1 with the finger, no trailing
           var y = ys, seg = segs[segs.length - 1];
           for (var n = 0; n < segs.length; n++) { if (y < segs[n].y0 + segs[n].len) { seg = segs[n]; break; } }
           var t = clamp((y - seg.y0) / seg.len),
@@ -1464,7 +1470,8 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
 
       (function () {
         var raf = null;
-        function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } auto = false; }
+        var rootEl = document.documentElement;
+        function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } auto = false; rootEl.style.scrollSnapType = ""; }
         ["wheel", "touchstart", "keydown"].forEach(function (e) { addEventListener(e, stop, { passive: true }); });
         function driveTo(k) {
           if (!window.xSpot) return;
@@ -1476,14 +1483,14 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           stop();
           var from = scrollY, d = to - from;
           if (matchMedia("(prefers-reduced-motion: reduce)").matches || Math.abs(d) < 2) { window.scrollTo(0, to); return; }
-          var t0 = null; auto = true;
+          var t0 = null; auto = true; rootEl.style.scrollSnapType = "none";
           function e(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
           function step(ts) {
             if (t0 === null) t0 = ts;
             var t = Math.min(1, (ts - t0) / dur);
             window.scrollTo(0, Math.round(from + d * e(t)));
             raf = t < 1 ? requestAnimationFrame(step) : null;
-            if (!raf) auto = false;
+            if (!raf) { auto = false; rootEl.style.scrollSnapType = ""; }
           }
           raf = requestAnimationFrame(step);
         }
@@ -1493,7 +1500,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
         addEventListener("touchcancel", function () { touching = false; arm(); }, { passive: true });
         // wait until iOS momentum has fully stopped before snapping, so the snap never fights the finger's fling
         var lastY = -1, still = 0;
-        function arm() { clearTimeout(settleT); lastY = scrollY; still = 0; settleT = setTimeout(check, 90); }
+        function arm() { return; clearTimeout(settleT); lastY = scrollY; still = 0; settleT = setTimeout(check, 90); }
         function check() {
           if (touching || raf) return;
           if (Math.abs(scrollY - lastY) > 0.5) { lastY = scrollY; still = 0; settleT = setTimeout(check, 90); return; }
@@ -1501,7 +1508,7 @@ tr.is-highlight > :last-child { box-shadow: 12px 0 var(--fill-tertiary); }
           settle();
         }
         var prevY = scrollY, dir = 1;
-        addEventListener("scroll", function () { var yy = scrollY; if (Math.abs(yy - prevY) > 1) dir = yy > prevY ? 1 : -1; prevY = yy; if (!auto) arm(); }, { passive: true });
+        addEventListener("scroll", function () { var yy = scrollY; if (Math.abs(yy - prevY) > 1) dir = yy > prevY ? 1 : -1; prevY = yy; }, { passive: true });
         function settle() {
           if (touching || raf || !window.xSpots) return;
           var S = window.xSpots(); if (!S) return;
