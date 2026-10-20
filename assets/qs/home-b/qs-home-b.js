@@ -44,7 +44,15 @@
     sp(); setTimeout(sp, 50); if (document.fonts && document.fonts.ready) document.fonts.ready.then(sp);
   } catch (e) {}
 })();
-/* Quality Stoner home — concept A "the front wall" (Fourthwall Custom HTML section 246a3a20), Oct 17 2026 (Justin picked A).
+/* Oct 19 2026 ~22:00 (Justin picked hero concept 4 "Two Fields, No Walls", site-build/concepts/hero-redo-oct19/parts/c4.html):
+   the hanger split hero AND the small "NEW / Shop Now" block are replaced by two flat colour fields (.qsa-h4): left black with the
+   QUALITY•STONER wordmark + LOUD & PROUD + Cipher Tee — White + SHOP LOUD (/collections/loud-proud); right #6E0B22 with the white QS mark +
+   DISCREET & NEAT + Signet Crew — Black + SHOP DISCREET (/collections/discreet-neat). Product images link to their product pages.
+   Phone: the two fields stacked. Height: hero = viewport - its own top (header) - ticker, so header + hero + ticker are all on screen at
+   first load (Justin, Oct 19 22:04); sizes inside the fields scale with --qh / --fh. Ticker stays directly under the hero; everything from
+   the Winter band down is unchanged. Images img/c4/ (logos scaled from the /workspace/work/qsmock/orig-* masters via the concept assets).
+   Previous version (hanger hero): blk/qs-home-b.src.8b50b.js.
+   Quality Stoner home — concept A "the front wall" (Fourthwall Custom HTML section 246a3a20), Oct 17 2026 (Justin picked A).
    Section HTML is one line: <script src="https://cdn.jsdelivr.net/gh/Tarius87/terrius-site@<commit>/assets/qs/home-b/qs-home-b.js"></script>
    Light page (#F4F3F0) that mirrors the 360 store's Front wall: hero = LP | DN wall halves rebuilt in CSS (dark half with the
    burgundy Wax Seal Crew (Loud & Proud), light half with the white Cipher Tee — White (Discreet & Neat); swapped Oct 17 2026 12:44; 13:01 panel backgrounds swapped too: crew on the light panel (left), tee on the dark panel (right); sign marks recoloured to stay legible: word-black.png / qs-mono-white.png), rails, 360 name-tag pills, floor strip
@@ -58,9 +66,10 @@
 var me=document.currentScript,CB=me&&me.src?me.src.replace(/[^\/]*$/,''):'https://cdn.jsdelivr.net/gh/Tarius87/terrius-site@main/assets/qs/home-b/';
 var I=CB+'img/a/',P=I+'p/';
 var S863='.custom-html--fw-section-custom-html-863702ee-37d1-48a0-8c17-b9a8c0e04dea',S246='.custom-html--fw-section-custom-html-246a3a20-ff62-43a2-bd4a-0c06afca2c46';
-/* hero pair: [slug, short name, fallback price, full name, from?] */
-var TEE=['maison-monogram-tee-white','Cipher Tee','34.99','Cipher Tee — White',1],
-    CREW=['seal-crew-burgundy','Wax Seal Crew','49','Wax Seal Crew — Burgundy',1];
+/* hero fields (concept 4): [slug, full name, fallback base price, image, w, h, collection link, link text, side line] */
+var HL=['maison-monogram-tee-white','Cipher Tee — White','34.99','cipher-tee-white.webp',1500,1298,'/collections/loud-proud','Shop Loud','Loud &amp; Proud'],
+    HR=['embroidered-qs-crew-black','Signet Crew — Black','49','signet-crew-black.webp',678,641,'/collections/discreet-neat','Shop Discreet','Discreet &amp; Neat'];
+var C4=I.replace(/a\/$/,'c4/');
 /* grid: [slug, short name, fallback price, full name, from?, image, tone w=white piece on dark stage / d=dark piece on DN stage] */
 var GRID=[
  ['wordmark-hoodie-white','Masthead Hoodie','58','Masthead Hoodie — White',0,'wordmark-hoodie-white','w'],
@@ -86,36 +95,42 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qsa a{color:inherit;text-decoration:none!important}',
 '.qsa img{display:block;max-width:100%;border:0}',
 '.qsa p,.qsa span{color:inherit}',
-/* the front wall */
-'.qsa-wall{display:grid;grid-template-columns:1fr 1fr}',
-'.qsa-half{position:relative;display:flex;flex-direction:column;align-items:center;padding:34px 10px 0;min-width:0}',
-'.qsa-half:before{content:"";position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none}',
-'.qsa-half>*{position:relative}',
-'.qsa-lp{background:linear-gradient(180deg,#1a0d11 0,#0d0809 55%,#090607 100%);box-shadow:inset 0 3px 0 #a3203f;color:#fff}',
-'.qsa-lp:before{background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 150px)}',
-'.qsa-dn{background:linear-gradient(180deg,#fbfaf8,#F4F3F0 60%,#e8e6e1);box-shadow:inset 0 -50px 70px -40px rgba(0,0,0,.18);color:#111}',
-'.qsa-dn:before{background:repeating-linear-gradient(90deg,rgba(0,0,0,.04) 0 1px,transparent 1px 150px)}',
-'.qsa-sign{display:flex;flex-direction:column;align-items:center;gap:10px;height:62px;justify-content:flex-end;text-align:center}',
-'.qsa-sign img.w{height:11px;width:auto}.qsa-sign img.m{height:40px;width:auto}',
-'.qsa-sign small{display:block;font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;opacity:.85;line-height:1.2;padding-left:.3em}',
-'.qsa-rail{width:74%;height:5px;border-radius:3px;margin-top:26px}.qsa-lp .qsa-rail{background:linear-gradient(#6b6b6b,#2b2b2b)}.qsa-dn .qsa-rail{background:#141414}',
-'.qsa-g{display:block;width:96%;margin-top:-4px}',
-'.qsa-g img{width:100%;height:auto}',
-'.qsa-half .qsa-tag{margin:12px 0 30px}',
-'.qsa-floor{display:grid;grid-template-columns:1fr 1fr}.qsa-flo{height:26px}',
-'.qsa-flo.l{background:linear-gradient(#2a0c14,#120709 70%,#0b0708)}.qsa-flo.r{background:linear-gradient(#d9d6d0,#bdb9b2 70%,#a9a59e)}',
+/* hero concept 4: two flat fields, no walls (Oct 19 2026). --qh = hero height (set by fit()), --fh = one phone field */
+'.qsa-h4{display:grid;grid-template-columns:1fr 1fr;height:var(--qh,calc(100vh - 124px));border-bottom:2px solid #F4F3F0;background:#0b0b0b}',
+'.qsa-f{position:relative;overflow:hidden;min-width:0;color:#fff}',
+'.qsa-f.l{background:#0b0b0b}.qsa-f.r{background:#6E0B22}',
+'.qsa-mk{position:absolute;z-index:2;top:calc(var(--qh,776px)*.057);left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap}',
+'.qsa-f.l .qsa-mk img{width:min(300px,34vw);height:auto;margin:0 auto}',
+'.qsa-f.r .qsa-mk img{height:min(56px,calc(var(--qh,776px)*.072));width:auto;margin:0 auto}',
+'.qsa-s{display:block;margin-top:16px;font-size:12px;font-weight:400;letter-spacing:.5em;padding-left:.5em;line-height:1.2;text-transform:uppercase;color:#fff!important}',
+'.qsa-f.r .qsa-s{margin-top:12px}',
+'.qsa-p{position:absolute;z-index:1;left:50%;top:47%;display:block;transform:translate(-50%,-50%) rotate(-3deg);width:min(66%,520px,calc(var(--qh,776px)*.61))}',
+'.qsa-f.r .qsa-p{transform:translate(-50%,-50%) rotate(3deg);width:min(58%,440px,calc(var(--qh,776px)*.54))}',
+'.qsa-p img{width:100%;height:auto;filter:drop-shadow(0 30px 30px rgba(0,0,0,.42))}',
+'.qsa-base{position:absolute;z-index:2;left:0;right:0;bottom:calc(var(--qh,776px)*.049);display:flex;flex-direction:column;align-items:center;gap:20px}',
+'.qsa-np{font-size:13px;font-weight:400;letter-spacing:.24em;line-height:1.2;text-transform:uppercase;color:#fff!important;text-align:center}',
+'.qsa-np b{font-weight:400;opacity:.62;margin-left:14px;color:#fff!important}',
+'.qsa-lk{display:inline-block;font-size:13px;font-weight:400;letter-spacing:.26em;line-height:1;padding:0 0 6px;border-bottom:1px solid rgba(255,255,255,.9);text-transform:uppercase;color:#fff!important}',
+'.qsa-lk:hover{opacity:.75}',
+'@media (max-width:600px){',
+' .qsa-h4{grid-template-columns:1fr;grid-template-rows:1fr 1fr}',
+' .qsa-mk{left:24px;top:clamp(14px,calc(var(--fh,373px)*.09),34px);transform:none;text-align:left}',
+' .qsa-f.l .qsa-mk img{width:150px;margin:0}',
+' .qsa-f.r .qsa-mk img{height:clamp(26px,calc(var(--fh,373px)*.107),40px);margin:0}',
+' .qsa-s{font-size:9.5px;letter-spacing:.4em;padding-left:0;margin-top:clamp(7px,calc(var(--fh,373px)*.032),12px)}',
+' .qsa-f.r .qsa-s{margin-top:clamp(7px,calc(var(--fh,373px)*.032),12px)}',
+' .qsa-p{left:auto;right:-4%;top:50%;transform:translateY(-50%) rotate(-3deg);width:min(62%,calc(var(--fh,373px)*.72))}',
+' .qsa-f.r .qsa-p{right:-7%;top:46%;transform:translateY(-50%) rotate(3deg);width:min(54%,calc(var(--fh,373px)*.68))}',
+' .qsa-base{left:24px;right:auto;bottom:clamp(12px,calc(var(--fh,373px)*.08),30px);align-items:flex-start;gap:clamp(8px,calc(var(--fh,373px)*.043),16px)}',
+' .qsa-np{font-size:11.5px;letter-spacing:.16em;display:flex;flex-direction:column;gap:6px;text-align:left}',
+' .qsa-np b{margin-left:0}',
+' .qsa-lk{font-size:12px;letter-spacing:.24em}',
+'}',
 /* 360 name tags */
 '.qsa-tag{display:inline-block;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.02em;padding:5px 10px;border-radius:99px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis}',
 '.qsa-tag i{font-style:normal;opacity:.7;margin-left:6px;font-weight:400}',
 '.qsa-tag.lp{background:rgba(10,6,7,.88);color:#fff;border:1px solid rgba(194,70,95,.7)}',
 '.qsa-tag.dn{background:#fff;color:#111;border:1px solid #d5d4d0}',
-/* copy */
-'.qsa-copy{text-align:center;padding:56px 22px 8px}',
-'.qsa-new{font-size:12px;letter-spacing:.36em;text-transform:uppercase;padding-left:.36em}',
-'.qsa-col{margin-top:12px;font-size:11px;letter-spacing:.26em;line-height:1.9;text-transform:uppercase;color:#4a4a4a!important}',
-'.qsa-rule{width:28px;height:1px;background:#6E0B22;margin:18px auto 0}',
-'.qsa-btn{display:inline-block;margin-top:26px;border:1px solid #141414;font-size:13px;letter-spacing:.04em;line-height:1;padding:12px 20px;border-radius:4px;color:#141414!important}',
-'.qsa-btn:hover{background:#141414;color:#F4F3F0!important}',
 /* Winter Atelier promo band (Oct 17 2026, Justin 17:08: right under the hero pair, above the grid). Ice band, navy spaced caps,
    blue-S QS mark (img/w/qs-bluemark-k.webp = the 360 winter wall's mark, built from collections/winter-atelier/assets/bqs.png + bqs-dot.png),
    the five preview pieces of the 360 winter wall (not links; products hidden until Nov 15), one link -> /pages/walk-the-store#w=all.
@@ -155,25 +170,18 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qsa-visit a:hover{opacity:.7}',
 /* Oct 19 2026 16:20 (Justin): promo ticker sits flush under the hero on home (moved here from the top of the page); copy below tightened */
 '.qsa>#qs-tk{margin:0;flex:none}',
-'.qsa #qs-tk+.qsa-copy{padding-top:40px}',
 '@media (min-width:900px){',
-' .qsa-wrap{max-width:1240px;margin:0 auto;padding:48px 48px 0}',
-' .qsa-half{padding:48px 20px 0}.qsa-sign{height:96px}.qsa-sign img.w{height:17px}.qsa-sign img.m{height:66px}.qsa-sign small{font-size:12px}',
-' .qsa-rail{width:52%;margin-top:34px}.qsa-g{width:min(80%,470px)}.qsa-half .qsa-tag{margin:16px 0 44px;font-size:13px;padding:7px 13px}',
-' .qsa-flo{height:40px}',
 ' .qsa-wa{margin-top:64px;padding:56px 48px}.qsa-wa-in{display:grid;grid-template-columns:minmax(300px,380px) 1fr;grid-template-rows:auto auto;column-gap:40px;row-gap:0}.qsa-wa-t{grid-column:1;grid-row:1;align-self:end}.qsa-wa-c{grid-column:1;grid-row:2;align-self:start}.qsa-wa-p{grid-column:2;grid-row:1/3;align-self:center}',
 ' .qsa-wa-m{height:72px}.qsa-wa-k{font-size:12.5px}.qsa-wa-h{font-size:30px}.qsa-wa-d{font-size:14px}.qsa-wa-l{font-size:12.5px}',
 ' .qsa-wa-p{margin:0;max-width:800px;gap:20px;padding-bottom:14px;justify-self:center;width:100%}',
 ' .qsa-sec{padding:120px 48px 0}.qsa-grid{grid-template-columns:repeat(4,1fr);gap:52px 26px}',
-' .qsa-visit{margin-top:120px;padding-bottom:96px}.qsa-visit a{font-size:12.5px}.qsa-copy{padding:64px 22px 8px}',
-' .qsa #qs-tk+.qsa-copy{padding-top:48px}',
+' .qsa-visit{margin-top:120px;padding-bottom:96px}.qsa-visit a{font-size:12.5px}',
 '}'
 ].join('\n');
 function tag(g,tone){return '<span class="qsa-tag '+tone+'" data-s="'+g[0]+'">'+esc(g[1])+'<i>'+pm(g[2],g[4])+'</i></span>'}
-function half(g,cls,sign,img,tone,side){
- return '<div class="qsa-half '+cls+'"><div class="qsa-sign">'+sign+'<small>'+side+'</small></div><div class="qsa-rail"></div>'+
-  '<a class="qsa-g" href="/products/'+g[0]+'"><img src="'+I+img+'" alt="'+esc(g[3])+'" width="1028" height="937"></a>'+
-  '<a href="/products/'+g[0]+'">'+tag(g,tone)+'</a></div>'}
+function field(g,cls,mark){return '<div class="qsa-f '+cls+'"><div class="qsa-mk">'+mark+'<span class="qsa-s">'+g[8]+'</span></div>'+
+ '<a class="qsa-p" href="/products/'+g[0]+'"><img src="'+C4+g[3]+'" alt="'+esc(g[1])+'" width="'+g[4]+'" height="'+g[5]+'"></a>'+
+ '<div class="qsa-base"><span class="qsa-np" data-h="'+g[0]+'">'+esc(g[1])+'<b>'+money(g[2])+'</b></span><a class="qsa-lk" href="'+g[6]+'">'+g[7]+'</a></div></div>'}
 function card(g){return '<a class="qsa-pc" href="/products/'+g[0]+'"><div class="ph qsa-st-'+g[6]+'"><img src="'+P+g[5]+'.webp" alt="'+esc(g[3])+'" loading="lazy"></div><span class="lb">'+tag(g,g[6]==='w'?'lp':'dn')+'</span></a>'}
 /* Winter Atelier (Collection 002) preview: same five pieces as the 360 winter wall */
 /* Oct 19 2026 (Justin): row tightened (each piece's box = its own aspect, so no wide empty cells around the joggers/beanie) and the beanie made bigger.
@@ -187,12 +195,10 @@ function winter(){return '<section class="qsa-wa" id="winter-atelier" aria-label
  '<div class="qsa-wa-p">'+WINTER.map(function(w){var f=(w[2]*w[3]).toFixed(4);return '<span style="flex:'+f+' 1 0;aspect-ratio:'+f+'/'+w[3]+'"><img src="'+W+w[0]+'.webp" alt="'+esc(w[1])+'" loading="lazy"></span>'}).join('')+'</div>'+
  '<div class="qsa-wa-c"><a class="qsa-wa-l" href="/pages/walk-the-store#w=all">Preview in the store &rarr;</a></div></div></section>'}
 var HTML='<div class="qsa" id="qs-home">'+
- '<div class="qsa-wrap"><div class="qsa-wall">'+
-  half(CREW,'qsa-dn','<img class="w" src="'+I+'word-black.png" alt="Quality Stoner">','crew-seal-hang-dn.webp','lp','Loud &amp; Proud')+
-  half(TEE,'qsa-lp','<img class="m" src="'+I+'qs-mono-white.png" alt="QS">','tee-dn-hang.webp','dn','Discreet &amp; Neat')+
- '</div><div class="qsa-floor"><div class="qsa-flo r"></div><div class="qsa-flo l"></div></div></div>'+
- '<div class="qsa-copy"><p class="qsa-new">New</p><div class="qsa-rule"></div>'+
-  '<a class="qsa-btn" href="/collections/all">Shop Now</a></div>'+winter()+
+ '<section class="qsa-h4" aria-label="Loud &amp; Proud or Discreet &amp; Neat">'+
+  field(HL,'l','<img src="'+C4+'word-white.png" alt="Quality Stoner" width="1200" height="62">')+
+  field(HR,'r','<img src="'+C4+'qs-mark-white.png" alt="QS" width="342" height="320">')+
+ '</section>'+winter()+
  '<section class="qsa-sec"><div class="qsa-sh"><span class="qsa-k">The pieces</span><a href="/collections/all">View all</a></div><div class="qsa-grid">'+GRID.map(card).join('')+'</div></section>'+
  '<p class="qsa-visit"><a href="/pages/walk-the-store">Visit the store &nbsp;&rarr;</a></p>'+
  '</div>';
@@ -200,10 +206,22 @@ document.documentElement.classList.add('qsa-on');
 var st=document.createElement('style');st.id='qs-home-css';st.textContent=CSS;(document.head||document.documentElement).appendChild(st);
 if(me&&me.parentNode){var w=document.createElement('div');w.innerHTML=HTML;while(w.firstChild)me.parentNode.insertBefore(w.firstChild,me)}
 /* promo ticker: directly under the hero (the shared ticker block above leaves it unplaced on home) */
-(function(){var tk=window.__qsTkEl||document.getElementById('qs-tk'),wr=document.querySelector('#qs-home .qsa-wrap');if(tk&&wr&&wr.parentNode)wr.parentNode.insertBefore(tk,wr.nextSibling)})();
+(function(){var tk=window.__qsTkEl||document.getElementById('qs-tk'),wr=document.querySelector('#qs-home .qsa-h4');if(tk&&wr&&wr.parentNode)wr.parentNode.insertBefore(tk,wr.nextSibling)})();
+/* hero height: header + hero + ticker fit the first screen (Justin Oct 19 22:04). Re-fit on width changes only (iOS toolbar show/hide
+   changes innerHeight while scrolling; re-fitting then would make the page jump), plus early load events while still at the top. */
+(function(){var hero=document.querySelector('#qs-home .qsa-h4');if(!hero)return;var lw=0;
+ function fit(force){var w=innerWidth;if(!force&&w===lw)return;lw=w;var tk=document.getElementById('qs-tk');
+  var th=(tk&&tk.isConnected&&tk.previousElementSibling===hero)?tk.offsetHeight:(w>=900?36:34);
+  var top=hero.getBoundingClientRect().top+(window.pageYOffset||0),ph=w<=600;
+  var H=Math.round(Math.max(ph?360:420,Math.min(1100,innerHeight-top-th)));
+  hero.style.setProperty('--qh',H+'px');hero.style.setProperty('--fh',((H-2)/2).toFixed(1)+'px')}
+ fit(1);var early=function(){if((window.pageYOffset||0)<5)fit(1)};
+ document.addEventListener('DOMContentLoaded',early);window.addEventListener('load',early);setTimeout(early,600);
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(early);
+ window.addEventListener('resize',function(){fit(0)});window.addEventListener('orientationchange',function(){setTimeout(function(){fit(1)},250)})})();
 /* retired side-choice gate (lived in 863702ee): never let it lock the page */
 function nogate(){var g=document.getElementById('qsg');if(g){g.classList.remove('on');g.style.display='none'}var r=document.documentElement;if(r.style.overflow==='hidden')r.style.overflow='';if(document.body&&document.body.style.overflow==='hidden')document.body.style.overflow=''}
 nogate();setTimeout(nogate,600);
 /* live prices from each product page's JSON-LD ("from" when sizes differ in price); a 404 product drops its grid card */
-[TEE,CREW].concat(GRID).forEach(function(g){fetch('/products/'+g[0],{credentials:'same-origin'}).then(function(r){if(r.status===404){var c=document.querySelector('.qsa-grid [data-s="'+g[0]+'"]');c=c&&c.closest('.qsa-pc');if(c)c.style.display='none';throw 0}if(!r.ok)throw 0;return r.text()}).then(function(h){var j=h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/),d=null;try{d=j&&JSON.parse(j[1])}catch(e){}if(!d)return;var o=d.offers;o=o&&(o.offers||o);o=[].concat(o||[]);var ps=o.map(function(x){return +x.price}).filter(function(v){return v>0});if(!ps.length)return;var lo=Math.min.apply(null,ps),hi=Math.max.apply(null,ps);[].forEach.call(document.querySelectorAll('.qsa [data-s="'+g[0]+'"] i'),function(i){i.textContent=pm(lo,hi>lo)})}).catch(function(){})});
+[HL,HR].concat(GRID).forEach(function(g){fetch('/products/'+g[0],{credentials:'same-origin'}).then(function(r){if(r.status===404){var c=document.querySelector('.qsa-grid [data-s="'+g[0]+'"]');c=c&&c.closest('.qsa-pc');if(c)c.style.display='none';throw 0}if(!r.ok)throw 0;return r.text()}).then(function(h){var j=h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/),d=null;try{d=j&&JSON.parse(j[1])}catch(e){}if(!d)return;var o=d.offers;o=o&&(o.offers||o);o=[].concat(o||[]);var ps=o.map(function(x){return +x.price}).filter(function(v){return v>0});if(!ps.length)return;var lo=Math.min.apply(null,ps),hi=Math.max.apply(null,ps);[].forEach.call(document.querySelectorAll('.qsa [data-s="'+g[0]+'"] i'),function(i){i.textContent=pm(lo,hi>lo)});[].forEach.call(document.querySelectorAll('.qsa [data-h="'+g[0]+'"] b'),function(b){b.textContent=money(lo)})}).catch(function(){})});
 })();
