@@ -46,7 +46,7 @@
 })();
 /* Oct 19 2026 ~22:00 (Justin picked hero concept 4 "Two Fields, No Walls", site-build/concepts/hero-redo-oct19/parts/c4.html):
    the hanger split hero AND the small "NEW / Shop Now" block are replaced by two flat colour fields (.qsa-h4): left black with the
-   QUALITY•STONER wordmark + LOUD & PROUD + Cipher Tee — White + SHOP LOUD (/collections/loud-proud); right #6E0B22 with the white QS mark +
+   QUALITY•STONER wordmark + LOUD & PROUD + Calling Card Tee — White (Oct 20 2026, Justin; was Cipher Tee — White) + SHOP LOUD (/collections/loud-proud); right #6E0B22 with the white QS mark +
    DISCREET & NEAT + Signet Crew — Black + SHOP DISCREET (/collections/discreet-neat). Product images link to their product pages.
    Phone: the two fields stacked. Height: hero = viewport - its own top (header) - ticker, so header + hero + ticker are all on screen at
    first load (Justin, Oct 19 22:04); sizes inside the fields scale with --qh / --fh. Ticker stays directly under the hero; everything from
@@ -67,7 +67,7 @@ var me=document.currentScript,CB=me&&me.src?me.src.replace(/[^\/]*$/,''):'https:
 var I=CB+'img/a/',P=I+'p/';
 var S863='.custom-html--fw-section-custom-html-863702ee-37d1-48a0-8c17-b9a8c0e04dea',S246='.custom-html--fw-section-custom-html-246a3a20-ff62-43a2-bd4a-0c06afca2c46';
 /* hero fields (concept 4): [slug, full name, fallback base price, image, w, h, collection link, link text, side line] */
-var HL=['maison-monogram-tee-white','Cipher Tee — White','34.99','cipher-tee-white.webp',1500,1298,'/collections/loud-proud','Shop Loud','Loud &amp; Proud'],
+var HL=['qs-lp-ts01-classic-tee-white','Calling Card Tee — White','29','calling-card-tee-white.webp',1061,918,'/collections/loud-proud','Shop Loud','Loud &amp; Proud'],
     HR=['embroidered-qs-crew-black','Signet Crew — Black','49','signet-crew-black.webp',678,641,'/collections/discreet-neat','Shop Discreet','Discreet &amp; Neat'];
 var C4=I.replace(/a\/$/,'c4/');
 /* grid: [slug, short name, fallback price, full name, from?, image, tone w=white piece on dark stage / d=dark piece on DN stage] */
