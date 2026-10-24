@@ -44,6 +44,110 @@
     sp(); setTimeout(sp, 50); if (document.fonts && document.fonts.ready) document.fonts.ready.then(sp);
   } catch (e) {}
 })();
+/* Entry intro (Oct 24 2026, Justin picked logo smoke v2-B "gust"; source promo/logo-smoke/work/render2.py B light 1080 1080, web cut
+   0-6.2 s = 186 frames, 720x720, files intro/qs-intro-b.mp4 (h264, iOS/Safari/Chrome) + .webm (VP9) + poster = first frame).
+   First homepage visit per browser session (sessionStorage 'qs-intro'): full-viewport fixed off-white #F4F3F0 overlay (the video's own
+   background), video centred (muted, playsinline, autoplay; its square's edges feathered into the overlay colour so a 1-level decode difference or
+   a smoke wisp at the frame edge never shows as a seam). When it ends, or on tap / any key / wheel / touch-scroll (= skip), it
+   crossfades to static images of the exact master lockup pieces (intro/qs-mark.webp + qs-word.webp, cut from
+   /workspace/work/qsmock/orig-light-lockup.png at the video's final-frame position), the wordmark fades out, and the QS mark flies
+   (FLIP: transform translate+scale only, 700 ms ease-in-out) onto the mark part of the theme header logo (img.header__logo-image is
+   one horizontal lockup image: mark rect = MK below, fitted to the header image's alpha) while the off-white fades away. The header
+   logo is held at opacity 0 during the intro and faded back in under the landed mark, then the overlay is removed. Autoplay refused /
+   video error / no frames within 3.5 s -> straight to the static mark + shrink. Page scroll is held (wheel/touch/scroll keys blocked,
+   no overflow change so nothing reflows) and released at the end. Skipped entirely under prefers-reduced-motion, inside an iframe
+   (theme editor preview) or when sessionStorage is unavailable. No backdrop-filter / preserve-3d / 3D transforms. window.QSIntro = state. */
+(function(){
+var Q=window.QSIntro={phase:'off',t:{}};
+try{
+ if(window.top!==window.self)return;
+ if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){Q.phase='reduced';return}
+ try{if(sessionStorage.getItem('qs-intro')){Q.phase='seen';return}sessionStorage.setItem('qs-intro','1')}catch(e){Q.phase='nostorage';return}
+}catch(e){return}
+var D0=(document.currentScript&&document.currentScript.src)?document.currentScript.src.replace(/[^\/]*$/,''):'https://cdn.jsdelivr.net/gh/Tarius87/terrius-site@main/assets/qs/home-b/';
+var IB=D0+'intro/',BG='#F4F3F0',EASE='cubic-bezier(.65,0,.35,1)',FLY=700;
+/* piece rects as fractions of the square video frame (final frame = master lockup scaled into 789x800 at 145,140 of 1080) */
+var MK=[0.148577,0.143827,0.701797,0.657654],WD=[0.220534,0.827407,0.557760,0.028765];
+/* QS mark inside the header logo image (fraction of the img box; least-squares fit of the master mark to the header image alpha) */
+var HM=[0.009375,0.046825,0.185683,0.883606];
+var now=function(){return (window.performance&&performance.now)?performance.now():+new Date};
+var t0=Q.t0=now(),phase='load',timers=[],ov,bg,box,v,mk,wd,hl=null,sx=window.pageXOffset||0,sy=window.pageYOffset||0,geo=null;
+function mark(p){phase=p;Q.phase=p;Q.t[p]=Math.round(now()-t0)}
+function later(f,ms){var id=setTimeout(function(){try{f()}catch(e){done()}},ms);timers.push(id);return id}
+function hdr(){return document.querySelector('.header__logo-image')||document.querySelector('.header__logo img')}
+function css(el,o){for(var k in o)el.style[k]=o[k];return el}
+function lay(){if(!ov||phase==='fly'||phase==='land')return;var r=ov.getBoundingClientRect(),vw=r.width||innerWidth,vh=r.height||innerHeight;
+ var d=Math.round(Math.min(vw*.88,vh*.66,620)),l=(vw-d)/2,t=(vh-d)/2;geo={d:d,l:l,t:t};
+ css(box,{left:l+'px',top:t+'px',width:d+'px',height:d+'px'});
+ css(mk,{left:(l+d*MK[0])+'px',top:(t+d*MK[1])+'px',width:(d*MK[2])+'px',height:(d*MK[3])+'px'});
+ css(wd,{left:(l+d*WD[0])+'px',top:(t+d*WD[1])+'px',width:(d*WD[2])+'px',height:(d*WD[3])+'px'})}
+var KEYS={' ':1,Spacebar:1,ArrowDown:1,ArrowUp:1,ArrowLeft:1,ArrowRight:1,PageDown:1,PageUp:1,Home:1,End:1,Down:1,Up:1};
+function onKey(e){if(KEYS[e.key])e.preventDefault();skip('key')}
+function onBlock(e){if(e.cancelable)e.preventDefault();skip(e.type)}
+function onDown(){skip('tap')}
+function onScroll(){if((window.pageYOffset||0)!==sy||(window.pageXOffset||0)!==sx){window.scrollTo(sx,sy);skip('scroll')}}
+function listen(on){var f=on?'addEventListener':'removeEventListener',np={passive:false,capture:true};
+ window[f]('keydown',onKey,true);window[f]('wheel',onBlock,np);window[f]('touchmove',onBlock,np);window[f]('scroll',onScroll,true);window[f]('resize',lay)}
+function done(){if(phase==='done')return;mark('done');for(var i=0;i<timers.length;i++)clearTimeout(timers[i]);
+ try{listen(false)}catch(e){}try{if(v){v.pause();v.removeAttribute('src')}}catch(e){}
+ if(ov&&ov.parentNode)ov.parentNode.removeChild(ov);var s=document.getElementById('qs-intro-css');if(s&&s.parentNode)s.parentNode.removeChild(s);
+ if(hl){hl.style.opacity='';hl.style.transition=''}}
+function skip(why){if(phase==='load'||phase==='play'){Q.skip=why;toStatic(false)}}
+function ready(i){return i.complete&&i.naturalWidth>0}
+function toStatic(natural){if(phase!=='load'&&phase!=='play')return;mark('static');Q.natural=natural;
+ var fade=natural?200:280;css(mk,{transition:'opacity '+fade+'ms linear',opacity:'1'});css(wd,{transition:'opacity '+fade+'ms linear',opacity:'1'});
+ var waited=0;(function go(){if(phase!=='static')return;
+  if(!(ready(mk)&&ready(wd))&&waited<1500){waited+=100;later(go,100);return}
+  later(function(){css(box,{transition:'opacity 200ms linear',opacity:'0'});if(v)try{v.pause()}catch(e){}
+   css(wd,{transition:'opacity 300ms linear',opacity:'0'});
+   later(function(){fly(ready(mk))},220)},fade+40)})()}
+function outro(){mark('fade');css(ov,{transition:'opacity 450ms linear',opacity:'0',pointerEvents:'none'});later(done,480)}
+function fly(ok){if(phase!=='static')return;var h=hl||hdr();if(h&&!hl){hl=h;hl.style.opacity='0'}
+ var r=h?h.getBoundingClientRect():null,vh=innerHeight;
+ if(!ok||!r||r.width<4||r.height<2||r.bottom<0||r.top>vh){Q.tgt=null;outro();return}
+ var tx=r.left+r.width*HM[0],ty=r.top+r.height*HM[1],tw=r.width*HM[2],th=r.height*HM[3];
+ var m=mk.getBoundingClientRect(),k=(tw/m.width+th/m.height)/2,dx=tx-m.left,dy=ty-m.top;
+ Q.tgt=[tx,ty,tw,th];Q.from=[m.left,m.top,m.width,m.height];Q.k=k;mark('fly');
+ css(ov,{pointerEvents:'none'});
+ css(mk,{transition:'transform '+FLY+'ms '+EASE,transform:'translate('+dx.toFixed(2)+'px,'+dy.toFixed(2)+'px) scale('+k.toFixed(5)+')'});
+ css(bg,{transition:'opacity '+FLY+'ms '+EASE,opacity:'0'});
+ later(function(){mark('land');var fin=function(){hl.style.transition='opacity 180ms linear';hl.style.opacity='1';later(done,220)};if(window.__qsIntroHold){Q.release=fin;return}fin()},FLY+30)}
+try{
+ var st=document.createElement('style');st.id='qs-intro-css';
+ st.textContent='#qs-intro{position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483000;overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;touch-action:none}'+
+  '#qs-intro .qi-bg{position:absolute;left:0;top:0;right:0;bottom:0;background:'+BG+'}'+
+  '#qs-intro .qi-box{position:absolute;overflow:hidden}'+
+  '#qs-intro video{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:transparent;border:0;outline:0;object-fit:contain;pointer-events:none}'+
+  '#qs-intro .qi-fx,#qs-intro .qi-fy{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}'+
+  '#qs-intro .qi-fx{background:linear-gradient(90deg,'+BG+' 0,rgba(244,243,240,0) 8%,rgba(244,243,240,0) 92%,'+BG+' 100%)}'+
+  '#qs-intro .qi-fy{background:linear-gradient(180deg,'+BG+' 0,rgba(244,243,240,0) 8%,rgba(244,243,240,0) 92%,'+BG+' 100%)}'+
+  '#qs-intro .qi-mk,#qs-intro .qi-wd{position:absolute;display:block;max-width:none!important;max-height:none!important;margin:0;padding:0;border:0;opacity:0;transform-origin:0 0;pointer-events:none;will-change:transform,opacity}';
+ (document.head||document.documentElement).appendChild(st);
+ ov=document.createElement('div');ov.id='qs-intro';ov.setAttribute('aria-hidden','true');
+ bg=ov.appendChild(document.createElement('div'));bg.className='qi-bg';
+ box=ov.appendChild(document.createElement('div'));box.className='qi-box';
+ mk=document.createElement('img');mk.className='qi-mk';mk.alt='';mk.decoding='sync';mk.src=IB+'qs-mark.webp';
+ wd=document.createElement('img');wd.className='qi-wd';wd.alt='';wd.decoding='sync';wd.src=IB+'qs-word.webp';
+ v=document.createElement('video');
+ ['muted','playsinline','webkit-playsinline','autoplay','disablepictureinpicture','disableremoteplayback'].forEach(function(a){v.setAttribute(a,'')});
+ v.muted=true;v.defaultMuted=true;v.playsInline=true;v.autoplay=true;v.preload='auto';v.poster=IB+'qs-intro-b-poster.jpg';
+ var s1=document.createElement('source');s1.src=IB+'qs-intro-b.mp4';s1.type='video/mp4';
+ var s2=document.createElement('source');s2.src=IB+'qs-intro-b.webm';s2.type='video/webm';v.appendChild(s1);v.appendChild(s2);
+ box.appendChild(v);box.appendChild(document.createElement('div')).className='qi-fx';box.appendChild(document.createElement('div')).className='qi-fy';ov.appendChild(wd);ov.appendChild(mk);
+ (document.body||document.documentElement).appendChild(ov);
+ hl=hdr();if(hl)hl.style.opacity='0';
+ lay();listen(true);ov.addEventListener('pointerdown',onDown);ov.addEventListener('touchstart',onDown,{passive:true});
+ v.addEventListener('playing',function(){if(phase==='load')mark('play')});
+ v.addEventListener('ended',function(){toStatic(true)});
+ v.addEventListener('timeupdate',function(){Q.ct=v.currentTime;if(v.duration&&v.currentTime>=v.duration-0.03&&phase==='play')toStatic(true)});
+ v.addEventListener('error',function(){Q.err='video';toStatic(false)});s2.addEventListener('error',function(){if(!v.currentSrc||v.networkState===3){Q.err='source';toStatic(false)}});
+ var p;try{p=v.play()}catch(e){p=null}
+ if(p&&p.then)p.then(function(){if(phase==='load')mark('play')},function(e){if(phase==='load'){Q.err='autoplay:'+(e&&e.name);toStatic(false)}});
+ later(function(){if(phase==='load'){Q.err='timeout';toStatic(false)}},3500);
+ later(function(){if(phase==='play'){Q.err='watchdog';toStatic(false)}},11000);
+ later(done,16000);
+}catch(e){Q.err='init:'+e;done()}
+})();
 /* Oct 19 2026 ~22:00 (Justin picked hero concept 4 "Two Fields, No Walls", site-build/concepts/hero-redo-oct19/parts/c4.html):
    the hanger split hero AND the small "NEW / Shop Now" block are replaced by two flat colour fields (.qsa-h4): left black with the
    QUALITY•STONER wordmark + LOUD & PROUD + Calling Card Tee — White (Oct 20 2026, Justin; was Cipher Tee — White) + SHOP LOUD (/collections/loud-proud); right #6E0B22 with the white QS mark +
