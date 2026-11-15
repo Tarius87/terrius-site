@@ -51,7 +51,8 @@
    iPhone rules: 2D projection in JS, one transform per element (translate + scale), opacity for the fade, no preserve-3d / backdrop-filter /
    filter animation; hidden items are display:none; images load lazily as they come round. Every product piece links to its product page
    (SHOP + slug + '?from=360', same hrefs as the wall room). Old wall-room source: qs-store360.src.85e4c.js.
-   Source: site-build/store360/qs-store360.src.js + ring.css, built by site-build/store360/build.py. */
+   Source: site-build/store360/qs-store360.src.js + ring.css, built by site-build/store360/build.py.
+   Nov 15 2026: since the Winter-live edit the LIVE file is the source (src.js is stale); the VIEW ALL grid is added by work/grid/assemble.py. */
 (function () {
   if (window.__q3Loaded) return; window.__q3Loaded = 1;
   var me = document.currentScript, SRC = me && me.src ? me.src : '';
@@ -130,7 +131,7 @@
     root = document.createElement('div'); root.className = 'q3' + (RM ? ' q3-rm' : '');
     root.innerHTML = '<div class="q3-bg"></div><div class="q3-ice"></div><svg class="q3-disc" aria-hidden="true"></svg>' +
       '<div class="q3-view" tabindex="0" role="region" aria-roledescription="carousel" aria-label="The Quality Stoner store. Drag, swipe or use the arrow keys to turn the ring."></div>' +
-      '<div class="q3-top"><a class="q3-back" href="https://qualitystoner.com/collections/all" aria-label="Back to the shop">&#8592;&nbsp; Shop</a><span class="q3-ttl">Take a look around</span></div>' +
+      '<div class="q3-top"><a class="q3-back" href="https://qualitystoner.com/collections/all" aria-label="Back to the shop">&#8592;&nbsp; Shop</a><button type="button" class="q3-gb" aria-label="Back to the store">&#8592;&nbsp; The store</button><button type="button" class="q3-va" aria-expanded="false">View all</button><span class="q3-gc" hidden></span></div>' +
       '<div class="q3-nav" role="tablist" aria-label="Categories"></div>' +
       '<div class="q3-wm" aria-hidden="true"><img alt="" decoding="async" data-src="' + OWN + 'w/qs-bluemark-k.webp"><div>Winter Atelier &middot; Collection 002</div></div>' +
       '<a class="q3-tag" draggable="false"><b></b><span></span></a>' +
@@ -155,8 +156,8 @@
       view.appendChild(sh); view.appendChild(e); it.el = e; it.sh = sh; it.img = e.firstChild; it.shown = false;
     });
     tag.addEventListener('click', function (ev) { if (!tag.getAttribute('href')) { ev.preventDefault(); return; } goPdp(ev, tag); });
-    prv.addEventListener('click', function () { step(-1); });
-    nxt.addEventListener('click', function () { step(1); });
+    prv.addEventListener('click', function () { if (GR.on) gStep(-1); else step(-1); });
+    nxt.addEventListener('click', function () { if (GR.on) gStep(1); else step(1); });
     view.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } });
     drag();
     fit(); layout(); built = true;
@@ -165,6 +166,7 @@
     addEventListener('orientationchange', function () { setTimeout(function () { fit(); layout(); }, 300); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measureNav(); render(1); });
     restore();
+    gInit();
     /* preload the rest of the ring once the page is idle so nothing pops in mid-turn */
     var rest = function () { var ric = window.requestIdleCallback || function (f) { return setTimeout(f, 200); }; ric(function () { ITEMS.forEach(load); }, { timeout: 1500 }); };
     if (document.readyState === 'complete') setTimeout(rest, 400); else addEventListener('load', function () { setTimeout(rest, 400); });
@@ -442,7 +444,244 @@
     var z = m.w && zone(m.w); if (!it && z) it = z.items[0]; if (!it) return;
     anim = null; yaw = it.a; render(1);
   }
+  /* ===== VIEW ALL: floating two-row grid (Nov 15 2026, Justin) =====
+     Every PUBLIC product (read live from /collections/all at open, so new products appear on their own; LIST0 = build-time fallback),
+     cutouts floating on the light field, no cards / borders / pills / shadows. Exactly two rows, each ONE flat track moved with
+     translateX; the rows wrap around endlessly (track = the row repeated, offset taken modulo the row length) with momentum
+     drag / swipe, wheel (horizontal) and the arrows. Pieces ease a little smaller / fainter toward the screen edges (flat 2D scale +
+     opacity on the piece, never preserve-3d / backdrop-filter). No auto-spin. First tap shows name, colour, price and "Shop it ->";
+     tapping the shown piece (or the link) opens its PDP. A short settle (opacity + 2D transform) when the grid opens; none under
+     prefers-reduced-motion (no inertia either). Opens from the "View all" control, or straight away with #all / ?view=all
+     (home "View all" links here). Cutouts: the 360's own tiles (D / WINTER / TRIM) + img/v/<slug>.webp for pieces without one
+     (work/grid/cut.py); a product with no cutout yet shows its Fourthwall photo, multiplied onto the field. */
+  var GV = {"blue-s-cuff-beanie-black":0.6771,"blue-s-lockup-back-hoodie-black":0.9886,"blue-s-monogram-hoodie-white":0.98,"blue-s-monogram-tee-white":0.9986,"blue-s-snapback-black":1.0243,"maison-winter-backpack-black":0.7857,"night-frost-tee-black":1.1543,"qs-dad-hat-black":1.07,"scattered-snow-crew-white":0.8143,"winter-crest-blanket-off-white":1.2057,"winter-side-band-backpack-white":0.7857,"winter-wordmark-dad-hat-black":1.0686,"winter-wordmark-hoodie-navy":0.98,"winter-wordmark-joggers-black":0.5129};      /* slug -> aspect of img/v/<slug>.webp (build time) */
+  var LIST0 = [["sticker-fall-crew-black","Sticker Fall Crew — Black","49"],["wordmark-cuff-beanie","Wordmark Cuff Beanie","32"],["night-frost-tee-black","Night Frost Tee — Black","45"],["winter-wordmark-joggers-black","Winter Wordmark Joggers — Black","45"],["winter-wordmark-hoodie-navy","Winter Wordmark Hoodie — Navy","68"],["blue-s-snapback-black","Blue-S Snapback — Black","34.95"],["winter-wordmark-dad-hat-black","Winter Wordmark Dad Hat — Black","34.95"],["qs-dad-hat-black","QS Dad Hat — Black","34.95"],["signet-joggers-burgundy","Signet Joggers — Burgundy","49"],["signet-hoodie-burgundy","Signet Hoodie — Burgundy","62"],["signet-tee-burgundy","Signet Tee — Burgundy","34.99"],["frost-lined-hood-black","Frost-Lined Hood - Black","58"],["winter-crest-back-tee-black","Winter Crest Back Tee - Black","45"],["seal-crew-burgundy","Wax Seal Crew — Burgundy","49"],["embroidered-qs-sherpa-black","Signet Sherpa Blanket — Black","59"],["heavyweight-tee-black","Calling Card Tee — Black","29"],["damask-lined-hoodie-black","Locket Hoodie — Black","58"],["wordmark-lattice-backpack-white","Filigree Backpack — White","48"],["qs-lp-ts01-classic-tee-white","Calling Card Tee — White","29"],["winter-side-band-backpack-white","Winter Side-Band Backpack — White","48"],["winter-crest-blanket-off-white","Winter Crest Blanket — Off-White","50"],["maison-winter-backpack-black","Maison Winter Backpack — Black","48"],["engraved-crest-blanket-white","Heirloom Blanket — White","45"],["winter-crest-crew-off-white","Winter Crest Crew — Off-White","54.95"],["maison-monogram-joggers-black","Cipher Joggers — Black","60"],["maison-monogram-tee-black","Cipher Tee — Black","34.99"],["scattered-snow-crew-white","Scattered Snow Crew — White","49"],["damask-crossbody-burgundy","Decanter Crossbody — Burgundy","55"],["maison-winter-joggers-black","Maison Winter Joggers — Black","60"],["scattered-monogram-hoodie-white","Pressed Flower Hoodie — White","58"],["maison-monogram-backpack-black","Cipher Backpack — Black","48"],["maison-monogram-tee-white","Cipher Tee — White","34.99"],["hem-band-joggers-off-white","Ribbon Joggers — Off-White","60"],["damask-crew-burgundy","Decanter Crew — Burgundy","49"],["wordmark-leg-joggers-black","Bookmark Joggers — Black","45"],["qs-cuff-beanie-burgundy","Signet Beanie — Burgundy","29.95"],["letterpress-crew-grey","First Edition Crew — Grey","49"],["embroidered-qs-crew-black","Signet Crew — Black","49"],["wordmark-hoodie-white","Masthead Hoodie — White","58"],["qs-snapback-black","Signet Snapback — Black","34.95"],["qs-snapback-burgundy","Signet Snapback — Burgundy","34.95"],["wordmark-snapback-black","Masthead Snapback — Black","34.95"],["wordmark-cuff-beanie-black","Masthead Beanie — Black","27.95"],["lockup-hoodie-black","Postscript Hoodie — Black","58"],["blue-s-cuff-beanie-black","Blue-S Cuff Beanie — Black","27.95"],["blue-s-monogram-hoodie-white","Blue-S Monogram Hoodie — White","58"],["blue-s-lockup-back-hoodie-black","Blue-S Lockup Back Hoodie — Black","58"],["blue-s-monogram-tee-white","Blue-S Monogram Tee — White","29"]];   /* [slug, live title, price] of every public product at build time (fallback if the live list can't load) */
+  var GR = { on: 0, rows: [[], []], off: 0, v: 0, n: 0, list: null, sel: null, raf: 0, anim: null };
+  var GCSS = '.q3.q3-g{--ink:#0b0b0b;--mut:rgba(11,11,11,.5);--acc:#6E0B22}' +
+    '.q3.q3-g .q3-view,.q3.q3-g .q3-disc,.q3.q3-g .q3-nav,.q3.q3-g .q3-tag,.q3.q3-g .q3-wm,.q3.q3-g .q3-ice{display:none!important}' +
+    '.q3 .q3-va{display:block;padding:14px 0 14px .3em;line-height:1;white-space:nowrap;color:var(--ink);font-size:inherit!important;letter-spacing:.3em!important;text-transform:uppercase!important}' +
+    '.q3 .q3-va:focus-visible,.q3 .q3-gb:focus-visible{outline:1px solid var(--acc);outline-offset:2px}' +
+    '.q3 .q3-gb{display:none;padding:14px 0;line-height:1;white-space:nowrap;color:var(--ink);font-size:inherit!important;letter-spacing:.3em!important;text-transform:uppercase!important}' +
+    '.q3.q3-g .q3-back,.q3.q3-g .q3-va,.q3 .q3-gc{display:none!important}.q3.q3-g .q3-gb,.q3.q3-g .q3-gc{display:block!important}' +
+    '.q3-gd{position:absolute;left:0;width:100%;overflow:hidden;display:none;touch-action:pan-y;cursor:grab;outline:0}.q3.q3-g .q3-gd{display:block}' +
+    '.q3-gd.q3-gdr{cursor:grabbing}' +
+    '.q3-gr{position:absolute;left:0;top:0;height:1px;will-change:transform}' +
+    '.q3-gi{position:absolute;top:0;display:block;transform-origin:50% 40%}' +
+    '.q3-gp{position:absolute;left:0;top:0;width:100%;transition:opacity .55s ease,transform .7s cubic-bezier(.2,.7,.2,1)}' +
+    '.q3-gd.q3-pre .q3-gp{opacity:0;transform:translate(0,14px) scale(.96)}' +
+    '.q3-gp img{width:100%;height:100%;opacity:0;transition:opacity .35s}.q3-gp img.q3-ok{opacity:1}.q3-gp img.q3-mx{mix-blend-mode:multiply}' +
+    '.q3-gl{position:absolute;left:50%;top:0;width:220px;margin-left:-110px;text-align:center;text-transform:uppercase;letter-spacing:.24em;line-height:1.6;font-size:10.5px;opacity:0;transition:opacity .25s;pointer-events:none}' +
+    '.q3-gl b{display:block;font-weight:400;color:var(--ink);white-space:normal}.q3-gl span{display:block;color:var(--mut);white-space:nowrap}' +
+    '.q3-gl i{display:inline-block;font-style:normal;margin-top:5px;padding:0 0 3px .24em;border-bottom:1px solid var(--ink);color:var(--ink);white-space:nowrap}' +
+    '.q3-gi.q3-gon .q3-gl{opacity:1}' +
+    '.q3-gi:focus-visible{outline:0}.q3-gi:focus-visible .q3-gl b{text-decoration:underline}' +
+    '@media (min-width:750px){.q3-gl{font-size:11px;width:260px;margin-left:-130px}}' +
+    '@media (prefers-reduced-motion:reduce){.q3-gp,.q3-gp img,.q3-gl{transition:none!important}.q3-gd.q3-pre .q3-gp{opacity:1;transform:none}}';
+  function gSplit(t) { var m = String(t).split(/\s+[\u2014\u2013-]\s+/); return m.length > 1 ? [m[0], m.slice(1).join(' ')] : [t, '']; }
+  function gMoney(p) { p = String(p).replace(/[^0-9.]/g, ''); var v = parseFloat(p); if (isNaN(v)) return ''; return '$' + (v % 1 ? v.toFixed(2) : String(Math.round(v))); }
+  function gKind(s) { return /snapback|dad-hat|hat-/.test(s) ? .5 : /beanie/.test(s) ? .56 : /backpack|crossbody/.test(s) ? .76 : /blanket|sherpa/.test(s) ? .8 : /tee/.test(s) ? .86 : 1; }
+  /* known cutouts by live slug: the 360's own tiles first, then img/v */
+  var GK = {};
+  (function () {
+    Object.keys(D).forEach(function (id) { var p = D[id], t = TRIM[id]; GK[p.u || id] = { src: (p.o ? OWN : IMG) + 'p/' + id + '.webp', ar: t ? t[4] : .8 }; });
+    WINTER.forEach(function (w) { var t = TRIM[w.id]; GK[w.u || w.id] = { src: OWN + 'w/' + w.id + '.webp', ar: t ? t[4] : .8 }; });
+    Object.keys(GV).forEach(function (s) { if (!GK[s]) GK[s] = { src: OWN + 'v/' + s + '.webp', ar: GV[s] }; });
+  })();
+  function gFromList(L) { return L.map(function (r) { var nc = gSplit(r[1]); return { s: r[0], n: nc[0], c: nc[1], p: gMoney(r[2]), ph: r[3] || '' }; }); }
+  /* the build-time list renders at once; the live list (fetched once per page) replaces it only if anything differs */
+  function gLive(cb) {
+    try {
+      fetch('/collections/all', { credentials: 'same-origin' }).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (h) {
+        var doc = new DOMParser().parseFromString(h, 'text/html'), seen = {}, L = [];
+        [].forEach.call(doc.querySelectorAll('.product-tile a[href*="/products/"]'), function (a) {
+          var m = (a.getAttribute('href') || '').match(/\/products\/([a-z0-9-]+)/); if (!m || seen[m[1]]) return; seen[m[1]] = 1;
+          var hd = a.querySelector('.tile__heading,h2,h3'), pr = a.querySelector('.tile__price'), im = a.querySelector('img');
+          L.push([m[1], hd ? hd.textContent.trim() : m[1], pr ? pr.textContent.trim() : '', im ? im.getAttribute('src') : '']);
+        });
+        if (L.length >= 4) cb(gFromList(L));
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  function gKey(L) { return L.map(function (p) { return [p.s, p.n, p.c, p.p].join('|'); }).join('~'); }
+  var gd, gTr = [], GL = {};   /* grid geometry */
+  function gBuild(L) {
+    var M2 = root.clientWidth < 750;
+    GR.n = L.length; GR.rows = [[], []]; gd.innerHTML = '';
+    L.forEach(function (p, i) { var k = GK[p.s]; p.src = k ? k.src : p.ph; p.ar = k ? k.ar : .8; p.cut = !!k; p.k = gKind(p.s); GR.rows[i % 2].push(p); });
+    gTr = [0, 1].map(function () { var t = document.createElement('div'); t.className = 'q3-gr'; gd.appendChild(t); return t; });
+    root.querySelector('.q3-gc').textContent = L.length + ' pieces';
+    gLayout(true);
+  }
+  function gLayout(rebuild) {
+    if (!gd || !GR.n) return;
+    var W = root.clientWidth, H = root.clientHeight, M2 = W < 750;
+    var top = (M2 ? 40 : 50) + (M2 ? 8 : 22), bot = H - (M2 ? 66 : 76), gap = M2 ? 6 : 18, labH = M2 ? 62 : 66;
+    var rowH = Math.max(150, (bot - top - gap) / 2), imgH = rowH - labH, sp = M2 ? 26 : 52;
+    gd.style.top = top + 'px'; gd.style.height = (bot - top) + 'px';
+    GL = { W: W, top: top, rowH: rowH, imgH: imgH, gap: gap, sp: sp, M: M2, L: [] };
+    GR.rows.forEach(function (row, r) {
+      var x = 0;
+      row.forEach(function (p) { p.h = Math.round(imgH * (M2 ? .9 : .96) * p.k); p.w = Math.round(p.h * p.ar); p.sw = Math.max(p.w, M2 ? 96 : 120); p.x = x; x += p.sw + sp; });
+      GL.L[r] = x; var reps = Math.max(3, Math.ceil(W / Math.max(1, x)) + 2); GL.reps = Math.max(GL.reps || 0, reps);
+    });
+    GR.rows.forEach(function (row, r) {
+      var tr = gTr[r], Lr = GL.L[r], reps = Math.max(3, Math.ceil(W / Math.max(1, Lr)) + 2);
+      tr.style.top = (r * (rowH + gap)) + 'px';
+      if (rebuild || tr.children.length !== reps * row.length) {
+        tr.innerHTML = ''; row.forEach(function (p) { p.els = []; });
+        for (var c = 0; c < reps; c++) row.forEach(function (p) {
+          var a = document.createElement('a'); a.className = 'q3-gi'; a.href = SHOP + p.s + '?from=360&w=grid';   /* the PDP's back link turns w into #w=grid -> grid */ a.draggable = false;
+          a.setAttribute('data-s', p.s);
+          if (c === 1) a.setAttribute('aria-label', p.n + (p.c ? ' ' + p.c : '') + (p.p ? ', ' + p.p : '')); else { a.tabIndex = -1; a.setAttribute('aria-hidden', 'true'); }
+          a.innerHTML = '<span class="q3-gp"><img alt="" decoding="async" draggable="false"' + (p.cut ? '' : ' class="q3-mx"') + '></span>' +
+            '<span class="q3-gl"><b>' + esc(p.n) + '</b><span>' + esc(p.c ? p.c + ' \u00a0\u00b7\u00a0 ' + p.p : p.p) + '</span><i>Shop it &rarr;</i></span>';
+          gEvents(a, p); tr.appendChild(a); p.els.push(a); a._p = p; a._c = c;
+        });
+      }
+      [].forEach.call(tr.children, function (a) {
+        var p = a._p, gp = a.firstChild, im = gp.firstChild, gl = a.lastChild;
+        a.style.left = (a._c * Lr + p.x) + 'px'; a.style.width = p.sw + 'px'; a.style.height = rowH + 'px';
+        gp.style.left = ((p.sw - p.w) / 2) + 'px'; gp.style.width = p.w + 'px'; gp.style.height = p.h + 'px'; gp.style.top = Math.round((imgH - p.h) / 2 + (M2 ? 2 : 4)) + 'px';
+        gl.style.top = (imgH + (M2 ? 2 : 6)) + 'px';
+        var d = Math.min(420, (a._c === 1 ? GR.rows[0].indexOf(p) > -1 ? GR.rows[0].indexOf(p) : GR.rows[1].indexOf(p) : 0) * 22);
+        gp.style.transitionDelay = (RM ? 0 : d) + 'ms';
+      });
+    });
+    gRender();
+  }
+  function gImg(a) { var im = a.firstChild.firstChild; if (im.getAttribute('src')) return; im.onload = function () { im.classList.add('q3-ok'); }; im.src = a._p.src; if (im.complete && im.naturalWidth) im.classList.add('q3-ok'); }
+  function gStart() { return -(GL.M ? 20 : 44); }   /* first piece starts at the page margin */
+  function gMod(v, m) { return ((v % m) + m) % m; }
+  function gRender() {
+    if (!GR.on || !GL.W) return;
+    var W = GL.W, cx = W / 2;
+    gTr.forEach(function (tr, r) {
+      var Lr = GL.L[r]; if (!Lr) return;
+      var o = gMod(GR.off + (r ? GL.sp * 1.5 + 40 : 0), Lr), tx = -(Lr + o);
+      tr.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,0,0)';
+      [].forEach.call(tr.children, function (a) {
+        var x0 = a._c * Lr + a._p.x + tx, x1 = x0 + a._p.sw;
+        if (x1 < -40 || x0 > W + 40) { if (a._v) { a._v = 0; a.style.visibility = 'hidden'; } return; }
+        if (!a._v) { a._v = 1; a.style.visibility = ''; gImg(a); }
+        var u = Math.abs((x0 + x1) / 2 - cx) / (W / 2), e = u < .7 ? 0 : Math.min(1, (u - .7) / .4); e = e * e * (3 - 2 * e);
+        a.style.transform = e ? 'scale(' + (1 - .08 * e).toFixed(3) + ')' : '';
+        a.style.opacity = e ? (1 - .45 * e).toFixed(3) : '';
+      });
+    });
+  }
+  function gKick() { if (!GR.raf) GR.raf = requestAnimationFrame(gTick); }
+  function gTick(now) {
+    GR.raf = 0;
+    if (GR.anim) { if (!GR.anim.s) GR.anim.s = now; var t = Math.min(1, (now - GR.anim.s) / GR.anim.d), k = easeOut(t); GR.off = GR.anim.f + (GR.anim.t - GR.anim.f) * k; if (t >= 1) GR.anim = null; }
+    else if (!GR.drag && Math.abs(GR.v) > .02) { var dt = Math.min(40, now - (GR.lt || now)); GR.off += GR.v * dt; GR.v *= Math.pow(.95, dt / 16.7); }
+    else GR.v = 0;
+    GR.lt = now; gRender();
+    if (GR.anim || (!GR.drag && Math.abs(GR.v) > .02)) gKick();
+  }
+  function gStep(dir) {
+    if (!GL.W) return; var by = dir * Math.max(200, GL.W * (GL.M ? .62 : .5));
+    GR.v = 0; var f = GR.anim ? GR.anim.t : GR.off;
+    if (RM) { GR.anim = null; GR.off = f + by; gRender(); return; }
+    GR.anim = { f: GR.off, t: f + by, s: 0, d: 560 }; gKick();
+  }
+  function gSel(p) {
+    GR.sel = p; [].forEach.call(gd.querySelectorAll('.q3-gi'), function (a) { a.classList.toggle('q3-gon', !!p && a._p === p); });
+  }
+  var gMoved = false;
+  function gEvents(a, p) {
+    a.addEventListener('click', function (e) {
+      if (gMoved) { e.preventDefault(); return; }
+      if (GR.sel !== p) { e.preventDefault(); gSel(p); return; }
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      gHash(1);   /* browser Back from the PDP lands on the grid (#all); the PDP's own back link too (q3-ret.g + product referrer) */
+      try { sessionStorage.setItem('q3-ret', JSON.stringify({ g: 1, at: Date.now() })); } catch (er) {}
+    });
+    a.addEventListener('focus', function () { if (Date.now() - (GR.pt || 0) < 900) return;   /* a tap focuses the link too: only keyboard focus reveals */
+      if (a._c === 1 && GR.sel !== p) { gSel(p); gReveal(a); } });
+  }
+  function gReveal(a) {   /* keyboard focus: bring the piece into view */
+    var r = a.getBoundingClientRect(), g = gd.getBoundingClientRect(), mid = (r.left + r.right) / 2 - g.left;
+    if (mid < GL.W * .15 || mid > GL.W * .85) { var tr = gTr[GR.rows[0].indexOf(a._p) > -1 ? 0 : 1]; GR.off += mid - GL.W / 2; gRender(); }
+  }
+  function gDrag() {
+    var on = false, x0, y0, lx, pid = null, horiz = null, S = [];
+    gd.addEventListener('pointerdown', function (e) {
+      if (e.button && e.button !== 0) return;
+      GR.pt = Date.now(); on = true; pid = e.pointerId; horiz = null; gMoved = false; x0 = lx = e.clientX; y0 = e.clientY; S = [];
+      if (GR.anim || Math.abs(GR.v) > .02) { GR.anim = null; GR.v = 0; gMoved = true; }   /* a touch stops the spin (and is not a tap) */
+    });
+    gd.addEventListener('pointermove', function (e) {
+      if (!on || e.pointerId !== pid) return;
+      var tx = Math.abs(e.clientX - x0), ty = Math.abs(e.clientY - y0);
+      if (horiz === null) { if (tx < 7 && ty < 7) return; horiz = tx > ty; gMoved = true; if (!horiz) { on = false; return; }
+        try { gd.setPointerCapture(pid); } catch (er) { } GR.drag = true; gd.classList.add('q3-gdr'); lx = e.clientX; }
+      var dx = e.clientX - lx; lx = e.clientX; GR.off -= dx;
+      var t = e.timeStamp || performance.now(); S.push([t, GR.off]); while (S.length > 2 && t - S[0][0] > 90) S.shift();
+      gRender();
+    });
+    function end(e) {
+      if (!on || (e && e.pointerId !== pid)) return; on = false;
+      try { gd.releasePointerCapture(pid); } catch (er) { }
+      if (!GR.drag) { setTimeout(function () { gMoved = false; }, 30); return; }
+      GR.drag = false; gd.classList.remove('q3-gdr');
+      var v = 0, now = (e && e.timeStamp) || performance.now();
+      if (S.length > 1 && now - S[S.length - 1][0] < 60) { var a = S[0], b = S[S.length - 1]; if (b[0] > a[0]) v = (b[1] - a[1]) / (b[0] - a[0]); }
+      if ((e && e.type === 'pointercancel') || RM) v = 0;
+      GR.v = clamp(v, -4, 4); GR.lt = 0; gKick();
+      setTimeout(function () { gMoved = false; }, 30);
+    }
+    gd.addEventListener('pointerup', end); gd.addEventListener('pointercancel', end);
+    gd.addEventListener('lostpointercapture', function (e) { if (on && GR.drag) end(e); });
+    gd.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    gd.addEventListener('click', function (e) { if (!e.target.closest || !e.target.closest('.q3-gi')) gSel(null); });
+    gd.addEventListener('wheel', function (e) {
+      var dx = e.deltaX || (e.shiftKey ? e.deltaY : 0); if (!dx || Math.abs(dx) < Math.abs(e.deltaY) * (e.shiftKey ? 0 : 1)) return;
+      e.preventDefault(); GR.anim = null; GR.v = 0; GR.off += dx * (e.deltaMode === 1 ? 16 : 1); gRender();
+    }, { passive: false });
+    gd.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); gStep(-1); } if (e.key === 'ArrowRight') { e.preventDefault(); gStep(1); } if (e.key === 'Escape') gClose(); });
+  }
+  function gHash(on) {
+    try { var u = location.pathname + location.search.replace(/([?&])view=all(&|$)/, function (m, a, b) { return b ? a : ''; }).replace(/\?$/, '');
+      history.replaceState(history.state, '', u + (on ? '#all' : '')); } catch (e) {}
+  }
+  function gOpen(quiet) {
+    if (GR.on) return; GR.on = 1; root.classList.add('q3-g'); anim = null;
+    root.querySelector('.q3-va').setAttribute('aria-expanded', 'true');
+    prv.setAttribute('aria-label', 'Scroll left'); nxt.setAttribute('aria-label', 'Scroll right');
+    gHash(1);
+    if (!RM && !quiet) gd.classList.add('q3-pre');
+    if (!GR.list) { GR.list = gFromList(LIST0); gBuild(GR.list); GR.off = gStart();
+      gLive(function (L) { if (gKey(L) === gKey(GR.list)) return; GR.list = L; var o = GR.off, s = GR.sel && GR.sel.s; gBuild(L); GR.off = o; gRender();
+        if (s) L.forEach(function (p) { if (p.s === s) gSel(p); }); }); }
+    else { gLayout(); GR.off = gStart(); }
+    gSel(null); gRender();
+    if (gd.classList.contains('q3-pre')) requestAnimationFrame(function () { requestAnimationFrame(function () { gd.classList.remove('q3-pre'); }); });
+    try { gd.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function gClose() {
+    if (!GR.on) return; GR.on = 0; GR.anim = null; GR.v = 0; root.classList.remove('q3-g'); gSel(null);
+    root.querySelector('.q3-va').setAttribute('aria-expanded', 'false');
+    prv.setAttribute('aria-label', 'Previous piece'); nxt.setAttribute('aria-label', 'Next piece');
+    gHash(0); fit(); layout();
+    try { root.querySelector('.q3-va').focus({ preventScroll: true }); } catch (e) {}
+  }
+  function gInit() {
+    var st = document.createElement('style'); st.id = 'q3-gcss'; st.textContent = GCSS; document.head.appendChild(st);
+    gd = document.createElement('div'); gd.className = 'q3-gd'; gd.tabIndex = 0; gd.setAttribute('role', 'region');
+    gd.setAttribute('aria-label', 'All pieces. Swipe, drag or use the arrow keys to browse; tap a piece for its name and price.');
+    root.insertBefore(gd, root.querySelector('.q3-top'));
+    root.querySelector('.q3-va').addEventListener('click', function () { if (GR.on) gClose(); else gOpen(); });
+    root.querySelector('.q3-gb').addEventListener('click', gClose);
+    gDrag();
+    var lw = innerWidth;
+    addEventListener('resize', function () { if (GR.on && innerWidth !== lw) { lw = innerWidth; gLayout(); } else lw = innerWidth; });
+    addEventListener('hashchange', function () { if (/^#(all|w=grid)$/.test(location.hash)) gOpen(1); });
+    var rt = null; try { rt = JSON.parse(sessionStorage.getItem('q3-ret') || 'null'); } catch (e) {}
+    if (/^#(all|w=grid)$/.test(location.hash) || /[?&]view=all(&|$)/.test(location.search)) gOpen();
+    else if (!location.hash && rt && rt.g && /\/products\//.test(document.referrer || '')) gOpen(1);
+  }
   window.QSStore360 = {
+    grid: { open: function () { gOpen(); }, close: gClose, on: function () { return !!GR.on; }, off: function () { return GR.off; }, set: function (o) { GR.anim = null; GR.v = 0; GR.off = o; gRender(); }, n: function () { return GR.n; }, sel: function () { return GR.sel && GR.sel.s; } },
     turn: function (a) { anim = null; yaw = norm(a); render(); }, go: goK, step: step, hint: function () {},
     zones: function () { return ZONES.map(function (z) { return [z.k, z.items[0].a]; }); },
     items: function () { return ITEMS.map(function (it) { return [it.id, it.a, it.z.k]; }); },

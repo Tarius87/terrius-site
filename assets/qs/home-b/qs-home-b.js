@@ -256,6 +256,7 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qsa-wa-p img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 0 1px rgba(27,34,54,.25)) drop-shadow(0 8px 9px rgba(27,34,54,.22))}',
 '.qsa-wa-l{display:inline-block;margin-top:26px;font-size:12px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;padding:0 0 6px .26em;border-bottom:1px solid #1B2236;color:#1B2236!important}',
 '.qsa-wa-l:hover{opacity:.75}',
+/* Nov 15 2026 (Justin): "The pieces" View all -> /pages/walk-the-store#all (the 360's VIEW ALL grid opens straight away). */
 /* THE STAPLE (Nov 15 2026): Sticker Fall Crew — Black under the Winter band (Nov 15 14:50: "THE STAPLE" label + short rule removed, Justin). Black / white / off-white only; no pills, glows, badges. */
 '.qsa-sf{background:#F4F3F0;padding:72px 24px 0}',
 '.qsa-sf-a{display:block;max-width:1180px;margin:0 auto;color:#141414!important}',
@@ -327,7 +328,7 @@ var HTML='<div class="qsa" id="qs-home">'+
   field(HL,'l','<img src="'+C4+'word-white.png" alt="Quality Stoner" width="1200" height="62">')+
   field(HR,'r','<img src="'+C4+'qs-mark-white.png" alt="QS" width="342" height="320">')+
  '</section>'+winter()+staple()+
- '<section class="qsa-sec"><div class="qsa-sh"><span class="qsa-k">The pieces</span><a href="/collections/all">View all</a></div><div class="qsa-grid">'+GRID.map(card).join('')+'</div></section>'+
+ '<section class="qsa-sec"><div class="qsa-sh"><span class="qsa-k">The pieces</span><a href="/pages/walk-the-store#all">View all</a></div><div class="qsa-grid">'+GRID.map(card).join('')+'</div></section>'+
  '<p class="qsa-visit"><a href="/pages/walk-the-store">Visit the store &nbsp;&rarr;</a></p>'+
  '</div>';
 document.documentElement.classList.add('qsa-on');
