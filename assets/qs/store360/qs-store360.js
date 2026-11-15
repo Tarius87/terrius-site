@@ -60,7 +60,9 @@
    Jan 1 2027 CT; after that each Winter piece falls into its own category and the Winter tab goes); 'Bags & More' -> 'Bags & Blankets';
    QS Dad Hat in Hats; every public piece has a side (SX: pieces showing the words QUALITY STONER -> LP, QS / Blue-S marks only -> DN,
    merged under the live LP/DN collection lists); side switch = ALL · LOUD & PROUD · DISCREET & NEAT, All on by default, burgundy underline
-   on the active one; a plain grid (cutout, name, colour · price) of the front piece's category sits under the ring; First Edition Crew = Grey. */
+   on the active one; a plain grid (cutout, name, colour · price) of the front piece's category sits under the ring; First Edition Crew = Grey.
+   Nov 15 2026 night (Justin): tapping a piece (ring, category grid or VIEW ALL grid) opens a quick-view card over the store (photos, size,
+   Add to Cart through the real product page loaded hidden) instead of leaving the store; 'Full details' still opens the product page. */
 (function () {
   if (window.__q3Loaded) return; window.__q3Loaded = 1;
   var me = document.currentScript, SRC = me && me.src ? me.src : '';
@@ -264,7 +266,9 @@
       z.items.map(function (it) { var mh = Math.round(clamp(it.h / 1.38, .4, 1) * 92);
         return '<li><a href="' + esc(it.href) + '" data-id="' + esc(it.id) + '"><span class="q3-ci"><img loading="lazy" decoding="async" alt="' + esc(it.n + (it.c ? ' ' + it.c : '')) + '" src="' + esc(it.src) + '" style="max-height:' + mh + '%"></span>' +
           '<b>' + esc(it.n) + '</b><em>' + esc((it.c ? it.c + ' \u00a0\u00b7\u00a0 ' : '') + it.p) + '</em></a></li>'; }).join('') + '</ul>';
-    [].forEach.call(cg.querySelectorAll('a'), function (a) { a.addEventListener('click', function () { remember(a.getAttribute('href')); }); });
+    [].forEach.call(cg.querySelectorAll('a'), function (a) { a.addEventListener('click', function (e) { remember(a.getAttribute('href'));
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; e.preventDefault();
+      var id = a.getAttribute('data-id'), it = null; (cgZ ? cgZ.items : ITEMS).forEach(function (x) { if (x.id === id) it = x; }); qvOpen(a.getAttribute('href'), it); }); });
   }
   function sideUI() {
     if (!sdEl) return; root.classList.toggle('q3-s-on', !!SIDE);
@@ -568,7 +572,9 @@
     if (moved) { e.preventDefault(); return; }
     var href = a.getAttribute('href'); if (!href) return; remember(href);
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
-    e.preventDefault(); location.href = href + (href.indexOf('?') > -1 ? '&' : '?') + 'w=' + retState().w;
+    e.preventDefault();
+    var id = a.getAttribute('data-id'), it = null; ITEMS.forEach(function (x) { if (x.id === id) it = x; }); if (!it && a === tag) it = front;
+    qvOpen(href, it);   /* Nov 15 2026 (Justin): the piece opens over the store instead of leaving it */
   }
   function restore() {
     var m = {}, h = location.hash.replace(/^#/, '');
@@ -731,8 +737,9 @@
       if (gMoved) { e.preventDefault(); return; }
       if (GR.sel !== p) { e.preventDefault(); gSel(p); return; }
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
-      gHash(1);   /* browser Back from the PDP lands on the grid (#all); the PDP's own back link too (q3-ret.g + product referrer) */
+      gHash(1);   /* if the full product page is opened from the card, Back lands on the grid (#all) */
       try { sessionStorage.setItem('q3-ret', JSON.stringify({ g: 1, at: Date.now() })); } catch (er) {}
+      e.preventDefault(); qvOpen(a.href, p);   /* Nov 15 2026 (Justin): quick view over the grid instead of leaving the store */
     });
     a.addEventListener('focus', function () { if (Date.now() - (GR.pt || 0) < 900) return;   /* a tap focuses the link too: only keyboard focus reveals */
       if (a._c === 1 && GR.sel !== p) { gSel(p); gReveal(a); } });
@@ -850,7 +857,273 @@
     if (/^#(all|w=grid)(&|$)/.test(location.hash) || /[?&]view=all(&|$)/.test(location.search)) gOpen();
     else if (!location.hash && rt && rt.g && /\/products\//.test(document.referrer || '')) gOpen(1);
   }
+  /* ===== quick view (Nov 15 2026, Justin): tapping a piece opens a product card OVER the store instead of leaving it.
+     The card renders at once from the store's own data (cutout, name, colour, price, sizes). The real product page loads in a hidden
+     same-origin iframe; from it the card takes the live photos, sizes (sold-out ones greyed), the short description and the size chart,
+     and Add to Cart drives that page's own size select and Add to Cart button, so the theme's real cart is used (no API, no token).
+     Cart count in the header is updated from the iframe's count. If anything fails (iframe blocked, no button, no confirmation in 10 s)
+     the card offers the full product page instead. Cmd/Ctrl/Shift-click still opens the product page. Phone: bottom sheet; desktop:
+     centred card. Esc, the X, the backdrop and the phone Back button close it. ===== */
+  var QVCSS = '.q3-qv{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:flex-end;justify-content:center;font-family:inherit;-webkit-font-smoothing:antialiased;color:#0b0b0b}' +
+    '.q3-qv *{box-sizing:border-box}' +
+    '.q3-qv-bd{position:absolute;inset:0;background:rgba(11,11,11,.46);opacity:0;transition:opacity .28s ease}' +
+    '.q3-qv.q3-in .q3-qv-bd{opacity:1}' +
+    '.q3-qv-c{position:relative;width:100%;max-height:92vh;max-height:92svh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#F4F3F0;border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .34s cubic-bezier(.2,.8,.2,1);padding:0 0 calc(18px + env(safe-area-inset-bottom))}' +
+    '.q3-qv.q3-in .q3-qv-c{transform:none}' +
+    '.q3-qv.q3-rmq .q3-qv-c,.q3-qv.q3-rmq .q3-qv-bd{transition:none}' +
+    '.q3-qv-grab{display:block;width:38px;height:4px;border-radius:2px;background:rgba(11,11,11,.18);margin:9px auto 0}' +
+    '.q3-qv-x{position:absolute;top:8px;right:8px;z-index:3;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:0!important;background:transparent!important;color:#0b0b0b!important;cursor:pointer;padding:0!important;margin:0!important;border-radius:50%!important;box-shadow:none!important}' +
+    '.q3-qv-x svg{width:18px;height:18px}' +
+    '.q3-qv-x:focus-visible,.q3-qv button:focus-visible,.q3-qv a:focus-visible{outline:1px solid #6E0B22;outline-offset:3px}' +
+    '.q3-qv-g{position:relative;margin:6px 0 0}' +
+    '.q3-qv-gs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}' +
+    '.q3-qv-gs::-webkit-scrollbar{display:none}' +
+    '.q3-qv-gs>div{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;padding:18px 28px}' +
+    '.q3-qv-gs img{display:block;max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;object-fit:contain;margin:0!important}' +
+    '.q3-qv-dt{display:flex;justify-content:center;gap:2px;height:22px;align-items:center;margin:0}' +
+    '.q3-qv-dt button{width:22px;height:22px;padding:0!important;margin:0!important;border:0!important;background:transparent!important;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none!important}' +
+    '.q3-qv-dt button:after{content:"";width:5px;height:5px;border-radius:50%;background:rgba(11,11,11,.22)}' +
+    '.q3-qv-dt button.q3-on:after{background:#6E0B22}' +
+    '.q3-qv-i{padding:14px 22px 6px}' +
+    '.q3-qv-sd{display:block;font-size:10px!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:#6E0B22!important;margin:0 0 8px!important}' +
+    '.q3-qv h2{margin:0!important;padding:0!important;font-family:inherit!important;font-weight:400!important;font-size:14px!important;line-height:1.45!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:#0b0b0b!important}' +
+    '.q3-qv-cp{margin:5px 0 0!important;font-size:12px!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:rgba(11,11,11,.6)!important}' +
+    '.q3-qv-cp b{font-weight:400!important;color:#0b0b0b!important}' +
+    '.q3-qv-ds{margin:14px 0 0!important;font-size:14px!important;line-height:1.55!important;color:rgba(11,11,11,.78)!important;letter-spacing:0!important;text-transform:none!important}' +
+    '.q3-qv-sz{margin:20px 0 0}' +
+    '.q3-qv-sh{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 10px}' +
+    '.q3-qv-sh span,.q3-qv-sh a{font-size:10.5px!important;letter-spacing:.22em!important;text-transform:uppercase!important;color:#0b0b0b!important}' +
+    '.q3-qv-sh a{color:rgba(11,11,11,.6)!important;text-decoration:underline!important;text-underline-offset:3px}' +
+    '.q3-qv-ch{display:flex;flex-wrap:wrap;gap:8px}' +
+    '.q3-qv-ch button{min-width:52px;height:44px;padding:0 12px!important;margin:0!important;border:1px solid rgba(11,11,11,.22)!important;border-radius:0!important;background:transparent!important;color:#0b0b0b!important;font-family:inherit!important;font-size:12px!important;letter-spacing:.1em!important;cursor:pointer;box-shadow:none!important;transition:border-color .15s,background .15s,color .15s}' +
+    '.q3-qv-ch button.q3-on{border-color:#0b0b0b!important;background:#0b0b0b!important;color:#F4F3F0!important}' +
+    '.q3-qv-ch button[disabled]{color:rgba(11,11,11,.3)!important;border-color:rgba(11,11,11,.1)!important;text-decoration:line-through;cursor:default}' +
+    '.q3-qv-one{font-size:12px!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:rgba(11,11,11,.6)!important}' +
+    '.q3-qv-ld{display:inline-block;width:150px;height:44px;background:linear-gradient(90deg,rgba(11,11,11,.05),rgba(11,11,11,.1),rgba(11,11,11,.05));background-size:200% 100%;animation:q3qvsh 1.2s linear infinite}' +
+    '@keyframes q3qvsh{to{background-position:-200% 0}}' +
+    '.q3-qv-add{display:flex;align-items:center;justify-content:center;width:100%;height:54px;margin:22px 0 0!important;padding:0 16px!important;border:0!important;border-radius:0!important;background:#0b0b0b!important;color:#F4F3F0!important;font-family:inherit!important;font-size:12px!important;letter-spacing:.24em!important;text-transform:uppercase!important;cursor:pointer;text-decoration:none!important;box-shadow:none!important;transition:background .2s}' +
+    '.q3-qv-add[aria-disabled="true"]{background:rgba(11,11,11,.32)!important;cursor:default}' +
+    '.q3-qv-add.q3-ok{background:#6E0B22!important}' +
+    '.q3-qv-msg{margin:10px 0 0!important;min-height:18px;font-size:12px!important;line-height:1.5!important;color:#6E0B22!important;text-align:center}' +
+    '.q3-qv-nx{display:none;gap:10px;margin:12px 0 0}' +
+    '.q3-qv-nx.q3-on{display:flex}' +
+    '.q3-qv-nx a,.q3-qv-nx button{flex:1;display:flex;align-items:center;justify-content:center;height:48px;margin:0!important;padding:0 10px!important;border:1px solid #0b0b0b!important;border-radius:0!important;background:transparent!important;color:#0b0b0b!important;font-family:inherit!important;font-size:11px!important;letter-spacing:.2em!important;text-transform:uppercase!important;text-decoration:none!important;cursor:pointer;box-shadow:none!important}' +
+    '.q3-qv-nx a{background:#0b0b0b!important;color:#F4F3F0!important}' +
+    '.q3-qv-fl{display:block;margin:20px 0 4px!important;text-align:center;font-size:10.5px!important;letter-spacing:.22em!important;text-transform:uppercase!important;color:rgba(11,11,11,.6)!important;text-decoration:none!important}' +
+    '@media (hover:hover){.q3-qv-fl:hover,.q3-qv-sh a:hover{color:#0b0b0b!important}.q3-qv-ch button:not([disabled]):not(.q3-on):hover{border-color:#0b0b0b!important}}' +
+    'html.q3-qv-lock,html.q3-qv-lock body{overflow:hidden!important}' +
+    '.q3-qv-f{position:fixed!important;left:-10000px!important;top:0!important;width:420px!important;height:900px!important;opacity:0!important;pointer-events:none!important;border:0!important}' +
+    '@media (min-width:750px){.q3-qv{align-items:center;padding:24px}' +
+      '.q3-qv-c{max-width:940px;max-height:88vh;border-radius:4px;transform:translateY(14px) scale(.985);opacity:0;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .25s ease;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);padding:0}' +
+      '.q3-qv.q3-in .q3-qv-c{opacity:1}' +
+      '.q3-qv-grab{display:none}' +
+      '.q3-qv-g{margin:0;background:#ECEAE6;display:flex;flex-direction:column;justify-content:center}' +
+      '.q3-qv-gs>div{aspect-ratio:4/5;padding:32px}' +
+      '.q3-qv-dt{position:absolute;left:0;right:0;bottom:12px}' +
+      '.q3-qv-i{padding:46px 40px 30px;align-self:center}' +
+      '.q3-qv h2{font-size:15px!important}}';
+  var QV = null;
+  function qvSlug(href) { var m = String(href || '').match(/\/products\/([a-z0-9-]+)/); return m ? m[1] : ''; }
+  function qvInfo(slug, it) {   /* what the store already knows about the piece: shown at once, before the product page loads */
+    var o = { s: slug, n: '', c: '', p: '', src: '', z: null, side: MS[slug] || '' };
+    if (it) { o.n = it.n || ''; o.c = it.c || ''; o.p = it.p || ''; o.src = it.src || ''; }
+    Object.keys(D).forEach(function (id) { var d = D[id]; if ((d.u || id) !== slug) return;
+      o.n = o.n || d.n; o.c = o.c || d.c; o.p = o.p || ('$' + d.p); if (d.z && d.z.length) o.z = d.z.slice();
+      if (d.v) { var sold = {}; d.v.forEach(function (v) { if (!v[4]) sold[v[2]] = 1; }); o.so = sold; } });
+    if (!o.src && GK[slug]) o.src = GK[slug].src;
+    return o;
+  }
+  function qvOpen(href, it) {
+    var slug = qvSlug(href); if (!slug) { location.href = href; return; }
+    if (QV) qvClose(1);
+    if (!document.getElementById('q3-qvcss')) { var st = document.createElement('style'); st.id = 'q3-qvcss'; st.textContent = QVCSS; document.head.appendChild(st); }
+    var I = qvInfo(slug, it), full = SHOP + slug + '?from=360&w=' + ((front && front.z && front.z.k) || 'all');
+    var el = document.createElement('div'); el.className = 'q3-qv' + (RM ? ' q3-rmq' : '');
+    el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'q3-qv-h');
+    el.innerHTML = '<div class="q3-qv-bd"></div><div class="q3-qv-c" tabindex="-1"><span class="q3-qv-grab" aria-hidden="true"></span>' +
+      '<button type="button" class="q3-qv-x" aria-label="Close"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 2l14 14M16 2L2 16" stroke="currentColor" stroke-width="1.3" fill="none"/></svg></button>' +
+      '<div class="q3-qv-g"><div class="q3-qv-gs">' + (I.src ? '<div><img alt="' + esc(I.n + (I.c ? ' ' + I.c : '')) + '" src="' + esc(I.src) + '"></div>' : '<div></div>') + '</div><div class="q3-qv-dt"></div></div>' +
+      '<div class="q3-qv-i">' + (I.side ? '<span class="q3-qv-sd">' + esc(SIDEN[I.side]) + '</span>' : '') +
+        '<h2 id="q3-qv-h">' + esc(I.n || slug.replace(/-/g, ' ')) + '</h2>' +
+        '<p class="q3-qv-cp">' + (I.c ? esc(I.c) + ' &nbsp;&middot;&nbsp; ' : '') + '<b class="q3-qv-pr">' + esc(I.p) + '</b></p>' +
+        '<p class="q3-qv-ds" hidden></p>' +
+        '<div class="q3-qv-sz"><div class="q3-qv-sh"><span>Size</span><a class="q3-qv-sc" target="_blank" rel="noopener" hidden>Size chart</a></div><div class="q3-qv-ch"></div></div>' +
+        '<button type="button" class="q3-qv-add" aria-disabled="true">Select a size</button>' +
+        '<p class="q3-qv-msg" role="status" aria-live="polite"></p>' +
+        '<div class="q3-qv-nx"><button type="button" class="q3-qv-ks">Keep shopping</button><a href="/cart">View cart</a></div>' +
+        '<a class="q3-qv-fl" href="' + esc(full) + '">Full details &rarr;</a></div></div>';
+    document.body.appendChild(el);
+    var Q = function (s) { return el.querySelector(s); };
+    QV = { el: el, slug: slug, I: I, full: full, size: '', sizes: null, ready: 0, fail: 0, busy: 0, f: null, back: document.activeElement, pushed: 0 };
+    document.documentElement.classList.add('q3-qv-lock');
+    qvSizes(I.z ? I.z.map(function (z) { return [z, !(I.so && I.so[z])]; }) : null);
+    Q('.q3-qv-bd').addEventListener('click', function () { qvClose(); });
+    Q('.q3-qv-x').addEventListener('click', function () { qvClose(); });
+    Q('.q3-qv-ks').addEventListener('click', function () { qvClose(); });
+    Q('.q3-qv-add').addEventListener('click', qvAdd);
+    Q('.q3-qv-fl').addEventListener('click', function () { remember(full); });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.preventDefault(); qvClose(); return; }
+      if (e.key !== 'Tab') return;   /* keep focus inside the card */
+      var fs = [].filter.call(el.querySelectorAll('button:not([disabled]),a[href]'), function (x) { return x.offsetParent !== null; });
+      if (!fs.length) return; var a = fs[0], b = fs[fs.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); b.focus(); } else if (!e.shiftKey && document.activeElement === b) { e.preventDefault(); a.focus(); }
+    });
+    var gs = Q('.q3-qv-gs'); gs.addEventListener('scroll', function () { qvDots(); }, { passive: true });
+    try { history.pushState({ q3qv: 1 }, ''); QV.pushed = 1; } catch (e) {}
+    requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('q3-in'); try { Q('.q3-qv-x').focus({ preventScroll: true }); } catch (e) {} }); });
+    qvFrame();
+  }
+  function qvClose(silent) {
+    if (!QV) return; var q = QV; QV = null;
+    document.documentElement.classList.remove('q3-qv-lock');
+    if (q.f && q.f.parentNode) q.f.parentNode.removeChild(q.f);
+    if (q.pushed && !silent && history.state && history.state.q3qv) { try { history.back(); } catch (e) {} }
+    var el = q.el; el.classList.remove('q3-in');
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, RM ? 0 : 340);
+    try { if (q.back && q.back.focus) q.back.focus({ preventScroll: true }); } catch (e) {}
+  }
+  window.addEventListener('popstate', function () { if (QV) qvClose(1); });
+  function qvSizes(list) {   /* list: [[label, available], ...] or null while loading */
+    if (!QV) return; var box = QV.el.querySelector('.q3-qv-ch'), sz = QV.el.querySelector('.q3-qv-sz');
+    if (!list) { box.innerHTML = '<span class="q3-qv-ld" aria-hidden="true"></span>'; return; }
+    QV.sizes = list;
+    if (list.length <= 1) {   /* one size (hats, bags, blankets): nothing to pick */
+      QV.size = list.length ? list[0][0] : '-';
+      sz.querySelector('.q3-qv-sh span').textContent = 'Size';
+      box.innerHTML = '<span class="q3-qv-one">' + esc(list.length ? list[0][0] : 'One size') + '</span>';
+    } else {
+      if (QV.size && !list.some(function (s) { return s[0] === QV.size && s[1]; })) QV.size = '';
+      box.innerHTML = list.map(function (s) { return '<button type="button" data-z="' + esc(s[0]) + '"' + (s[1] ? '' : ' disabled aria-label="' + esc(s[0]) + ', sold out"') +
+        (QV.size === s[0] ? ' class="q3-on" aria-pressed="true"' : ' aria-pressed="false"') + '>' + esc(s[0]) + '</button>'; }).join('');
+      [].forEach.call(box.querySelectorAll('button'), function (b) { b.addEventListener('click', function () {
+        QV.size = b.getAttribute('data-z');
+        [].forEach.call(box.querySelectorAll('button'), function (x) { var on = x === b; x.classList.toggle('q3-on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+        qvBtn(); }); });
+    }
+    qvBtn();
+  }
+  function qvBtn(state) {
+    if (!QV) return; var b = QV.el.querySelector('.q3-qv-add'), pr = QV.el.querySelector('.q3-qv-pr').textContent;
+    b.classList.remove('q3-ok');
+    if (state === 'busy') { b.textContent = 'Adding…'; b.setAttribute('aria-disabled', 'true'); return; }
+    if (state === 'ok') { b.textContent = 'Added to cart ✓'; b.classList.add('q3-ok'); b.setAttribute('aria-disabled', 'false'); return; }
+    if (QV.fail) { b.textContent = 'Add on the full page'; b.setAttribute('aria-disabled', 'false'); return; }
+    if (QV.sizes && !QV.size) { b.textContent = 'Select a size'; b.setAttribute('aria-disabled', 'true'); return; }
+    if (!QV.sizes) { b.textContent = 'Add to cart' + (pr ? ' · ' + pr : ''); b.setAttribute('aria-disabled', 'true'); return; }
+    b.textContent = 'Add to cart' + (pr ? ' · ' + pr : ''); b.setAttribute('aria-disabled', 'false');
+  }
+  function qvDots() {
+    if (!QV) return; var gs = QV.el.querySelector('.q3-qv-gs'), dt = QV.el.querySelector('.q3-qv-dt'), n = gs.children.length;
+    if (n < 2) { dt.innerHTML = ''; return; }
+    var i = Math.round(gs.scrollLeft / Math.max(1, gs.clientWidth));
+    if (dt.children.length !== n) {
+      dt.innerHTML = ''; for (var k = 0; k < n; k++) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Photo ' + (k + 1) + ' of ' + n);
+        (function (k) { b.addEventListener('click', function () { gs.scrollTo({ left: k * gs.clientWidth, behavior: RM ? 'auto' : 'smooth' }); }); })(k); dt.appendChild(b); }
+    }
+    [].forEach.call(dt.children, function (b, k) { b.classList.toggle('q3-on', k === i); });
+  }
+  /* ---- the hidden product page ---- */
+  function qvFrame() {
+    var q = QV, f = document.createElement('iframe'); f.className = 'q3-qv-f'; f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1; f.title = '';
+    f.src = '/products/' + q.slug + '?qv=1'; q.f = f; document.body.appendChild(f);
+    var t0 = Date.now();
+    var poll = function () {
+      if (QV !== q) return;
+      var doc = null; try { doc = f.contentDocument; } catch (e) {}
+      if (!doc) return qvFail(q);   /* the page refused to load inside the store */
+      var h1 = doc.querySelector('main h1, h1'), btn = qvBtnIn(doc);
+      if (h1 && btn) return qvRead(q, doc);
+      if (Date.now() - t0 > 12000) return qvFail(q);
+      setTimeout(poll, 150);
+    };
+    f.addEventListener('load', function () { setTimeout(poll, 60); });
+    setTimeout(function () { if (QV === q && !q.ready && !q.fail) poll(); }, 2500);
+  }
+  function qvBtnIn(doc) { var bs = doc.querySelectorAll('button'); for (var i = 0; i < bs.length; i++) if (/^add to cart$/i.test((bs[i].textContent || '').trim())) return bs[i]; return null; }
+  function qvSelIn(doc) {
+    var ss = doc.querySelectorAll('main select, select');
+    for (var i = 0; i < ss.length; i++) { var s = ss[i]; if (s.options.length && /size/i.test((s.options[0].text || '') + ' ' + (s.getAttribute('aria-label') || '') + ' ' + (s.name || ''))) return s; }
+    return ss.length === 1 ? ss[0] : null;
+  }
+  function qvCount(doc) { var a = doc.querySelector('a[href="/cart"], a[href$="/cart"]'); var m = a && (a.textContent || '').match(/\((\d+)\)/); return m ? +m[1] : -1; }
+  function qvRead(q, doc) {
+    q.ready = 1; q.doc = doc;
+    var sel = qvSelIn(doc), list = [];
+    if (sel) [].forEach.call(sel.options, function (o, i) { var t = (o.text || '').trim(); if (!t || (i === 0 && (o.disabled || !o.value) && /select/i.test(t))) return;
+      list.push([t.replace(/\s*[-–—]\s*sold out.*$/i, ''), !o.disabled && !/sold out/i.test(t), o.value]); });
+    q.sel = sel; q.opt = {}; list.forEach(function (s) { q.opt[s[0]] = s[2]; });
+    qvSizes(list.map(function (s) { return [s[0], s[1]]; }));
+    var h1 = doc.querySelector('main h1, h1'), main = doc.querySelector('main') || doc.body;
+    /* price: the first $-only line after the title */
+    var w = doc.createTreeWalker(main, 4), n, pr = '';
+    while ((n = w.nextNode())) { if (h1.compareDocumentPosition(n) & 4) { var tx = n.nodeValue.trim(); if (/^\$\d[\d,.]*$/.test(tx)) { pr = tx.replace(/\.00$/, ''); break; } } }
+    if (pr) { q.el.querySelector('.q3-qv-pr').textContent = pr; qvBtn(); }
+    /* short description: first real paragraph after the title */
+    var ps = main.querySelectorAll('p');
+    for (var i = 0; i < ps.length; i++) { var p = ps[i]; if (!(h1.compareDocumentPosition(p) & 4)) continue; var t = (p.textContent || '').trim();
+      if (t.length > 30 && !/free shipping|select size|size guide|promotion/i.test(t)) { var d = q.el.querySelector('.q3-qv-ds'); d.textContent = t; d.hidden = false; break; } }
+    /* size chart */
+    var as = main.querySelectorAll('a[href]');
+    for (var j = 0; j < as.length; j++) if (/size chart/i.test(as[j].textContent || '')) { var sc = q.el.querySelector('.q3-qv-sc'); sc.href = as[j].href; sc.hidden = false; break; }
+    /* photos: the product carousel's large images (thumbnails are narrower than 200 px inside the 420 px page) */
+    var seen = {}, srcs = [];
+    [].forEach.call(main.querySelectorAll('img'), function (im) {
+      if (!(im.compareDocumentPosition(h1) & 4)) return;   /* only images before the title (the gallery) */
+      var r = im.getBoundingClientRect(); if (r.width && r.width < 200) return;
+      var s = im.currentSrc || im.getAttribute('src') || im.getAttribute('data-src') || '';
+      if (!s && im.srcset) { var c = im.srcset.split(',').pop().trim().split(' ')[0]; s = c; }
+      if (!s || /^data:/.test(s)) return; var k = s.split('?')[0]; if (seen[k]) return; seen[k] = 1; srcs.push(s);
+    });
+    if (srcs.length) {
+      var gs = q.el.querySelector('.q3-qv-gs'), alt = esc(q.I.n + (q.I.c ? ' ' + q.I.c : ''));
+      gs.innerHTML = (q.I.src ? '<div><img alt="' + alt + '" src="' + esc(q.I.src) + '"></div>' : '') +
+        srcs.slice(0, 6).map(function (s, k) { return '<div><img loading="lazy" decoding="async" alt="' + alt + ', photo ' + (k + 1) + '" src="' + esc(s) + '"></div>'; }).join('');
+      qvDots();
+    }
+    if (q.want) qvAdd();
+  }
+  function qvFail(q) { if (QV !== q || q.ready) return; q.fail = 1; if (!q.sizes) qvSizes(q.I.z ? q.I.z.map(function (z) { return [z, 1]; }) : []); qvBtn(); }
+  function qvAdd() {
+    var q = QV; if (!q || q.busy) return;
+    var b = q.el.querySelector('.q3-qv-add'), msg = q.el.querySelector('.q3-qv-msg');
+    if (q.fail) { remember(q.full); location.href = q.full; return; }
+    if (b.classList.contains('q3-ok')) { q.el.querySelector('.q3-qv-nx a').focus(); return; }
+    if (q.sizes && !q.size) { msg.textContent = 'Pick a size first.'; return; }
+    if (!q.ready) { q.want = 1; qvBtn('busy'); return; }   /* page still loading: add as soon as it is ready */
+    q.want = 0; msg.textContent = '';
+    var doc = q.doc, win = q.f.contentWindow, btn = qvBtnIn(doc);
+    if (!btn) return qvFail(q);
+    try {
+      if (q.sel && q.sizes && q.sizes.length > 1) {
+        var v = q.opt[q.size]; var set = Object.getOwnPropertyDescriptor(win.HTMLSelectElement.prototype, 'value').set; set.call(q.sel, v);
+        q.sel.dispatchEvent(new win.Event('input', { bubbles: true })); q.sel.dispatchEvent(new win.Event('change', { bubbles: true }));
+      }
+    } catch (e) { return qvFail(q); }
+    q.busy = 1; qvBtn('busy');
+    var c0 = qvCount(doc), sub0 = qvSub(doc), t0 = Date.now();
+    setTimeout(function () { try { qvBtnIn(doc).click(); } catch (e) {} }, 120);
+    var wait = function () {
+      if (QV !== q) return;
+      var c = qvCount(doc), sub = qvSub(doc);
+      if ((c0 > -1 && c > c0) || (sub && sub !== sub0)) {
+        q.busy = 0; qvBtn('ok'); msg.textContent = (q.sizes && q.sizes.length > 1 ? 'Size ' + q.size + ' added.' : 'Added.') + (c > 0 ? ' ' + c + (c === 1 ? ' item' : ' items') + ' in your cart.' : '');
+        q.el.querySelector('.q3-qv-nx').classList.add('q3-on'); qvHeaderCount(c); return;
+      }
+      if (Date.now() - t0 > 10000) { q.busy = 0; q.fail = 1; qvBtn(); msg.textContent = 'That didn’t go through here. Add it on the full page.'; return; }
+      setTimeout(wait, 150);
+    };
+    setTimeout(wait, 300);
+  }
+  function qvSub(doc) { var all = doc.querySelectorAll('*'); for (var i = all.length - 1; i >= 0; i--) { var t = all[i].childElementCount ? '' : (all[i].textContent || ''); if (/^\s*\$\d/.test(t) && all[i].parentNode && /subtotal/i.test(all[i].parentNode.textContent || '')) return t.trim(); } return ''; }
+  function qvHeaderCount(c) {
+    if (!(c > -1)) return;
+    [].forEach.call(document.querySelectorAll('a[href="/cart"], a[href$="/cart"]'), function (a) {
+      var w = document.createTreeWalker(a, 4), n; while ((n = w.nextNode())) if (/\(\d+\)/.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(/\(\d+\)/, '(' + c + ')');
+    });
+  }
   window.QSStore360 = {
+    qv: function (slug) { if (slug) qvOpen(SHOP + slug); return QV ? { slug: QV.slug, ready: !!QV.ready, fail: !!QV.fail, sizes: QV.sizes } : null; }, qvClose: function () { qvClose(); },
     side: function (v) { if (v !== undefined) setSide(v, 1); return SIDE; }, sideLive: function () { return !!window.__q3SideLive; },
     grid: { open: function () { gOpen(); }, close: gClose, on: function () { return !!GR.on; }, off: function () { return GR.off; }, set: function (o) { GR.anim = null; GR.v = 0; GR.off = o; gRender(); }, n: function () { return GR.n; }, sel: function () { return GR.sel && GR.sel.s; } },
     turn: function (a) { anim = null; yaw = norm(a); render(); }, go: goK, step: step, hint: function () {},
