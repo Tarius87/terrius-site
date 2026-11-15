@@ -256,15 +256,13 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qsa-wa-p img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 0 1px rgba(27,34,54,.25)) drop-shadow(0 8px 9px rgba(27,34,54,.22))}',
 '.qsa-wa-l{display:inline-block;margin-top:26px;font-size:12px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;padding:0 0 6px .26em;border-bottom:1px solid #1B2236;color:#1B2236!important}',
 '.qsa-wa-l:hover{opacity:.75}',
-/* THE STAPLE (Nov 15 2026): Sticker Fall Crew — Black under the Winter band. Black / white / off-white only; no pills, glows, badges. */
+/* THE STAPLE (Nov 15 2026): Sticker Fall Crew — Black under the Winter band (Nov 15 14:50: "THE STAPLE" label + short rule removed, Justin). Black / white / off-white only; no pills, glows, badges. */
 '.qsa-sf{background:#F4F3F0;padding:72px 24px 0}',
 '.qsa-sf-a{display:block;max-width:1180px;margin:0 auto;color:#141414!important}',
 '.qsa-sf-ph{display:block;width:min(86%,440px);margin:0 auto}',
 '.qsa-sf-ph img{width:100%;height:auto;filter:drop-shadow(0 18px 18px rgba(0,0,0,.16))}',
 '.qsa-sf-tx{display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:36px}',
-'.qsa-sf-k{display:block;font-size:11px;font-weight:400;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:#141414!important;opacity:.62}',
-'.qsa-sf-r{display:block;width:28px;height:1px;background:#141414;margin:16px auto 0}',
-'.qsa-sf-n{display:block;margin-top:16px;font-size:15px;font-weight:400;letter-spacing:.22em;padding-left:.22em;line-height:1.5;text-transform:uppercase;color:#141414!important}',
+'.qsa-sf-n{display:block;margin-top:0;font-size:15px;font-weight:400;letter-spacing:.22em;padding-left:.22em;line-height:1.5;text-transform:uppercase;color:#141414!important}',
 '.qsa-sf-pr{display:block;margin-top:8px;font-size:13px;letter-spacing:.2em;padding-left:.2em;color:#141414!important}',
 '.qsa-sf-pr b{font-weight:400;opacity:.62;color:#141414!important}',
 '.qsa-sf-l{display:inline-block;margin-top:24px;font-size:12px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;padding:0 0 6px .28em;border-bottom:1px solid #141414;color:#141414!important}',
@@ -295,7 +293,7 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 ' .qsa-wa{margin-top:64px;padding:56px 48px}.qsa-wa-in{display:grid;grid-template-columns:minmax(300px,380px) 1fr;grid-template-rows:auto auto;column-gap:40px;row-gap:0}.qsa-wa-t{grid-column:1;grid-row:1;align-self:end}.qsa-wa-c{grid-column:1;grid-row:2;align-self:start}.qsa-wa-p{grid-column:2;grid-row:1/3;align-self:center}',
 ' .qsa-wa-m{height:72px}.qsa-wa-k{font-size:12.5px}.qsa-wa-h{font-size:30px}.qsa-wa-d{font-size:14px}.qsa-wa-l{font-size:12.5px}',
 ' .qsa-wa-p{margin:0;max-width:800px;gap:20px;padding-bottom:14px;justify-self:center;width:100%}',
-' .qsa-sf{padding:120px 48px 0}.qsa-sf-a{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:72px;align-items:center}\n .qsa-sf-ph{width:min(100%,560px);margin:0 0 0 auto}.qsa-sf-tx{align-items:flex-start;text-align:left;margin-top:0}.qsa-sf-k,.qsa-sf-n,.qsa-sf-pr{padding-left:0}.qsa-sf-r{margin:18px 0 0}.qsa-sf-n{font-size:20px;margin-top:20px}.qsa-sf-pr{font-size:14px;margin-top:10px}.qsa-sf-l{margin-top:32px;font-size:12.5px;padding-left:0}',
+' .qsa-sf{padding:120px 48px 0}.qsa-sf-a{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:72px;align-items:center}\n .qsa-sf-ph{width:min(100%,560px);margin:0 0 0 auto}.qsa-sf-tx{align-items:flex-start;text-align:left;margin-top:0}.qsa-sf-n,.qsa-sf-pr{padding-left:0}.qsa-sf-n{font-size:20px;margin-top:0}.qsa-sf-pr{font-size:14px;margin-top:10px}.qsa-sf-l{margin-top:32px;font-size:12.5px;padding-left:0}',
 ' .qsa-sec{padding:120px 48px 0}.qsa-grid{grid-template-columns:repeat(4,1fr);gap:52px 26px}',
 ' .qsa-visit{margin-top:120px;padding-bottom:96px}.qsa-visit a{font-size:12.5px}',
 '}'
@@ -318,7 +316,7 @@ var W=I.replace(/a\/$/,'w/');
 var SF=['sticker-fall-crew-black','Sticker Fall Crew — Black','49','sticker-fall-crew-black.webp',1200,1474],SI=I.replace(/a\/$/,'s/');
 function staple(){return '<section class="qsa-sf" aria-label="The staple: '+esc(SF[1])+'"><a class="qsa-sf-a" href="/products/'+SF[0]+'">'+
  '<span class="qsa-sf-ph"><img src="'+SI+SF[3]+'" alt="'+esc(SF[1])+'" width="'+SF[4]+'" height="'+SF[5]+'" loading="lazy"></span>'+
- '<span class="qsa-sf-tx"><span class="qsa-sf-k">The Staple</span><span class="qsa-sf-r"></span><span class="qsa-sf-n">'+esc(SF[1])+'</span>'+
+ '<span class="qsa-sf-tx"><span class="qsa-sf-n">'+esc(SF[1])+'</span>'+
  '<span class="qsa-sf-pr" data-h="'+SF[0]+'"><b>'+money(SF[2])+'</b></span><span class="qsa-sf-l">Shop it &rarr;</span></span></a></section>'}
 function winter(){return '<section class="qsa-wa" id="winter-atelier" aria-label="Winter Atelier, Collection 002, available now"><div class="qsa-wa-in">'+
  '<div class="qsa-wa-t"><img class="qsa-wa-m" src="'+W+'qs-bluemark-k.webp" alt="QS" width="342" height="320"><p class="qsa-wa-k">Collection 002</p><p class="qsa-wa-h">Winter Atelier</p><div class="qsa-wa-r"></div><p class="qsa-wa-d">Available now</p></div>'+
