@@ -7,6 +7,7 @@
    (it was covering the menu's close X). Home: the ticker sits directly under the hero instead of at the top. When the home section
    (246a3a20) is on the page the ticker is NOT inserted at the top; it is left in window.__qsTkEl and qs-home-b.js places it right after
    .qsa-wrap (fallback: top of the page if that never happens). Theme announcement bar still hidden there (one promo bar only).
+   Nov 15 2026 (Justin): old code promo gone everywhere; text = 'Winter Atelier is live · Free US shipping over $75', links to the store's Winter zone.
    Source: site-build/ticker/qs-ticker.js */
 (function () {
   try {
@@ -22,8 +23,8 @@
       '@media (min-width:900px){#qs-tk{font-size:12px;height:36px;line-height:36px}}' +
       '@media (prefers-reduced-motion:reduce){#qs-tk{text-align:center}#qs-tk .qs-tk-r{animation:none;display:block}#qs-tk .qs-tk-h+.qs-tk-h,#qs-tk .qs-tk-i+.qs-tk-i{display:none}#qs-tk .qs-tk-i{padding:0}}';
     var st = document.createElement('style'); st.id = 'qs-tk-css'; st.textContent = css; (document.head || document.documentElement).appendChild(st);
-    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/collections/winter-atelier';
-    a.setAttribute('aria-label', 'Winter Atelier is live. Free US shipping over $75. Shop Winter Atelier');
+    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/pages/walk-the-store#w=all';
+    a.setAttribute('aria-label', 'Winter Atelier is live. Free US shipping over $75. Walk the store');
     var one = '<span class="qs-tk-i" aria-hidden="true">' + TXT + '</span>', half = '<span class="qs-tk-h">' + one + one + one + one + '</span>';
     a.innerHTML = '<span class="qs-tk-r">' + half + half + '</span>';
     var top = function () {
@@ -175,8 +176,8 @@ var me=document.currentScript,CB=me&&me.src?me.src.replace(/[^\/]*$/,''):'https:
 var I=CB+'img/a/',P=I+'p/';
 var S863='.custom-html--fw-section-custom-html-863702ee-37d1-48a0-8c17-b9a8c0e04dea',S246='.custom-html--fw-section-custom-html-246a3a20-ff62-43a2-bd4a-0c06afca2c46';
 /* hero fields (concept 4): [slug, full name, fallback base price, image, w, h, collection link, link text, side line] */
-var HL=['qs-lp-ts01-classic-tee-white','Calling Card Tee — White','29','calling-card-tee-white.webp',1061,918,'/collections/loud-proud','Shop Loud','Loud &amp; Proud'],
-    HR=['embroidered-qs-crew-black','Signet Crew — Black','49','signet-crew-black.webp',678,641,'/collections/discreet-neat','Shop Discreet','Discreet &amp; Neat'];
+var HL=['qs-lp-ts01-classic-tee-white','Calling Card Tee — White','29','calling-card-tee-white.webp',1061,918,'/pages/walk-the-store#all&side=lp','Shop Loud','Loud &amp; Proud'],
+    HR=['embroidered-qs-crew-black','Signet Crew — Black','49','signet-crew-black.webp',678,641,'/pages/walk-the-store#all&side=dn','Shop Discreet','Discreet &amp; Neat'];
 var C4=I.replace(/a\/$/,'c4/');
 /* grid: [slug, short name, fallback price, full name, from?, image, tone w=white piece on dark stage / d=dark piece on DN stage] */
 var GRID=[
@@ -256,6 +257,8 @@ S246+','+S246+' .container{padding:0!important;margin:0!important;max-width:none
 '.qsa-wa-p img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 0 1px rgba(27,34,54,.25)) drop-shadow(0 8px 9px rgba(27,34,54,.22))}',
 '.qsa-wa-l{display:inline-block;margin-top:26px;font-size:12px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;padding:0 0 6px .26em;border-bottom:1px solid #1B2236;color:#1B2236!important}',
 '.qsa-wa-l:hover{opacity:.75}',
+/* Nov 15 2026 later (Justin): every home link to a collection now goes to the store: hero LP/DN -> /pages/walk-the-store#all&side=lp|dn (grid, that side),
+   Shop Winter Atelier + ticker -> /pages/walk-the-store#w=all (the ring's Winter zone). PDP links unchanged. */
 /* Nov 15 2026 (Justin): "The pieces" View all -> /pages/walk-the-store#all (the 360's VIEW ALL grid opens straight away). */
 /* THE STAPLE (Nov 15 2026): Sticker Fall Crew — Black under the Winter band (Nov 15 14:50: "THE STAPLE" label + short rule removed, Justin). Black / white / off-white only; no pills, glows, badges. */
 '.qsa-sf{background:#F4F3F0;padding:72px 24px 0}',
@@ -322,7 +325,7 @@ function staple(){return '<section class="qsa-sf" aria-label="The staple: '+esc(
 function winter(){return '<section class="qsa-wa" id="winter-atelier" aria-label="Winter Atelier, Collection 002, available now"><div class="qsa-wa-in">'+
  '<div class="qsa-wa-t"><img class="qsa-wa-m" src="'+W+'qs-bluemark-k.webp" alt="QS" width="342" height="320"><p class="qsa-wa-k">Collection 002</p><p class="qsa-wa-h">Winter Atelier</p><div class="qsa-wa-r"></div><p class="qsa-wa-d">Available now</p></div>'+
  '<div class="qsa-wa-p">'+WINTER.map(function(w){var f=(w[2]*w[3]).toFixed(4);return '<span style="flex:'+f+' 1 0;aspect-ratio:'+f+'/'+w[3]+'"><a href="/products/'+(w[4]||w[0])+'" aria-label="'+esc(w[1])+'"><img src="'+W+w[0]+'.webp" alt="'+esc(w[1])+'" loading="lazy"></a></span>'}).join('')+'</div>'+
- '<div class="qsa-wa-c"><a class="qsa-wa-l" href="/collections/winter-atelier">Shop Winter Atelier &rarr;</a></div></div></section>'}
+ '<div class="qsa-wa-c"><a class="qsa-wa-l" href="/pages/walk-the-store#w=all">Shop Winter Atelier &rarr;</a></div></div></section>'}
 var HTML='<div class="qsa" id="qs-home">'+
  '<section class="qsa-h4" aria-label="Loud &amp; Proud or Discreet &amp; Neat">'+
   field(HL,'l','<img src="'+C4+'word-white.png" alt="Quality Stoner" width="1200" height="62">')+

@@ -7,11 +7,12 @@
    (it was covering the menu's close X). Home: the ticker sits directly under the hero instead of at the top. When the home section
    (246a3a20) is on the page the ticker is NOT inserted at the top; it is left in window.__qsTkEl and qs-home-b.js places it right after
    .qsa-wrap (fallback: top of the page if that never happens). Theme announcement bar still hidden there (one promo bar only).
+   Nov 15 2026 (Justin): old code promo gone everywhere; text = 'Winter Atelier is live · Free US shipping over $75', links to the store's Winter zone.
    Source: site-build/ticker/qs-ticker.js */
 (function () {
   try {
     if (window.__qsTk || document.getElementById('qs-tk')) return; window.__qsTk = 1;
-    var TXT = 'Free US shipping over $75 \u00a0\u00b7\u00a0 or 15% off with code FIRSTDROP';
+    var TXT = 'Winter Atelier is live \u00a0\u00b7\u00a0 Free US shipping over $75';
     var css = 'html.qs-tk-on [id^="fw-section-announcement-bar"],html.qs-tk-on section.announcement-bar{display:none!important}' +
       '#qs-tk{display:block;position:relative;z-index:10;width:100%;height:34px;overflow:hidden;background:#6E0B22;color:#fff!important;text-decoration:none!important;' +
       'font-family:inherit;font-size:11.5px;font-weight:600;line-height:34px;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;-webkit-font-smoothing:antialiased;border:0;margin:0;padding:0;box-shadow:none}' +
@@ -22,8 +23,8 @@
       '@media (min-width:900px){#qs-tk{font-size:12px;height:36px;line-height:36px}}' +
       '@media (prefers-reduced-motion:reduce){#qs-tk{text-align:center}#qs-tk .qs-tk-r{animation:none;display:block}#qs-tk .qs-tk-h+.qs-tk-h,#qs-tk .qs-tk-i+.qs-tk-i{display:none}#qs-tk .qs-tk-i{padding:0}}';
     var st = document.createElement('style'); st.id = 'qs-tk-css'; st.textContent = css; (document.head || document.documentElement).appendChild(st);
-    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/collections/all';
-    a.setAttribute('aria-label', 'Free US shipping over $75, or 15% off with code FIRSTDROP. Shop all');
+    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/pages/walk-the-store#w=all';
+    a.setAttribute('aria-label', 'Winter Atelier is live. Free US shipping over $75. Walk the store');
     var one = '<span class="qs-tk-i" aria-hidden="true">' + TXT + '</span>', half = '<span class="qs-tk-h">' + one + one + one + one + '</span>';
     a.innerHTML = '<span class="qs-tk-r">' + half + half + '</span>';
     var top = function () {

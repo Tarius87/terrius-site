@@ -7,6 +7,7 @@
    (it was covering the menu's close X). Home: the ticker sits directly under the hero instead of at the top. When the home section
    (246a3a20) is on the page the ticker is NOT inserted at the top; it is left in window.__qsTkEl and qs-home-b.js places it right after
    .qsa-wrap (fallback: top of the page if that never happens). Theme announcement bar still hidden there (one promo bar only).
+   Nov 15 2026 (Justin): old code promo gone everywhere; text = 'Winter Atelier is live · Free US shipping over $75', links to the store's Winter zone.
    Source: site-build/ticker/qs-ticker.js */
 (function () {
   try {
@@ -22,8 +23,8 @@
       '@media (min-width:900px){#qs-tk{font-size:12px;height:36px;line-height:36px}}' +
       '@media (prefers-reduced-motion:reduce){#qs-tk{text-align:center}#qs-tk .qs-tk-r{animation:none;display:block}#qs-tk .qs-tk-h+.qs-tk-h,#qs-tk .qs-tk-i+.qs-tk-i{display:none}#qs-tk .qs-tk-i{padding:0}}';
     var st = document.createElement('style'); st.id = 'qs-tk-css'; st.textContent = css; (document.head || document.documentElement).appendChild(st);
-    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/collections/winter-atelier';
-    a.setAttribute('aria-label', 'Winter Atelier is live. Free US shipping over $75. Shop Winter Atelier');
+    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/pages/walk-the-store#w=all';
+    a.setAttribute('aria-label', 'Winter Atelier is live. Free US shipping over $75. Walk the store');
     var one = '<span class="qs-tk-i" aria-hidden="true">' + TXT + '</span>', half = '<span class="qs-tk-h">' + one + one + one + one + '</span>';
     a.innerHTML = '<span class="qs-tk-r">' + half + half + '</span>';
     var top = function () {
@@ -52,7 +53,9 @@
    filter animation; hidden items are display:none; images load lazily as they come round. Every product piece links to its product page
    (SHOP + slug + '?from=360', same hrefs as the wall room). Old wall-room source: qs-store360.src.85e4c.js.
    Source: site-build/store360/qs-store360.src.js + ring.css, built by site-build/store360/build.py.
-   Nov 15 2026: since the Winter-live edit the LIVE file is the source (src.js is stale); the VIEW ALL grid is added by work/grid/assemble.py. */
+   Nov 15 2026: since the Winter-live edit the LIVE file is the source (src.js is stale); the VIEW ALL grid is added by work/grid/assemble.py.
+   Nov 15 2026 later (Justin): '<- Shop' removed (collection pages now redirect here); LOUD & PROUD / DISCREET & NEAT toggle filters ring + grid;
+   grid swipes on iPhone (touch events); #w=<zone> / #all&side=lp|dn routing. Patch: site-build/lpdn-1115/patch_store.py. */
 (function () {
   if (window.__q3Loaded) return; window.__q3Loaded = 1;
   var me = document.currentScript, SRC = me && me.src ? me.src : '';
@@ -94,23 +97,37 @@
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
 
   /* ===== the ring: every piece placed along the circumference by its real width ===== */
-  var ZONES = [], ITEMS = [];
-  ORDER.forEach(function (k, zi) {
-    var z = k === 'all' ? { k: 'all', n: 'Winter' } : { k: k, n: cat(k).n };
-    z.i = zi; z.items = []; ZONES.push(z);
-    var list = k === 'all' ? WINTER.map(function (w) { return { id: w.id, pv: 0, win: 1, n: w.n, c: w.c, p: w.p, h: w.h, href: SHOP + (w.u || w.id) + '?from=360', src: OWN + 'w/' + w.id + '.webp' }; })
-      : cat(k).ids.map(function (id) { var p = P(id); return { id: id, pv: 0, n: p.n, c: p.c, p: money(id), h: HID[id] || HC[k], href: url(id), src: (p.o ? OWN : IMG) + 'p/' + id + '.webp' }; });
-    list.forEach(function (it) {
-      var t = TRIM[it.id] || [0, 0, 1, 1, 1];
-      it.tr = t; it.Hi = it.h / Math.max(.2, t[3] - t[1]); it.Wi = it.Hi * t[4]; it.cx = (t[0] + t[2]) / 2; it.tw = (t[2] - t[0]) * it.Wi;
-      it.z = z; it.k = ITEMS.length; z.items.push(it); ITEMS.push(it);
+  /* Nov 15 2026 (Justin): LOUD & PROUD / DISCREET & NEAT side toggle is back (calm text, no pill). SIDE '' = everything (default);
+     'lp' / 'dn' = only that side's pieces, in the ring (a category with none on that side is skipped) and in the VIEW ALL grid.
+     Membership = the live /collections/loud-proud and /collections/discreet-neat lists (MS = build-time copy; refreshed by fetch at load,
+     fetch runs no page scripts, so the collection-page redirect never fires). Pieces on neither side (Winter, Blue-S) show only with no side. */
+  var MS = {"sticker-fall-crew-black":"lp","seal-crew-burgundy":"lp","qs-lp-ts01-classic-tee-white":"lp","heavyweight-tee-black":"lp","wordmark-hoodie-white":"lp","lockup-hoodie-black":"lp","letterpress-crew-grey":"lp","wordmark-leg-joggers-black":"lp","hem-band-joggers-off-white":"lp","wordmark-snapback-black":"lp","wordmark-cuff-beanie-black":"lp","qs-lp-bp04-backpack-black":"lp","qs-lp-bp05-backpack-white":"lp","wordmark-lattice-backpack-white":"lp","winter-wordmark-dad-hat-black":"lp","winter-wordmark-hoodie-navy":"lp","winter-wordmark-joggers-black":"lp","signet-tee-burgundy":"dn","signet-hoodie-burgundy":"dn","signet-joggers-burgundy":"dn","maison-monogram-tee-black":"dn","maison-monogram-tee-white":"dn","damask-lined-hoodie-black":"dn","scattered-monogram-hoodie-white":"dn","embroidered-qs-crew-black":"dn","damask-crew-burgundy":"dn","maison-monogram-joggers-black":"dn","qs-snapback-burgundy":"dn","qs-snapback-black":"dn","qs-cuff-beanie-burgundy":"dn","maison-monogram-backpack-black":"dn","damask-crossbody-burgundy":"dn","engraved-crest-blanket-white":"dn","embroidered-qs-sherpa-black":"dn","qs-dad-hat-black":"dn","blue-s-snapback-black":"dn"};
+  var SIDE = '', SIDEN = { lp: 'Loud & Proud', dn: 'Discreet & Neat' };
+  function keep(slug) { return !SIDE || MS[slug] === SIDE; }
+  var ZONES = [], ITEMS = [], LT = 0, R = 1, STEP = 1;
+  function buildRing() {
+    ZONES = []; ITEMS = [];
+    ORDER.forEach(function (k) {
+      var z = k === 'all' ? { k: 'all', n: 'Winter' } : { k: k, n: cat(k).n };
+      var list = k === 'all' ? WINTER.map(function (w) { return { id: w.id, sl: w.u || w.id, pv: 0, win: 1, n: w.n, c: w.c, p: w.p, h: w.h, href: SHOP + (w.u || w.id) + '?from=360', src: OWN + 'w/' + w.id + '.webp' }; })
+        : cat(k).ids.map(function (id) { var p = P(id); return { id: id, sl: p.u || id, pv: 0, n: p.n, c: p.c, p: money(id), h: HID[id] || HC[k], href: url(id), src: (p.o ? OWN : IMG) + 'p/' + id + '.webp' }; });
+      list = list.filter(function (it) { return keep(it.sl); });
+      if (!list.length) return;   /* nothing on this side here: the category is skipped (nav too) */
+      z.i = ZONES.length; z.items = []; ZONES.push(z);
+      list.forEach(function (it) {
+        var t = TRIM[it.id] || [0, 0, 1, 1, 1];
+        it.tr = t; it.Hi = it.h / Math.max(.2, t[3] - t[1]); it.Wi = it.Hi * t[4]; it.cx = (t[0] + t[2]) / 2; it.tw = (t[2] - t[0]) * it.Wi;
+        it.z = z; it.k = ITEMS.length; z.items.push(it); ITEMS.push(it);
+      });
     });
-  });
-  var LT = 0;
-  ZONES.forEach(function (z) { z.items.forEach(function (it, i) { if (i) LT += GAP; it.L = LT + it.tw / 2; LT += it.tw; }); LT += ZG; });
-  var R = LT / (2 * Math.PI);
-  ITEMS.forEach(function (it) { it.a = norm(it.L / LT * 360 - ITEMS[0].L / LT * 360); });
-  var STEP = 360 * (LT / ITEMS.length) / LT;   /* mean angle per piece */
+    if (!ITEMS.length && SIDE) { SIDE = ''; return buildRing(); }   /* safety: never an empty ring */
+    LT = 0;
+    ZONES.forEach(function (z) { z.items.forEach(function (it, i) { if (i) LT += GAP; it.L = LT + it.tw / 2; LT += it.tw; }); LT += ZG; });
+    R = LT / (2 * Math.PI);
+    ITEMS.forEach(function (it) { it.a = norm(it.L / LT * 360 - ITEMS[0].L / LT * 360); });
+    STEP = 360 * (LT / ITEMS.length) / LT;   /* mean angle per piece */
+  }
+  buildRing();
   function zone(k) { for (var i = 0; i < ZONES.length; i++) if (ZONES[i].k === k) return ZONES[i]; }
 
   var host, root, view, bg, ice, disc, nav, hl, tag, wm, prv, nxt, sr;
@@ -131,7 +148,8 @@
     root = document.createElement('div'); root.className = 'q3' + (RM ? ' q3-rm' : '');
     root.innerHTML = '<div class="q3-bg"></div><div class="q3-ice"></div><svg class="q3-disc" aria-hidden="true"></svg>' +
       '<div class="q3-view" tabindex="0" role="region" aria-roledescription="carousel" aria-label="The Quality Stoner store. Drag, swipe or use the arrow keys to turn the ring."></div>' +
-      '<div class="q3-top"><a class="q3-back" href="https://qualitystoner.com/collections/all" aria-label="Back to the shop">&#8592;&nbsp; Shop</a><button type="button" class="q3-gb" aria-label="Back to the store">&#8592;&nbsp; The store</button><button type="button" class="q3-va" aria-expanded="false">View all</button><span class="q3-gc" hidden></span></div>' +
+      '<div class="q3-top"><span class="q3-tl"></span><button type="button" class="q3-gb" aria-label="Back to the store">&#8592;&nbsp; The store</button><button type="button" class="q3-va" aria-expanded="false">View all</button><span class="q3-gc" hidden></span></div>' +
+      '<div class="q3-sd" role="group" aria-label="Side"><button type="button" data-s="lp" aria-pressed="false">Loud &amp; Proud</button><i aria-hidden="true">&middot;</i><button type="button" data-s="dn" aria-pressed="false">Discreet &amp; Neat</button></div>' +
       '<div class="q3-nav" role="tablist" aria-label="Categories"></div>' +
       '<div class="q3-wm" aria-hidden="true"><img alt="" decoding="async" data-src="' + OWN + 'w/qs-bluemark-k.webp"><div>Winter Atelier &middot; Collection 002</div></div>' +
       '<a class="q3-tag" draggable="false"><b></b><span></span></a>' +
@@ -140,9 +158,36 @@
     host.innerHTML = ''; host.appendChild(root);
     var Q = function (s) { return root.querySelector(s); };
     view = Q('.q3-view'); bg = Q('.q3-bg'); ice = Q('.q3-ice'); disc = Q('.q3-disc'); nav = Q('.q3-nav'); tag = Q('.q3-tag'); wm = Q('.q3-wm'); prv = Q('.q3-prev'); nxt = Q('.q3-next'); sr = Q('.q3-sr');
+    sdEl = Q('.q3-sd');
+    [].forEach.call(sdEl.querySelectorAll('button'), function (b) { b.addEventListener('click', function () { var v = b.getAttribute('data-s'); setSide(SIDE === v ? '' : v, 1); }); });
+    mkNav(); mkPieces();
+    tag.addEventListener('click', function (ev) { if (!tag.getAttribute('href')) { ev.preventDefault(); return; } goPdp(ev, tag); });
+    prv.addEventListener('click', function () { if (GR.on) gStep(-1); else step(-1); });
+    nxt.addEventListener('click', function () { if (GR.on) gStep(1); else step(1); });
+    view.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } });
+    drag();
+    (function () { var m = {}; location.hash.replace(/^#/, '').split('&').forEach(function (kv) { var p = kv.split('='); if (p[0]) m[p[0]] = decodeURIComponent(p[1] || ''); });
+      var v = m.side; if (v == null && /\/products\//.test(document.referrer || '')) try { v = sessionStorage.getItem('q3-side'); } catch (e) {}
+      if (v === 'lp' || v === 'dn') { SIDE = v; buildRing(); mkNav(); mkPieces(); } sideUI(); })();
+    fit(); layout(); built = true;
+    var lw = innerWidth;
+    addEventListener('resize', function () { if (innerWidth !== lw) { lw = innerWidth; fit(); layout(); } });
+    addEventListener('orientationchange', function () { setTimeout(function () { fit(); layout(); }, 300); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measureNav(); render(1); });
+    restore();
+    gInit();
+    setTimeout(sideLive, 600);
+    /* preload the rest of the ring once the page is idle so nothing pops in mid-turn */
+    var rest = function () { var ric = window.requestIdleCallback || function (f) { return setTimeout(f, 200); }; ric(function () { ITEMS.forEach(load); }, { timeout: 1500 }); };
+    if (document.readyState === 'complete') setTimeout(rest, 400); else addEventListener('load', function () { setTimeout(rest, 400); });
+  }
+  function mkNav() {
     nav.innerHTML = ZONES.map(function (z) { return '<button type="button" role="tab" data-k="' + z.k + '">' + esc(z.n) + '</button>'; }).join('') + '<i class="q3-hl"></i>';
     hl = nav.querySelector('.q3-hl');
     [].forEach.call(nav.querySelectorAll('button'), function (b) { b.addEventListener('click', function () { if (!moved) goK(b.getAttribute('data-k')); }); });
+  }
+  function mkPieces() {
+    [].slice.call(view.querySelectorAll('.q3-it,.q3-pv,.q3-sh')).forEach(function (e) { e.parentNode.removeChild(e); });
     /* pieces: product pieces are links (q3-it), Winter previews are not (q3-pv) */
     ITEMS.forEach(function (it) {
       var e = document.createElement(it.pv ? 'div' : 'a');
@@ -155,21 +200,43 @@
       var sh = document.createElement('div'); sh.className = 'q3-sh';
       view.appendChild(sh); view.appendChild(e); it.el = e; it.sh = sh; it.img = e.firstChild; it.shown = false;
     });
-    tag.addEventListener('click', function (ev) { if (!tag.getAttribute('href')) { ev.preventDefault(); return; } goPdp(ev, tag); });
-    prv.addEventListener('click', function () { if (GR.on) gStep(-1); else step(-1); });
-    nxt.addEventListener('click', function () { if (GR.on) gStep(1); else step(1); });
-    view.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } });
-    drag();
-    fit(); layout(); built = true;
-    var lw = innerWidth;
-    addEventListener('resize', function () { if (innerWidth !== lw) { lw = innerWidth; fit(); layout(); } });
-    addEventListener('orientationchange', function () { setTimeout(function () { fit(); layout(); }, 300); });
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measureNav(); render(1); });
-    restore();
-    gInit();
-    /* preload the rest of the ring once the page is idle so nothing pops in mid-turn */
-    var rest = function () { var ric = window.requestIdleCallback || function (f) { return setTimeout(f, 200); }; ric(function () { ITEMS.forEach(load); }, { timeout: 1500 }); };
-    if (document.readyState === 'complete') setTimeout(rest, 400); else addEventListener('load', function () { setTimeout(rest, 400); });
+  }
+  /* side toggle: tapping a side shows only it; tapping the active side again shows everything. Kept across ring <-> grid, in the
+     hash (&side=lp|dn) and in sessionStorage (q3-side, used when coming back from a product page). */
+  var sdEl = null;
+  function sideUI() {
+    if (!sdEl) return; root.classList.toggle('q3-s-on', !!SIDE);
+    [].forEach.call(sdEl.querySelectorAll('button'), function (b) { var on = b.getAttribute('data-s') === SIDE; b.classList.toggle('q3-on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  }
+  function sideHash() { return SIDE ? '&side=' + SIDE : ''; }
+  function setSide(v, user) {
+    v = v === 'lp' || v === 'dn' ? v : '';
+    try { sessionStorage.setItem('q3-side', v); } catch (e) {}
+    if (v === SIDE && built) { sideUI(); return; }
+    var zk = front && front.z && front.z.k;
+    SIDE = v; buildRing(); sideUI();
+    if (!built) return;
+    mkNav(); mkPieces(); tagItem = null; srItem = null; anim = null; dragging = false;
+    var z = zk && zone(zk); yaw = (z ? z.items[0] : ITEMS[0]).a;
+    layout();
+    if (GR.list) gApply();
+    if (user) {
+      try { var h = GR.on ? '#all' + sideHash() : (SIDE ? '#side=' + SIDE : ''); history.replaceState(history.state, '', location.pathname + location.search + h); } catch (e) {}
+      if (sr) sr.textContent = SIDE ? 'Showing ' + SIDEN[SIDE] + ' only' : 'Showing both sides';
+    }
+  }
+  function sideLive() {   /* refresh the side lists from the live collection pages (no page scripts run inside fetch) */
+    try {
+      var get = function (h) { return fetch('/collections/' + h, { credentials: 'same-origin' }).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (t) {
+        var doc = new DOMParser().parseFromString(t, 'text/html'), L = [];
+        [].forEach.call(doc.querySelectorAll('.product-tile a[href*="/products/"]'), function (a) { var m = (a.getAttribute('href') || '').match(/\/products\/([a-z0-9-]+)/); if (m && L.indexOf(m[1]) < 0) L.push(m[1]); });
+        if (!L.length) throw 0; return L; }); };
+      Promise.all([get('loud-proud'), get('discreet-neat')]).then(function (r) { window.__q3SideLive = 1;
+        var nm = {}; r[0].forEach(function (x) { nm[x] = 'lp'; }); r[1].forEach(function (x) { nm[x] = 'dn'; });
+        if (JSON.stringify(nm) === JSON.stringify(MS)) return;
+        MS = nm; if (SIDE) { var v = SIDE; SIDE = '#'; setSide(v); }
+      }).catch(function () {});
+    } catch (e) {}
   }
   function load(it) {
     if (it.ld) return; it.ld = 1; var i = it.img;
@@ -200,7 +267,7 @@
   var G = {}, NRH = 24;   /* phone nav row height (nav C) */
   function layout() {
     Wv = root.clientWidth; Hb = root.clientHeight; M = Wv < 750; CX = Wv / 2;
-    var pad = M ? 20 : 44, topH = M ? 40 : 50, navY = topH, navH = M ? 2 * NRH + 2 : 36;   /* Oct 23 2026 nav C: phone = two centred rows */
+    var pad = M ? 20 : 44, topH = M ? 40 : 50, SDH = M ? 32 : 0, navY = topH + SDH, navH = M ? 2 * NRH + 2 : 36;   /* Oct 23 2026 nav C: phone = two centred rows */
     var stageTop = navY + navH + (M ? 6 : 14);
     var tagH = M ? 36 : 40, bot = M ? 14 : 26, tagY = Hb - bot - tagH;
     var yF = tagY - (M ? 16 : 22);              /* floor line under the front piece */
@@ -225,10 +292,11 @@
     if ((M && !PP.noxc) || PP.xc) { var fw = 0; ITEMS.forEach(function (it) { fw = Math.max(fw, it.tw * hF * it.B); }); XC = [Math.min(fw / 2, Wv * .36) * (PP.x0 || 1), Wv / 2 + (PP.x1 != null ? PP.x1 : 10)]; }
     DW = STEP * (PP.dw || 1.0); FA = PP.fa || (M ? 20 : 22); OPMIN = PP.opm != null ? PP.opm : (M ? .3 : .15);
     var v1 = STEP * VK * DEG; KPX = STEP / Math.max(60, F * RV * Math.sin(v1) / (Dc - RV * Math.cos(v1)) * 1.1);   /* drag: one piece per neighbour distance */
-    G = { pad: pad, topH: topH, navY: navY, stageTop: stageTop, tagY: tagY, yF: yF, stageH: stageH };
+    G = { pad: pad, topH: topH, SDH: SDH, navY: navY, stageTop: stageTop, tagY: tagY, yF: yF, stageH: stageH };
     /* chrome */
     var tp = root.querySelector('.q3-top'); tp.style.padding = '0 ' + pad + 'px'; tp.style.height = topH + 'px';
     nav.style.top = navY + 'px';
+    if (sdEl) { sdEl.style.top = (M ? topH - 4 : 0) + 'px'; sdEl.style.height = (M ? SDH : topH) + 'px'; sdEl.style.lineHeight = (M ? SDH : topH) + 'px'; }
     var cy = tagY + tagH / 2 - 22;
     prv.style.left = (pad - 12) + 'px'; prv.style.top = cy + 'px'; nxt.style.left = (Wv - pad - 32) + 'px'; nxt.style.top = cy + 'px';
     /* Winter mark: top of the stage, only as big as the free space above the front piece allows */
@@ -252,7 +320,8 @@
     [].forEach.call(bs, function (b) { navW.push(b.offsetWidth || 60); });
     var tot = navW.reduce(function (a, b) { return a + b; }, 0);
     /* desktop: all six names in one centred row; phone: a sliding line with the active name centred */
-    if (!M) { navGap = Math.max(28, Math.min(56, (Wv - 2 * G.pad - tot) / 5)); var x = CX - (tot + 5 * navGap) / 2; NAVX = navW.map(function (w) { var c = x + w / 2; x += w + navGap; return c; }); }
+    var nn = Math.max(1, navW.length - 1);
+    if (!M) { navGap = Math.max(28, Math.min(56, (Wv - 2 * G.pad - tot) / nn)); var x = CX - (tot + nn * navGap) / 2; NAVX = navW.map(function (w) { var c = x + w / 2; x += w + navGap; return c; }); }
     else navGap = 34;
   }
 
@@ -305,9 +374,10 @@
     tag.style.opacity = clamp(1 - (bd / (STEP * .5)) * 1.25, 0, 1).toFixed(3);
     /* winter-ness: ice wash + navy ink while the Winter zone is in front */
     var wz = 0; ITEMS.forEach(function (it) { if (it.win) wz = Math.max(wz, it.w); });
-    var wa = zone('all'), wf = wa.items[0], wl = wa.items[wa.items.length - 1];
-    var inW = norm(yaw - wf.a) >= -STEP * .5 && norm(yaw - wl.a) <= STEP * .5;
-    var wv = inW ? 1 : clamp(1 - (Math.min(Math.abs(norm(yaw - wf.a)), Math.abs(norm(yaw - wl.a))) - STEP * .5) / (STEP * .4), 0, 1);
+    var wa = zone('all'), wv = 0;
+    if (wa) { var wf = wa.items[0], wl = wa.items[wa.items.length - 1];
+      var inW = norm(yaw - wf.a) >= -STEP * .5 && norm(yaw - wl.a) <= STEP * .5;
+      wv = inW ? 1 : clamp(1 - (Math.min(Math.abs(norm(yaw - wf.a)), Math.abs(norm(yaw - wl.a))) - STEP * .5) / (STEP * .4), 0, 1); }
     ice.style.opacity = wv.toFixed(3); wm.style.opacity = wv.toFixed(3);
     if (wv > .5 && !wm.dataset.l) { wm.dataset.l = 1; var mi = wm.querySelector('img'); mi.src = mi.getAttribute('data-src'); }
     root.classList.toggle('q3-w', wv > .5);
@@ -315,15 +385,17 @@
     var z = best.z, zp = zpos();
     if (!M) {
       ZONES.forEach(function (zz, i) { var b = nav.children[i]; b.style.transform = 'translate(' + (NAVX[i] - navW[i] / 2).toFixed(1) + 'px,0)'; b.style.opacity = zz === z ? '1' : '.42'; b.setAttribute('aria-selected', zz === z ? 'true' : 'false'); });
-      var i0 = Math.floor(zp) % 6, i1 = (i0 + 1) % 6, f = zp - Math.floor(zp), xa = NAVX[i0], xb = NAVX[i1];
+      var nz = ZONES.length, i0 = Math.floor(zp) % nz, i1 = (i0 + 1) % nz, f = zp - Math.floor(zp), xa = NAVX[i0], xb = NAVX[i1];
       if (i1 === 0) xb = NAVX[0];   /* wrap: jump instead of sliding across the whole row */
       var hc = i1 === 0 ? (f < .5 ? xa : xb) : xa + (xb - xa) * f, hw = i1 === 0 ? (f < .5 ? navW[i0] : navW[0]) : navW[i0] + (navW[i1] - navW[i0]) * f;
       hl.style.transform = 'translate(' + (hc - 2).toFixed(1) + 'px,0)'; hl.style.opacity = '1';   /* nav C (Oct 23 2026): a small dot instead of the hairline */
     } else {
       /* nav C (Oct 23 2026): all six names at once in two centred rows (Tees · Hoodies & Crews · Joggers / Hats · Bags & More · Winter),
          inactive faded, small dot under the active one. Order never wraps: Tees first, Winter last. */
-      var n = ZONES.length, rows = [[0, 1, 2], [3, 4, 5]], P = [];
-      var g = Math.max(14, Math.min(30, (Wv - 2 * G.pad - Math.max(navW[0] + navW[1] + navW[2], navW[3] + navW[4] + navW[5])) / 2));
+      var n = ZONES.length, h1 = n <= 3 ? n : Math.ceil(n / 2), rows = [[], []], P = [];
+      for (var ri0 = 0; ri0 < n; ri0++) rows[ri0 < h1 ? 0 : 1].push(ri0); if (!rows[1].length) rows.pop();
+      var rw = function (r) { return r.reduce(function (s2, i) { return s2 + navW[i]; }, 0); }, wmax = Math.max.apply(null, rows.map(rw)), gmax = Math.max.apply(null, rows.map(function (r) { return r.length - 1; })) || 1;
+      var g = Math.max(14, Math.min(30, (Wv - 2 * G.pad - wmax) / gmax));
       rows.forEach(function (r, ri) { var tot = r.reduce(function (s2, i) { return s2 + navW[i]; }, 0) + g * (r.length - 1), x = CX - tot / 2;
         r.forEach(function (i) { P[i] = [x + navW[i] / 2, ri * NRH]; x += navW[i] + g; }); });
       ZONES.forEach(function (zz, i) { var b = nav.children[i];
@@ -424,7 +496,7 @@
   /* ===== product page round trip: the zone + piece ride in this page's URL hash and sessionStorage (q3-ret), so the PDP's back link
      and the browser Back button land on the same piece. Old #w= keys still work (front -> Tees, fit/all -> Winter). ===== */
   function retState() { var it = front || ITEMS[0]; return { w: it.z.k, i: it.id }; }
-  function retHash(st) { return '#w=' + st.w + '&i=' + st.i; }
+  function retHash(st) { return '#w=' + st.w + '&i=' + st.i + sideHash(); }
   function remember(href) {
     try { var st = retState(); st.at = Date.now(); if (href) st.p = href.replace(/^https?:\/\/[^\/]+/, '').split('?')[0];
       sessionStorage.setItem('q3-ret', JSON.stringify(st)); history.replaceState(history.state, '', location.pathname + location.search + retHash(st)); } catch (e) {}
@@ -462,7 +534,7 @@
     '.q3 .q3-va{display:block;padding:14px 0 14px .3em;line-height:1;white-space:nowrap;color:var(--ink);font-size:inherit!important;letter-spacing:.3em!important;text-transform:uppercase!important}' +
     '.q3 .q3-va:focus-visible,.q3 .q3-gb:focus-visible{outline:1px solid var(--acc);outline-offset:2px}' +
     '.q3 .q3-gb{display:none;padding:14px 0;line-height:1;white-space:nowrap;color:var(--ink);font-size:inherit!important;letter-spacing:.3em!important;text-transform:uppercase!important}' +
-    '.q3.q3-g .q3-back,.q3.q3-g .q3-va,.q3 .q3-gc{display:none!important}.q3.q3-g .q3-gb,.q3.q3-g .q3-gc{display:block!important}' +
+    '.q3.q3-g .q3-tl,.q3.q3-g .q3-va,.q3 .q3-gc{display:none!important}.q3.q3-g .q3-gb,.q3.q3-g .q3-gc{display:block!important}' +
     '.q3-gd{position:absolute;left:0;width:100%;overflow:hidden;display:none;touch-action:pan-y;cursor:grab;outline:0}.q3.q3-g .q3-gd{display:block}' +
     '.q3-gd.q3-gdr{cursor:grabbing}' +
     '.q3-gr{position:absolute;left:0;top:0;height:1px;will-change:transform}' +
@@ -476,6 +548,7 @@
     '.q3-gi.q3-gon .q3-gl{opacity:1}' +
     '.q3-gi:focus-visible{outline:0}.q3-gi:focus-visible .q3-gl b{text-decoration:underline}' +
     '@media (min-width:750px){.q3-gl{font-size:11px;width:260px;margin-left:-130px}}' +
+    '.q3 .q3-sd{position:absolute;left:0;top:0;width:100%;display:flex;justify-content:center;align-items:center;gap:0;z-index:3001;pointer-events:none;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}.q3 .q3-sd button{position:relative;pointer-events:auto;padding:0 .2em 0 .4em;margin:0;line-height:inherit;height:100%;color:var(--ink);opacity:.62;font-size:inherit!important;letter-spacing:inherit!important;text-transform:uppercase!important;white-space:nowrap;background:none;border:0;border-radius:0;box-shadow:none;transition:opacity .25s}.q3 .q3-sd i{font-style:normal;color:var(--mut);padding:0 .7em;pointer-events:none}.q3.q3-s-on .q3-sd button{opacity:.42}.q3.q3-s-on .q3-sd button.q3-on{opacity:1}.q3 .q3-sd button.q3-on:after{content:"";position:absolute;left:50%;bottom:4px;width:4px;height:4px;margin-left:-1px;border-radius:50%;background:var(--acc)}.q3 .q3-sd button:focus-visible{outline:1px solid var(--acc);outline-offset:-3px}@media (hover:hover){.q3 .q3-sd button:hover{opacity:1}}@media (min-width:750px){.q3 .q3-sd{font-size:11.5px;letter-spacing:.26em}.q3 .q3-sd button.q3-on:after{bottom:9px}}.q3 .q3-tl{display:block;width:1px}.q3-gd,.q3-gd .q3-gi,.q3-gd img{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}.q3-gd .q3-gi{touch-action:pan-y}' +
     '@media (prefers-reduced-motion:reduce){.q3-gp,.q3-gp img,.q3-gl{transition:none!important}.q3-gd.q3-pre .q3-gp{opacity:1;transform:none}}';
   function gSplit(t) { var m = String(t).split(/\s+[\u2014\u2013-]\s+/); return m.length > 1 ? [m[0], m.slice(1).join(' ')] : [t, '']; }
   function gMoney(p) { p = String(p).replace(/[^0-9.]/g, ''); var v = parseFloat(p); if (isNaN(v)) return ''; return '$' + (v % 1 ? v.toFixed(2) : String(Math.round(v))); }
@@ -504,8 +577,10 @@
   }
   function gKey(L) { return L.map(function (p) { return [p.s, p.n, p.c, p.p].join('|'); }).join('~'); }
   var gd, gTr = [], GL = {};   /* grid geometry */
+  function gShown() { var L = (GR.list || []).filter(function (p) { return keep(p.s); }); return L.length ? L : (GR.list || []); }
+  function gApply() { var s0 = GR.sel && GR.sel.s; gBuild(gShown()); GR.off = gStart(); GR.anim = null; GR.v = 0; gSel(null); gRender(); if (s0) GR.cur.forEach(function (p) { if (p.s === s0) gSel(p); }); }
   function gBuild(L) {
-    var M2 = root.clientWidth < 750;
+    var M2 = root.clientWidth < 750; GR.cur = L;
     GR.n = L.length; GR.rows = [[], []]; gd.innerHTML = '';
     L.forEach(function (p, i) { var k = GK[p.s]; p.src = k ? k.src : p.ph; p.ar = k ? k.ar : .8; p.cut = !!k; p.k = gKind(p.s); GR.rows[i % 2].push(p); });
     gTr = [0, 1].map(function () { var t = document.createElement('div'); t.className = 'q3-gr'; gd.appendChild(t); return t; });
@@ -515,7 +590,7 @@
   function gLayout(rebuild) {
     if (!gd || !GR.n) return;
     var W = root.clientWidth, H = root.clientHeight, M2 = W < 750;
-    var top = (M2 ? 40 : 50) + (M2 ? 8 : 22), bot = H - (M2 ? 66 : 76), gap = M2 ? 6 : 18, labH = M2 ? 62 : 66;
+    var top = (M2 ? 40 + 32 : 50) + (M2 ? 8 : 22), bot = H - (M2 ? 66 : 76), gap = M2 ? 6 : 18, labH = M2 ? 62 : 66;
     var rowH = Math.max(150, (bot - top - gap) / 2), imgH = rowH - labH, sp = M2 ? 26 : 52;
     gd.style.top = top + 'px'; gd.style.height = (bot - top) + 'px';
     GL = { W: W, top: top, rowH: rowH, imgH: imgH, gap: gap, sp: sp, M: M2, L: [] };
@@ -603,35 +678,62 @@
     var r = a.getBoundingClientRect(), g = gd.getBoundingClientRect(), mid = (r.left + r.right) / 2 - g.left;
     if (mid < GL.W * .15 || mid > GL.W * .85) { var tr = gTr[GR.rows[0].indexOf(a._p) > -1 ? 0 : 1]; GR.off += mid - GL.W / 2; gRender(); }
   }
+  /* Nov 15 2026 (Justin, real iPhone: the rows did not swipe): touch is handled with touch events (touchmove passive:false, preventDefault
+     only once the gesture is horizontal, so vertical swipes still scroll the page; touch-action: pan-y on the region and every piece);
+     pointer events now serve mouse / pen only. A tap = movement under 8 px (reveals, then the second tap opens the PDP). */
   function gDrag() {
     var on = false, x0, y0, lx, pid = null, horiz = null, S = [];
-    gd.addEventListener('pointerdown', function (e) {
-      if (e.button && e.button !== 0) return;
-      GR.pt = Date.now(); on = true; pid = e.pointerId; horiz = null; gMoved = false; x0 = lx = e.clientX; y0 = e.clientY; S = [];
-      if (GR.anim || Math.abs(GR.v) > .02) { GR.anim = null; GR.v = 0; gMoved = true; }   /* a touch stops the spin (and is not a tap) */
-    });
-    gd.addEventListener('pointermove', function (e) {
-      if (!on || e.pointerId !== pid) return;
-      var tx = Math.abs(e.clientX - x0), ty = Math.abs(e.clientY - y0);
-      if (horiz === null) { if (tx < 7 && ty < 7) return; horiz = tx > ty; gMoved = true; if (!horiz) { on = false; return; }
-        try { gd.setPointerCapture(pid); } catch (er) { } GR.drag = true; gd.classList.add('q3-gdr'); lx = e.clientX; }
-      var dx = e.clientX - lx; lx = e.clientX; GR.off -= dx;
-      var t = e.timeStamp || performance.now(); S.push([t, GR.off]); while (S.length > 2 && t - S[0][0] > 90) S.shift();
-      gRender();
-    });
-    function end(e) {
-      if (!on || (e && e.pointerId !== pid)) return; on = false;
-      try { gd.releasePointerCapture(pid); } catch (er) { }
+    function gGo(x, y) { GR.pt = Date.now(); on = true; horiz = null; gMoved = false; x0 = lx = x; y0 = y; S = [];
+      if (GR.anim || Math.abs(GR.v) > .02) { GR.anim = null; GR.v = 0; gMoved = true; } }   /* a touch stops the spin (and is not a tap) */
+    function gMv(x, y, t) {   /* returns true while the gesture is a horizontal drag */
+      var tx = Math.abs(x - x0), ty = Math.abs(y - y0);
+      if (horiz === null) { if (tx < 8 && ty < 8) return false; horiz = tx > ty; gMoved = true; if (!horiz) { on = false; return false; }
+        GR.drag = true; gd.classList.add('q3-gdr'); lx = x; }
+      var dx = x - lx; lx = x; GR.off -= dx;
+      S.push([t, GR.off]); while (S.length > 2 && t - S[0][0] > 90) S.shift();
+      gRender(); return true;
+    }
+    function gEnd(now, cancel) {
+      on = false;
       if (!GR.drag) { setTimeout(function () { gMoved = false; }, 30); return; }
       GR.drag = false; gd.classList.remove('q3-gdr');
-      var v = 0, now = (e && e.timeStamp) || performance.now();
+      var v = 0;
       if (S.length > 1 && now - S[S.length - 1][0] < 60) { var a = S[0], b = S[S.length - 1]; if (b[0] > a[0]) v = (b[1] - a[1]) / (b[0] - a[0]); }
-      if ((e && e.type === 'pointercancel') || RM) v = 0;
+      if (cancel || RM) v = 0;
       GR.v = clamp(v, -4, 4); GR.lt = 0; gKick();
       setTimeout(function () { gMoved = false; }, 30);
     }
+    var tid = null;
+    gd.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { if (on) gEnd(performance.now(), 1); tid = null; return; }
+      var t = e.touches[0]; tid = t.identifier; gGo(t.clientX, t.clientY);
+    }, { passive: true });
+    gd.addEventListener('touchmove', function (e) {
+      if (!on || tid === null) return; var t = null;
+      for (var i = 0; i < e.changedTouches.length; i++) if (e.changedTouches[i].identifier === tid) t = e.changedTouches[i];
+      if (!t) return;
+      if (gMv(t.clientX, t.clientY, performance.now()) && e.cancelable) e.preventDefault();
+    }, { passive: false });
+    var tEnd = function (e) { if (tid === null) return; var hit = false; for (var i = 0; i < e.changedTouches.length; i++) if (e.changedTouches[i].identifier === tid) hit = true;
+      if (!hit) return; tid = null; if (on || GR.drag) gEnd(performance.now(), e.type === 'touchcancel'); };
+    gd.addEventListener('touchend', tEnd); gd.addEventListener('touchcancel', tEnd);
+    gd.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch' || (e.button && e.button !== 0)) return;
+      pid = e.pointerId; gGo(e.clientX, e.clientY);
+    });
+    gd.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch' || !on || e.pointerId !== pid) return;
+      var was = GR.drag;
+      if (gMv(e.clientX, e.clientY, e.timeStamp || performance.now()) && !was) { try { gd.setPointerCapture(pid); } catch (er) { } }
+    });
+    function end(e) {
+      if (e && e.pointerType === 'touch') return;
+      if (!on || (e && e.pointerId !== pid)) return;
+      try { gd.releasePointerCapture(pid); } catch (er) { }
+      gEnd((e && e.timeStamp) || performance.now(), e && e.type === 'pointercancel');
+    }
     gd.addEventListener('pointerup', end); gd.addEventListener('pointercancel', end);
-    gd.addEventListener('lostpointercapture', function (e) { if (on && GR.drag) end(e); });
+    gd.addEventListener('lostpointercapture', function (e) { if (e.pointerType !== 'touch' && on && GR.drag) end(e); });
     gd.addEventListener('dragstart', function (e) { e.preventDefault(); });
     gd.addEventListener('click', function (e) { if (!e.target.closest || !e.target.closest('.q3-gi')) gSel(null); });
     gd.addEventListener('wheel', function (e) {
@@ -642,7 +744,7 @@
   }
   function gHash(on) {
     try { var u = location.pathname + location.search.replace(/([?&])view=all(&|$)/, function (m, a, b) { return b ? a : ''; }).replace(/\?$/, '');
-      history.replaceState(history.state, '', u + (on ? '#all' : '')); } catch (e) {}
+      history.replaceState(history.state, '', u + (on ? '#all' + sideHash() : (SIDE ? '#side=' + SIDE : ''))); } catch (e) {}
   }
   function gOpen(quiet) {
     if (GR.on) return; GR.on = 1; root.classList.add('q3-g'); anim = null;
@@ -650,10 +752,10 @@
     prv.setAttribute('aria-label', 'Scroll left'); nxt.setAttribute('aria-label', 'Scroll right');
     gHash(1);
     if (!RM && !quiet) gd.classList.add('q3-pre');
-    if (!GR.list) { GR.list = gFromList(LIST0); gBuild(GR.list); GR.off = gStart();
-      gLive(function (L) { if (gKey(L) === gKey(GR.list)) return; GR.list = L; var o = GR.off, s = GR.sel && GR.sel.s; gBuild(L); GR.off = o; gRender();
-        if (s) L.forEach(function (p) { if (p.s === s) gSel(p); }); }); }
-    else { gLayout(); GR.off = gStart(); }
+    if (!GR.list) { GR.list = gFromList(LIST0); gBuild(gShown()); GR.off = gStart();
+      gLive(function (L) { if (gKey(L) === gKey(GR.list)) return; GR.list = L; var o = GR.off, s = GR.sel && GR.sel.s; gBuild(gShown()); GR.off = o; gRender();
+        if (s) GR.cur.forEach(function (p) { if (p.s === s) gSel(p); }); }); }
+    else { if (gKey(GR.cur || []) !== gKey(gShown())) gBuild(gShown()); else gLayout(); GR.off = gStart(); }
     gSel(null); gRender();
     if (gd.classList.contains('q3-pre')) requestAnimationFrame(function () { requestAnimationFrame(function () { gd.classList.remove('q3-pre'); }); });
     try { gd.focus({ preventScroll: true }); } catch (e) {}
@@ -675,12 +777,18 @@
     gDrag();
     var lw = innerWidth;
     addEventListener('resize', function () { if (GR.on && innerWidth !== lw) { lw = innerWidth; gLayout(); } else lw = innerWidth; });
-    addEventListener('hashchange', function () { if (/^#(all|w=grid)$/.test(location.hash)) gOpen(1); });
+    addEventListener('hashchange', function () {
+      var m = {}; location.hash.replace(/^#/, '').split('&').forEach(function (kv) { var p = kv.split('='); if (p[0]) m[p[0]] = decodeURIComponent(p[1] || ''); });
+      if (m.side === 'lp' || m.side === 'dn') setSide(m.side); else if ('all' in m || 'w' in m) setSide('');
+      if ('all' in m || m.w === 'grid') { gOpen(1); return; }
+      if (m.w) { if (GR.on) gClose(); var z = zone(m.w === 'fit' ? 'all' : m.w === 'front' ? 'tees' : m.w); if (z) { try { history.replaceState(history.state, '', location.pathname + location.search + '#w=' + z.k + sideHash()); } catch (e) {} goK(z.k); } }
+    });
     var rt = null; try { rt = JSON.parse(sessionStorage.getItem('q3-ret') || 'null'); } catch (e) {}
-    if (/^#(all|w=grid)$/.test(location.hash) || /[?&]view=all(&|$)/.test(location.search)) gOpen();
+    if (/^#(all|w=grid)(&|$)/.test(location.hash) || /[?&]view=all(&|$)/.test(location.search)) gOpen();
     else if (!location.hash && rt && rt.g && /\/products\//.test(document.referrer || '')) gOpen(1);
   }
   window.QSStore360 = {
+    side: function (v) { if (v !== undefined) setSide(v, 1); return SIDE; }, sideLive: function () { return !!window.__q3SideLive; },
     grid: { open: function () { gOpen(); }, close: gClose, on: function () { return !!GR.on; }, off: function () { return GR.off; }, set: function (o) { GR.anim = null; GR.v = 0; GR.off = o; gRender(); }, n: function () { return GR.n; }, sel: function () { return GR.sel && GR.sel.s; } },
     turn: function (a) { anim = null; yaw = norm(a); render(); }, go: goK, step: step, hint: function () {},
     zones: function () { return ZONES.map(function (z) { return [z.k, z.items[0].a]; }); },
