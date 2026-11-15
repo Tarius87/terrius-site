@@ -11,7 +11,7 @@
 (function () {
   try {
     if (window.__qsTk || document.getElementById('qs-tk')) return; window.__qsTk = 1;
-    var TXT = 'Free US shipping over $75 \u00a0\u00b7\u00a0 or 15% off with code FIRSTDROP';
+    var TXT = 'Winter Atelier is live \u00a0\u00b7\u00a0 Free US shipping over $75';
     var css = 'html.qs-tk-on [id^="fw-section-announcement-bar"],html.qs-tk-on section.announcement-bar{display:none!important}' +
       '#qs-tk{display:block;position:relative;z-index:10;width:100%;height:34px;overflow:hidden;background:#6E0B22;color:#fff!important;text-decoration:none!important;' +
       'font-family:inherit;font-size:11.5px;font-weight:600;line-height:34px;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;-webkit-font-smoothing:antialiased;border:0;margin:0;padding:0;box-shadow:none}' +
@@ -22,8 +22,8 @@
       '@media (min-width:900px){#qs-tk{font-size:12px;height:36px;line-height:36px}}' +
       '@media (prefers-reduced-motion:reduce){#qs-tk{text-align:center}#qs-tk .qs-tk-r{animation:none;display:block}#qs-tk .qs-tk-h+.qs-tk-h,#qs-tk .qs-tk-i+.qs-tk-i{display:none}#qs-tk .qs-tk-i{padding:0}}';
     var st = document.createElement('style'); st.id = 'qs-tk-css'; st.textContent = css; (document.head || document.documentElement).appendChild(st);
-    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/collections/all';
-    a.setAttribute('aria-label', 'Free US shipping over $75, or 15% off with code FIRSTDROP. Shop all');
+    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/collections/winter-atelier';
+    a.setAttribute('aria-label', 'Winter Atelier is live. Free US shipping over $75. Shop Winter Atelier');
     var one = '<span class="qs-tk-i" aria-hidden="true">' + TXT + '</span>', half = '<span class="qs-tk-h">' + one + one + one + one + '</span>';
     a.innerHTML = '<span class="qs-tk-r">' + half + half + '</span>';
     var top = function () {
@@ -291,17 +291,17 @@ function field(g,cls,mark){return '<div class="qsa-f '+cls+'"><div class="qsa-mk
  '<a class="qsa-p" href="/products/'+g[0]+'"><img src="'+C4+g[3]+'" alt="'+esc(g[1])+'" width="'+g[4]+'" height="'+g[5]+'"></a>'+
  '<div class="qsa-base"><span class="qsa-np" data-h="'+g[0]+'">'+esc(g[1])+'<b>'+money(g[2])+'</b></span><a class="qsa-lk" href="'+g[6]+'">'+g[7]+'</a></div></div>'}
 function card(g){return '<a class="qsa-pc" href="/products/'+g[0]+'"><div class="ph qsa-st-'+g[6]+'"><img src="'+P+g[5]+'.webp" alt="'+esc(g[3])+'" loading="lazy"></div><span class="lb">'+tag(g,g[6]==='w'?'lp':'dn')+'</span></a>'}
-/* Winter Atelier (Collection 002) preview: same five pieces as the 360 winter wall */
+/* Winter Atelier (Collection 002): LIVE since Nov 15 2026 08:00 CST. Nov 15 08:55 (Justin): 'Drops Nov 15' -> 'Available now', pieces link to their PDPs, CTA -> /collections/winter-atelier. */
 /* Oct 19 2026 (Justin): row tightened (each piece's box = its own aspect, so no wide empty cells around the joggers/beanie) and the beanie made bigger.
    [slug, name, image w/h (img/w files are 520 px tall), height vs the tops] */
 /* Oct 19 2026 ~17:30 (Justin: side-by-side pieces must match in real-world scale): k = box height vs the crew at ONE scale (tee/crew/hood same torso width; joggers 1.2x crew height; beanie 0.5x torso width), from work/tee3back/layout.py. Was tee 1, hood 1, joggers 1.12, beanie .92 (qs-home-b.src.2f761.js). */
 /* Oct 19 2026 ~18:00 (Justin: "That hat looks really small and goofy"): beanie k .332 -> .565 (0.5 T -> 0.85 T wide, 1.7x); tee/crew/hood/joggers k unchanged. Previous: blk/qs-home-b.src.0cca5.js. */
-var WINTER=[['winter-crest-back-tee-black','Winter Crest Back Tee — Black',599/520,.905],['winter-crest-crew-off-white','Winter Crest Crew — Off-White',423/520,1],['frost-lined-hood-black','Frost-Lined Hood — Black',403/520,1.095],['maison-winter-joggers-black','Maison Winter Joggers',189/520,1.2],['wordmark-cuff-beanie-navy','Wordmark Cuff Beanie — Navy',458/520,.565]];
+var WINTER=[['winter-crest-back-tee-black','Winter Crest Back Tee — Black',599/520,.905],['winter-crest-crew-off-white','Winter Crest Crew — Off-White',423/520,1],['frost-lined-hood-black','Frost-Lined Hood — Black',403/520,1.095],['maison-winter-joggers-black','Maison Winter Joggers',189/520,1.2],['wordmark-cuff-beanie-navy','Wordmark Cuff Beanie',458/520,.565,'wordmark-cuff-beanie']];
 var W=I.replace(/a\/$/,'w/');
-function winter(){return '<section class="qsa-wa" id="winter-atelier" aria-label="Winter Atelier, Collection 002, drops November 15"><div class="qsa-wa-in">'+
- '<div class="qsa-wa-t"><img class="qsa-wa-m" src="'+W+'qs-bluemark-k.webp" alt="QS" width="342" height="320"><p class="qsa-wa-k">Collection 002</p><p class="qsa-wa-h">Winter Atelier</p><div class="qsa-wa-r"></div><p class="qsa-wa-d">Drops Nov 15</p></div>'+
- '<div class="qsa-wa-p">'+WINTER.map(function(w){var f=(w[2]*w[3]).toFixed(4);return '<span style="flex:'+f+' 1 0;aspect-ratio:'+f+'/'+w[3]+'"><img src="'+W+w[0]+'.webp" alt="'+esc(w[1])+'" loading="lazy"></span>'}).join('')+'</div>'+
- '<div class="qsa-wa-c"><a class="qsa-wa-l" href="/pages/walk-the-store#w=all">Preview in the store &rarr;</a></div></div></section>'}
+function winter(){return '<section class="qsa-wa" id="winter-atelier" aria-label="Winter Atelier, Collection 002, available now"><div class="qsa-wa-in">'+
+ '<div class="qsa-wa-t"><img class="qsa-wa-m" src="'+W+'qs-bluemark-k.webp" alt="QS" width="342" height="320"><p class="qsa-wa-k">Collection 002</p><p class="qsa-wa-h">Winter Atelier</p><div class="qsa-wa-r"></div><p class="qsa-wa-d">Available now</p></div>'+
+ '<div class="qsa-wa-p">'+WINTER.map(function(w){var f=(w[2]*w[3]).toFixed(4);return '<span style="flex:'+f+' 1 0;aspect-ratio:'+f+'/'+w[3]+'"><a href="/products/'+(w[4]||w[0])+'" aria-label="'+esc(w[1])+'"><img src="'+W+w[0]+'.webp" alt="'+esc(w[1])+'" loading="lazy"></a></span>'}).join('')+'</div>'+
+ '<div class="qsa-wa-c"><a class="qsa-wa-l" href="/collections/winter-atelier">Shop Winter Atelier &rarr;</a></div></div></section>'}
 var HTML='<div class="qsa" id="qs-home">'+
  '<section class="qsa-h4" aria-label="Loud &amp; Proud or Discreet &amp; Neat">'+
   field(HL,'l','<img src="'+C4+'word-white.png" alt="Quality Stoner" width="1200" height="62">')+

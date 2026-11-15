@@ -11,7 +11,7 @@
 (function () {
   try {
     if (window.__qsTk || document.getElementById('qs-tk')) return; window.__qsTk = 1;
-    var TXT = 'Free US shipping over $75 \u00a0\u00b7\u00a0 or 15% off with code FIRSTDROP';
+    var TXT = 'Winter Atelier is live \u00a0\u00b7\u00a0 Free US shipping over $75';
     var css = 'html.qs-tk-on [id^="fw-section-announcement-bar"],html.qs-tk-on section.announcement-bar{display:none!important}' +
       '#qs-tk{display:block;position:relative;z-index:10;width:100%;height:34px;overflow:hidden;background:#6E0B22;color:#fff!important;text-decoration:none!important;' +
       'font-family:inherit;font-size:11.5px;font-weight:600;line-height:34px;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;-webkit-font-smoothing:antialiased;border:0;margin:0;padding:0;box-shadow:none}' +
@@ -22,8 +22,8 @@
       '@media (min-width:900px){#qs-tk{font-size:12px;height:36px;line-height:36px}}' +
       '@media (prefers-reduced-motion:reduce){#qs-tk{text-align:center}#qs-tk .qs-tk-r{animation:none;display:block}#qs-tk .qs-tk-h+.qs-tk-h,#qs-tk .qs-tk-i+.qs-tk-i{display:none}#qs-tk .qs-tk-i{padding:0}}';
     var st = document.createElement('style'); st.id = 'qs-tk-css'; st.textContent = css; (document.head || document.documentElement).appendChild(st);
-    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/collections/all';
-    a.setAttribute('aria-label', 'Free US shipping over $75, or 15% off with code FIRSTDROP. Shop all');
+    var a = document.createElement('a'); a.id = 'qs-tk'; a.href = '/collections/winter-atelier';
+    a.setAttribute('aria-label', 'Winter Atelier is live. Free US shipping over $75. Shop Winter Atelier');
     var one = '<span class="qs-tk-i" aria-hidden="true">' + TXT + '</span>', half = '<span class="qs-tk-h">' + one + one + one + one + '</span>';
     a.innerHTML = '<span class="qs-tk-r">' + half + half + '</span>';
     var top = function () {
@@ -73,9 +73,10 @@
   CATS.forEach(function (c) { c.ids = c.ids.filter(function (id) { return D[id]; }); });
   /* Winter Atelier (Collection 002) preview: pieces are HIDDEN in Fourthwall until launch -> NOT links, "Nov 15" instead of a price, class q3-pv
      (not q3-it) keeps them out of QSStore360.count(). REMINDER: after the Sun Nov 15 2026 launch swap "Nov 15" for prices + product links. */
-  var WINTER = [{ id: 'winter-crest-back-tee-black', n: 'Winter Crest Back Tee', h: .84 }, { id: 'winter-crest-crew-off-white', n: 'Winter Crest Crew', h: 1 },
-    { id: 'frost-lined-hood-black', n: 'Frost-Lined Hood', h: 1 }, { id: 'maison-winter-joggers-black', n: 'Maison Winter Joggers', h: 1.38 },
-    { id: 'wordmark-cuff-beanie-navy', n: 'Wordmark Cuff Beanie', h: .5 }];
+  /* Nov 15 2026 08:55 (Justin): Winter is LIVE -> pieces are links with prices (q3-it); win:1 keeps the ice wash logic. */
+  var WINTER = [{ id: 'winter-crest-back-tee-black', n: 'Winter Crest Back Tee', c: 'Black', p: '$45', h: .84 }, { id: 'winter-crest-crew-off-white', n: 'Winter Crest Crew', c: 'Off-White', p: '$54.95', h: 1 },
+    { id: 'frost-lined-hood-black', n: 'Frost-Lined Hood', c: 'Black', p: '$58', h: 1 }, { id: 'maison-winter-joggers-black', n: 'Maison Winter Joggers', c: 'Black', p: '$60', h: 1.38 },
+    { id: 'wordmark-cuff-beanie-navy', u: 'wordmark-cuff-beanie', n: 'Wordmark Cuff Beanie', c: 'Navy', p: '$32', h: .5 }];
   /* real-world piece heights (world unit = a hoodie) so neighbours keep true scale; the front piece is then enlarged to fill its box */
   var HC = { tees: .84, tops: 1, joggers: 1.38, hats: .5, bags: .8 };
   var HID = { 'damask-crossbody-burgundy': .46, 'engraved-crest-blanket-white': .78, 'embroidered-qs-sherpa-black': .78, 'wordmark-snapback-black': .44, 'qs-snapback-black': .44, 'qs-snapback-burgundy': .44 };
@@ -95,7 +96,7 @@
   ORDER.forEach(function (k, zi) {
     var z = k === 'all' ? { k: 'all', n: 'Winter' } : { k: k, n: cat(k).n };
     z.i = zi; z.items = []; ZONES.push(z);
-    var list = k === 'all' ? WINTER.map(function (w) { return { id: w.id, pv: 1, n: w.n, c: '', p: 'Nov 15', h: w.h, src: OWN + 'w/' + w.id + '.webp' }; })
+    var list = k === 'all' ? WINTER.map(function (w) { return { id: w.id, pv: 0, win: 1, n: w.n, c: w.c, p: w.p, h: w.h, href: SHOP + (w.u || w.id) + '?from=360', src: OWN + 'w/' + w.id + '.webp' }; })
       : cat(k).ids.map(function (id) { var p = P(id); return { id: id, pv: 0, n: p.n, c: p.c, p: money(id), h: HID[id] || HC[k], href: url(id), src: (p.o ? OWN : IMG) + 'p/' + id + '.webp' }; });
     list.forEach(function (it) {
       var t = TRIM[it.id] || [0, 0, 1, 1, 1];
@@ -300,7 +301,7 @@
     tag.style.transform = 'translate(' + (CX - tw / 2).toFixed(1) + 'px,' + G.tagY + 'px)';
     tag.style.opacity = clamp(1 - (bd / (STEP * .5)) * 1.25, 0, 1).toFixed(3);
     /* winter-ness: ice wash + navy ink while the Winter zone is in front */
-    var wz = 0; ITEMS.forEach(function (it) { if (it.pv) wz = Math.max(wz, it.w); });
+    var wz = 0; ITEMS.forEach(function (it) { if (it.win) wz = Math.max(wz, it.w); });
     var wa = zone('all'), wf = wa.items[0], wl = wa.items[wa.items.length - 1];
     var inW = norm(yaw - wf.a) >= -STEP * .5 && norm(yaw - wl.a) <= STEP * .5;
     var wv = inW ? 1 : clamp(1 - (Math.min(Math.abs(norm(yaw - wf.a)), Math.abs(norm(yaw - wl.a))) - STEP * .5) / (STEP * .4), 0, 1);
