@@ -1046,13 +1046,36 @@
     for (var i = 0; i < ss.length; i++) { var s = ss[i]; if (s.options.length && /size/i.test((s.options[0].text || '') + ' ' + (s.getAttribute('aria-label') || '') + ' ' + (s.name || ''))) return s; }
     return ss.length === 1 ? ss[0] : null;
   }
+  /* some product pages pick the size with buttons (radio inputs) instead of a dropdown */
+  function qvRadIn(doc) {
+    var main = doc.querySelector('main') || doc.body, h1 = doc.querySelector('main h1, h1'), g = {}, order = [];
+    [].forEach.call(main.querySelectorAll('input[type=radio]'), function (r) {
+      if (h1 && !(h1.compareDocumentPosition(r) & 4)) return;
+      var k = r.name || '_'; if (!g[k]) { g[k] = []; order.push(k); } g[k].push(r);
+    });
+    var SZ = /^(xxs|xs|s|m|l|xl|xxl|xxxl|[2-6]xl|one size|os|\d{1,2}(\.\d)?)$/i, best = null, bn = -1;
+    order.forEach(function (k) { var n = g[k].filter(function (r) { return SZ.test(qvRadLabel(doc, r)); }).length; if (n > bn) { bn = n; best = g[k]; } });
+    return best;
+  }
+  function qvRadLabel(doc, r) {
+    var t = r.getAttribute('aria-label') || '';
+    if (!t && r.id) { var l = doc.querySelector('label[for="' + r.id.replace(/"/g, '') + '"]'); if (l) t = l.textContent; }
+    if (!t) { var c = r.closest('label'); if (c) t = c.textContent; }
+    if (!t && r.nextElementSibling) t = r.nextElementSibling.textContent;
+    if (!t && r.parentNode) t = r.parentNode.textContent;
+    return (t || r.value || '').replace(/\s+/g, ' ').trim();
+  }
   function qvCount(doc) { var a = doc.querySelector('a[href="/cart"], a[href$="/cart"]'); var m = a && (a.textContent || '').match(/\((\d+)\)/); return m ? +m[1] : -1; }
   function qvRead(q, doc) {
     q.ready = 1; q.doc = doc;
     var sel = qvSelIn(doc), list = [];
     if (sel) [].forEach.call(sel.options, function (o, i) { var t = (o.text || '').trim(); if (!t || (i === 0 && (o.disabled || !o.value) && /select/i.test(t))) return;
       list.push([t.replace(/\s*[-–—]\s*sold out.*$/i, ''), !o.disabled && !/sold out/i.test(t), o.value]); });
-    q.sel = sel; q.opt = {}; list.forEach(function (s) { q.opt[s[0]] = s[2]; });
+    var rad = sel ? null : qvRadIn(doc);
+    if (rad) rad.forEach(function (r) { var t = qvRadLabel(doc, r); if (!t) return; list.push([t.replace(/\s*[-–—]\s*sold out.*$/i, ''), !r.disabled && !/sold out/i.test(t), r]); });
+    /* the page shows no size control we understand, but the piece comes in sizes: send them to the full page rather than guess */
+    if (!list.length && q.I.z && q.I.z.length > 1) { q.ready = 0; return qvFail(q); }
+    q.sel = sel; q.rad = rad; q.opt = {}; list.forEach(function (s) { q.opt[s[0]] = s[2]; });
     qvSizes(list.map(function (s) { return [s[0], s[1]]; }));
     var h1 = doc.querySelector('main h1, h1'), main = doc.querySelector('main') || doc.body;
     /* price: the first $-only line after the title */
@@ -1083,7 +1106,7 @@
     }
     if (q.want) qvAdd();
   }
-  function qvFail(q) { if (QV !== q || q.ready) return; q.fail = 1; if (!q.sizes) qvSizes(q.I.z ? q.I.z.map(function (z) { return [z, 1]; }) : []); qvBtn(); }
+  function qvFail(q, force) { if (QV !== q || (q.ready && !force)) return; q.fail = 1; if (!q.sizes) qvSizes(q.I.z ? q.I.z.map(function (z) { return [z, 1]; }) : []); qvBtn(); }
   function qvAdd() {
     var q = QV; if (!q || q.busy) return;
     var b = q.el.querySelector('.q3-qv-add'), msg = q.el.querySelector('.q3-qv-msg');
@@ -1093,13 +1116,19 @@
     if (!q.ready) { q.want = 1; qvBtn('busy'); return; }   /* page still loading: add as soon as it is ready */
     q.want = 0; msg.textContent = '';
     var doc = q.doc, win = q.f.contentWindow, btn = qvBtnIn(doc);
-    if (!btn) return qvFail(q);
+    if (!btn) { msg.textContent = 'That didn’t go through here. Add it on the full page.'; return qvFail(q, 1); }
     try {
       if (q.sel && q.sizes && q.sizes.length > 1) {
         var v = q.opt[q.size]; var set = Object.getOwnPropertyDescriptor(win.HTMLSelectElement.prototype, 'value').set; set.call(q.sel, v);
         q.sel.dispatchEvent(new win.Event('input', { bubbles: true })); q.sel.dispatchEvent(new win.Event('change', { bubbles: true }));
+      } else if (q.rad && q.sizes && q.sizes.length > 1) {
+        var r = q.opt[q.size]; if (!r) { msg.textContent = 'That didn’t go through here. Add it on the full page.'; return qvFail(q, 1); }
+        r.click();
+        if (!r.checked) { Object.getOwnPropertyDescriptor(win.HTMLInputElement.prototype, 'checked').set.call(r, true);
+          r.dispatchEvent(new win.Event('input', { bubbles: true })); r.dispatchEvent(new win.Event('change', { bubbles: true })); }
+        if (!r.checked) { msg.textContent = 'That didn’t go through here. Add it on the full page.'; return qvFail(q, 1); }
       }
-    } catch (e) { return qvFail(q); }
+    } catch (e) { { msg.textContent = 'That didn’t go through here. Add it on the full page.'; return qvFail(q, 1); } }
     q.busy = 1; qvBtn('busy');
     var c0 = qvCount(doc), sub0 = qvSub(doc), t0 = Date.now();
     setTimeout(function () { try { qvBtnIn(doc).click(); } catch (e) {} }, 120);
